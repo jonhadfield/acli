@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+import acli
+
+if __name__ == '__main__':
+    acli.real_main()
