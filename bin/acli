@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-
-import acli
+from __future__ import (absolute_import, print_function)
+from acli import real_main
 
 if __name__ == '__main__':
-    acli.real_main()
+    real_main()

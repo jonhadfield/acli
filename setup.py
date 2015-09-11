@@ -2,8 +2,9 @@
 
 import os
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
+sys.path.insert(0, os.path.abspath('lib'))
 
 version = "0.0.1"
 
@@ -49,14 +50,15 @@ setup(
     author='Jon Hadfield',
     author_email='jon.hadfield@lessknown.co.uk',
     url='http://github.com/jonhadfield/acli',
-    install_requires=['docopt==0.6.2', 'colorama==0.3.3'],
+    install_requires=['docopt==0.6.2', 'colorama==0.3.3', 'boto>=2.38.0'],
     description='A CLI to manage AWS resources',
     long_description=long_description,
-    packages=['acli'],
+    #packages=['acli','acli.services'],
+    packages=find_packages('lib'),
     platforms='any',
     license='MIT',
     scripts=['bin/acli'],
-    package_dir={'acli': 'acli'},
+    package_dir={'': 'lib'},
     include_package_data=True,
     classifiers=[
         'Programming Language :: Python',
@@ -72,6 +74,6 @@ setup(
     keywords=(
         'aws, Python, cli'
     ),
-    tests_require=['pytest'],
+    tests_require=['pytest', 'moto>=0.4.12'],
     cmdclass={'test': PyTest},
 )
