@@ -8,44 +8,30 @@ Usage:
   acli --version
 
 Options:
-  -h --help                    show this help message and exit
-  -l --list                    list resources
-  -r --region=REGION           aws region to connect to
-  --version                    show version and exit
+  -h --help                             show this help message and exit
+  -r --region=REGION                    set aws region
+  --access_key_id=ACCESS_KEY_ID         set access key id
+  --secret_access_id=SECRET_ACCESS_KEY  set secret access key
+  --version                             show version and exit
 """
 
-from __future__ import print_function
+from __future__ import (absolute_import, print_function)
 
 from docopt import docopt
 from colorama import init
-from services import (ec2, elb)
+from acli.services import (ec2, elb)
+from acli.config import Config
 init(autoreset=True)
 
 
 def real_main():
-    """ The function called from the script
+    args = docopt(__doc__, version='0.0.1')
+    print(args)
+    aws_config = Config()
+    aws_config.load_config(args)
 
-    :return: None
-    """
-    arguments = docopt(__doc__, version='0.0.1')
-    print(arguments)
-    chosen_aws_region = arguments.get('--region')
-    if not chosen_aws_region:
-        region = 'eu-west-1'
-    else:
-        region = chosen_aws_region
+    if args.get('ec2'):
+        ec2.get_ec2_list(aws_config)
 
-    if arguments.get('ec2'):
-        conn = ec2.get_ec2_conn(region)
-        print(conn)
-        for instance in conn.get_all_instances():
-            print(instance)
-
-    if arguments.get('elb'):
-        conn = elb.get_elb_conn(region)
-        print(conn)
-        for instance in conn.get_all_load_balancers():
-            print(instance)
-
-if __name__ == '__main__':
-    real_main()
+    if args.get('elb'):
+        elb.get_elb_list(aws_config)
