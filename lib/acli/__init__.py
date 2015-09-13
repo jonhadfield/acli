@@ -3,7 +3,8 @@
 """acli.
 
 Usage:
-  acli ec2 (list | info | search)
+  acli ec2 list
+  acli ec2 info <instance_id>
   acli elb (list | info | search)
   acli --version
 
@@ -20,18 +21,26 @@ from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb)
 from acli.config import Config
-from acli.output import (output_ec2, output_elb)
+from acli.output import (output_ec2_list, output_ec2_info, output_elb)
 init(autoreset=True)
 
 
 def real_main():
     args = docopt(__doc__, version='0.0.1')
     aws_config = Config(args)
-
     if args.get('ec2'):
         if args.get('list'):
-            output_ec2(output_type='console', instances=ec2.get_ec2_list(aws_config))
+            output_ec2_list(
+                output_media='console',
+                instances=ec2.get_ec2_list(aws_config))
+        if args.get('info'):
+            if args.get('<instance_id>'):
+                output_ec2_info(output_media='console',
+                                instance=ec2.get_ec2_instance(aws_config,
+                                                              instance_id=args.get('<instance_id>')))
 
     if args.get('elb'):
         if args.get('list'):
-            output_elb(output_type='console', elbs=elb.get_elb_list(aws_config))
+            output_elb(
+                output_media='console',
+                elbs=elb.get_elb_list(aws_config))
