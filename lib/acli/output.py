@@ -43,6 +43,7 @@ def output_ec2_list(output_media=None, instances=None):
 def dash_if_none(item=None):
     return item if item else '-'
 
+
 def short_instance_profile(instance_profile):
     return instance_profile.get('arn').split('/')[-1]
 
@@ -68,31 +69,10 @@ def output_ec2_info(output_media=None, instance=None):
         table_data.append(['interfaces', dash_if_none(str(instance.interfaces))])
         table_data.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
         table_data.append(['instance profile', dash_if_none(short_instance_profile(instance.instance_profile))])
-
-        #for instance in instances:
-        #    instance_id = instance[0].id
-        #    instance_state = instance[0].state
-        #    instance_type = instance[0].instance_type
-        #    image_id = instance[0].image_id
-        #    public_ip = instance[0].ip_address
-        #    private_ip = instance[0].private_ip_address
-        #    instance_profile = instance[0].instance_profile
-        #    instance_profile_out = '-'
-        #    instance_name = instance[0].tags.get('Name', '-')
-        #    if len(instance_name) > 40:
-        #        instance_name = "{0}...".format(instance_name[:30])
-        #    if instance_profile:
-        #        instance_profile_out = instance_profile.get('arn').split('/')[-1]
-        #    table_data.append([instance_id,
-        #                       instance_name,
-        #                       instance_state,
-        #                       instance_type,
-        #                       image_id,
-        #                       public_ip if public_ip else '-',
-        #                       private_ip if private_ip else '-',
-        #                       instance_profile_out])
         table = AsciiTable(table_data)
         table.inner_heading_row_border = False
+        table.inner_row_border = False
+        table.title = "Instance Info"
         print(table.table)
 
 
