@@ -109,6 +109,7 @@ def output_elb_info(output_media=None, elb=None):
     if output_media == 'console':
         table_data = [['name', elb[0].name]]
         table_data.append(['dns name', elb[0].dns_name])
+        table_data.append(['listeners', ",".join(elb[0].listeners)])
         table_data.append(['created time', dash_if_none(elb[0].created_time)])
         table_data.append(['instances', output_elb_instances(elb[0].instances)])
         table_data.append(['availability zones', ",".join(elb[0].availability_zones)])
