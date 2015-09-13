@@ -92,13 +92,9 @@ def output_ec2_info(output_media=None, instance=None):
 
 def output_elb(output_media=None, elbs=None):
     if output_media == 'console':
-        heading = ['id', 'name']
-        table_data = [heading]
-
+        table_data = [['name', 'instances', 'dns_name']]
         for elb in elbs:
-            elb_id = elb.name
-            elb_name = elb.name
-            table_data.append([elb_id, elb_name])
+            table_data.append([elb.name, str(len(elb.instances)), elb.dns_name])
         table = AsciiTable(table_data)
         table.title = "ELBs"
         print(table.table)
