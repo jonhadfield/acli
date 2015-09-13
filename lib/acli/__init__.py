@@ -5,7 +5,8 @@
 Usage:
   acli ec2 list
   acli ec2 info <instance_id>
-  acli elb (list | info | search)
+  acli elb list
+  acli elb info <elb_name>
   acli --version
 
 Options:
@@ -44,3 +45,9 @@ def real_main():
             output_elb(
                 output_media='console',
                 elbs=elb.get_elb_list(aws_config))
+        if args.get('info'):
+            if args.get('<elb_name>'):
+                output_elb_info(output_media='console',
+                                elb=elb.get_elb(aws_config,
+                                                elb_name=args.get('<elb_name>')))
+

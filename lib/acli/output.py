@@ -98,3 +98,16 @@ def output_elb(output_media=None, elbs=None):
         table = AsciiTable(table_data)
         table.title = "ELBs"
         print(table.table)
+
+
+def output_elb_info(output_media=None, elb=None):
+    if output_media == 'console':
+        table_data = [['id', elb.id]]
+        table_data.append(['dns_name', elb.dns_name])
+        table_data.append(['created_time', dash_if_none(elb.created_time)])
+        table = AsciiTable(table_data)
+        table.inner_heading_row_border = False
+        table.inner_row_border = False
+        table.title = "Instance Info"
+        print(table.table)
+
