@@ -60,6 +60,11 @@ def get_interface_ids(interfaces=None):
     return ",".join(interface_ids)
 
 
+def output_elb_instances(instances=None):
+    instance_ids = [x.id for x in instances]
+    return ",".join(instance_ids)
+
+
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
         table_data = [['id', instance.id]]
@@ -103,8 +108,15 @@ def output_elbs(output_media=None, elbs=None):
 def output_elb_info(output_media=None, elb=None):
     if output_media == 'console':
         table_data = [['name', elb[0].name]]
-        table_data.append(['dns_name', elb[0].dns_name])
-        table_data.append(['created_time', dash_if_none(elb[0].created_time)])
+        table_data.append(['dns name', elb[0].dns_name])
+        table_data.append(['created time', dash_if_none(elb[0].created_time)])
+        table_data.append(['instances', output_elb_instances(elb[0].instances)])
+        table_data.append(['availability zones', ",".join(elb[0].availability_zones)])
+        table_data.append(['source security group', dash_if_none(elb[0].source_security_group.name)])
+        table_data.append(['security groups', ",".join(elb[0].security_groups)])
+        table_data.append(['subnets', ",".join(elb[0].subnets)])
+        table_data.append(['vpc id', dash_if_none(elb[0].vpc_id)])
+
         table = AsciiTable(table_data)
         table.inner_heading_row_border = False
         table.inner_row_border = False
