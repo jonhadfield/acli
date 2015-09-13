@@ -92,6 +92,7 @@ def output_ec2_info(output_media=None, instance=None):
         #                       private_ip if private_ip else '-',
         #                       instance_profile_out])
         table = AsciiTable(table_data)
+        table.inner_heading_row_border = False
         print(table.table)
 
 
