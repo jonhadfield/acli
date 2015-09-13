@@ -4,8 +4,8 @@ from terminaltables import AsciiTable
 
 def output_ec2(output_type=None, instances=None):
     if output_type == 'console':
-        heading = ['id', 'state', 'type', 'image', 'public ip', 'private ip']
-        table_data = [heading]
+        table_data = [['id', 'state', 'type', 'image',
+                      'public ip', 'private ip', 'profile']]
 
         for instance in instances:
             instance_id = instance[0].id
@@ -14,14 +14,17 @@ def output_ec2(output_type=None, instances=None):
             image_id = instance[0].image_id
             public_ip = instance[0].ip_address
             private_ip = instance[0].private_ip_address
-
+            instance_profile = instance[0].instance_profile
+            instance_profile_out = '-'
+            if instance_profile:
+                instance_profile_out = instance_profile.get('arn').split('/')[-1]
             table_data.append([instance_id,
                                instance_state,
                                instance_type,
                                image_id,
                                public_ip if public_ip else '-',
-                               private_ip if private_ip else '-'])
-
+                               private_ip if private_ip else '-',
+                               instance_profile_out])
         table = AsciiTable(table_data)
         print(table.table)
 
