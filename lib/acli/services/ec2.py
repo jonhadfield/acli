@@ -9,5 +9,8 @@ def get_ec2_conn(aws_config):
 
 def get_ec2_list(aws_config):
     ec2_conn = get_ec2_conn(aws_config)
-    for instance in ec2_conn.get_all_instances():
-        print(instance)
+    reservations = [reservation for reservation in ec2_conn.get_all_instances()]
+    instances = []
+    for reservation in reservations:
+        instances.append(reservation.instances)
+    return instances

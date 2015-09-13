@@ -10,5 +10,5 @@ def get_elb_conn(aws_config):
 
 def get_elb_list(aws_config):
     elb_conn = get_elb_conn(aws_config)
-    for elb in elb_conn.get_all_load_balancers():
-        print(elb)
+    return [elb for elb in elb_conn.get_all_load_balancers()]
+
