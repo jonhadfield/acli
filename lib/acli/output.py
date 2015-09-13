@@ -37,6 +37,7 @@ def output_ec2_list(output_media=None, instances=None):
                                private_ip if private_ip else '-',
                                instance_profile_out])
         table = AsciiTable(table_data)
+        table.title = "EC2 Instances"
         print(table.table)
 
 
@@ -45,14 +46,27 @@ def dash_if_none(item=None):
 
 
 def short_instance_profile(instance_profile):
-    return instance_profile.get('arn').split('/')[-1]
+    if instance_profile:
+        return instance_profile.get('arn').split('/')[-1]
+
+
+def get_sec_group_names(groups=None):
+    sec_group_names = [x.name for x in groups]
+    return ",".join(sec_group_names)
+
+
+def get_interface_ids(interfaces=None):
+    interface_ids = [x.id for x in interfaces]
+    return ",".join(interface_ids)
 
 
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
         table_data = [['id', instance.id]]
-        table_data.append(['groups', str(instance.groups)])
+        table_data.append(['groups', get_sec_group_names(instance.groups)])
+        table_data.append(['public ip', dash_if_none(instance.ip_address)])
         table_data.append(['public dns name', dash_if_none(instance.public_dns_name)])
+        table_data.append(['private ip', dash_if_none(instance.private_ip_address)])
         table_data.append(['private dns name', dash_if_none(instance.private_dns_name)])
         table_data.append(['state', dash_if_none(instance.state)])
         table_data.append(['previous state', dash_if_none(instance.previous_state)])
@@ -66,7 +80,7 @@ def output_ec2_info(output_media=None, instance=None):
         table_data.append(['vpc id', dash_if_none(instance.vpc_id)])
         table_data.append(['root device type', dash_if_none(instance.root_device_type)])
         table_data.append(['state reason', dash_if_none(instance.state_reason)])
-        table_data.append(['interfaces', dash_if_none(str(instance.interfaces))])
+        table_data.append(['interfaces', dash_if_none(get_interface_ids(instance.interfaces))])
         table_data.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
         table_data.append(['instance profile', dash_if_none(short_instance_profile(instance.instance_profile))])
         table = AsciiTable(table_data)
@@ -86,4 +100,5 @@ def output_elb(output_media=None, elbs=None):
             elb_name = elb.name
             table_data.append([elb_id, elb_name])
         table = AsciiTable(table_data)
+        table.title = "ELBs"
         print(table.table)
