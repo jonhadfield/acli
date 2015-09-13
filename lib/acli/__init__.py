@@ -22,7 +22,7 @@ from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb)
 from acli.config import Config
-from acli.output import (output_ec2_list, output_ec2_info, output_elb)
+from acli.output import (output_ec2_list, output_ec2_info, output_elbs, output_elb_info)
 init(autoreset=True)
 
 
@@ -42,7 +42,7 @@ def real_main():
 
     if args.get('elb'):
         if args.get('list'):
-            output_elb(
+            output_elbs(
                 output_media='console',
                 elbs=elb.get_elb_list(aws_config))
         if args.get('info'):
