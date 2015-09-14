@@ -76,6 +76,6 @@ setup(
     keywords=(
         'aws, Python, cli'
     ),
-    tests_require=['pytest', 'moto>=0.4.12'],
+    tests_require=['pytest>=2.7.2', 'moto>=0.4.12', 'docopt>=0.6.2', 'boto>=2.38.0'],
     cmdclass={'test': PyTest},
 )

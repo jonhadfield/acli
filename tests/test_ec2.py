@@ -18,9 +18,6 @@ def ec2():
 
     reservations = conn.run_instances(image_id='ami-12345', min_count=2, max_count=2)
     for i, s in enumerate(reservations.instances):
-        print('here')
-        print(i, s.id)
-        print('end')
         conn.create_tags(
             resource_ids=[s.id],
             tags={'Name': 'BOB'})
@@ -29,5 +26,4 @@ def ec2():
 
 
 def test_ec2_list(ec2):
-    print(ec2.get('servers').instances)
     assert output_ec2_info(output_media='console', instance=ec2.get('servers').instances[0])
