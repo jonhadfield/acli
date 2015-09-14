@@ -3,6 +3,7 @@
 """acli.
 
 Usage:
+  acli [account|acc]
   acli ec2 list
   acli ec2 info <instance_id>
   acli elb list
@@ -22,7 +23,7 @@ Options:
 from __future__ import (absolute_import, print_function)
 from docopt import docopt
 from colorama import init
-from acli.services import (ec2, elb)
+from acli.services import (ec2, elb, account)
 from acli.config import Config
 from acli.output import (output_ec2_list, output_ec2_info,
                          output_elbs, output_elb_info,
@@ -33,6 +34,12 @@ init(autoreset=True)
 def real_main():
     args = docopt(__doc__, version='0.0.1')
     aws_config = Config(args)
+
+    if args.get('account') or args.get('acc'):
+        iam_conn = account.get_iam_conn(aws_config)
+        print(account.get_account_id(iam_conn))
+        print(account.get_account_aliases(iam_conn))
+
     if args.get('ec2'):
         if args.get('list'):
             output_ec2_list(
