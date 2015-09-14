@@ -64,10 +64,16 @@ def output_elb_instances(instances=None):
     instance_ids = [x.id for x in instances]
     return ",".join(instance_ids)
 
+def output_tags(tags):
+    tag_list = []
+    for tag_name, tag_value in tags.iteritems():
+        tag_list.append("{0}:{1}".format(tag_name, tag_value))
+    return ", ".join(tag_list)
 
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
         table_data = [['id', instance.id]]
+        table_data.append(['name', instance.tags.get('Name', '-')])
         table_data.append(['groups', get_sec_group_names(instance.groups)])
         table_data.append(['public ip', dash_if_none(instance.ip_address)])
         table_data.append(['public dns name', dash_if_none(instance.public_dns_name)])
@@ -88,11 +94,13 @@ def output_ec2_info(output_media=None, instance=None):
         table_data.append(['interfaces', dash_if_none(get_interface_ids(instance.interfaces))])
         table_data.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
         table_data.append(['instance profile', dash_if_none(short_instance_profile(instance.instance_profile))])
+        table_data.append(['tags', output_tags(instance.tags)])
         table = AsciiTable(table_data)
         table.inner_heading_row_border = False
         table.inner_row_border = False
         table.title = "Instance Info"
         print(table.table)
+        return True
 
 
 def output_elbs(output_media=None, elbs=None):
@@ -109,7 +117,12 @@ def output_elb_info(output_media=None, elb=None):
     if output_media == 'console':
         table_data = [['name', elb[0].name]]
         table_data.append(['dns name', elb[0].dns_name])
-        table_data.append(['listeners', ",".join(elb[0].listeners)])
+        table_data.append(['listeners', str(elb[0].listeners)])
+        table_data.append(['canonical hosted zone name', dash_if_none(elb[0].canonical_hosted_zone_name)])
+        table_data.append(['canonical hosted zone name id', dash_if_none(elb[0].canonical_hosted_zone_name_id)])
+        table_data.append(['connection', str(elb[0].connection)])
+        table_data.append(['policies', str(elb[0].policies)])
+        table_data.append(['health check', str(elb[0].health_check)])
         table_data.append(['created time', dash_if_none(elb[0].created_time)])
         table_data.append(['instances', output_elb_instances(elb[0].instances)])
         table_data.append(['availability zones', ",".join(elb[0].availability_zones)])
