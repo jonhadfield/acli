@@ -161,30 +161,48 @@ def output_amis(output_media=None, amis=None):
                            table_data=td)
 
 
+def output_block_device_mapping(bdm=None):
+    out = ""
+    for i, (key, value) in enumerate(bdm.iteritems()):
+        out += "{0},{1},{2}".format(key, value.volume_type, value.size)
+        if i < len(bdm)-1:
+            out += "\n"
+    return out
+
+
+def output_ami_permissions(perms=None):
+    out = ""
+    for i, (key, value) in enumerate(perms.iteritems()):
+        out += "{0},{1}".format(key, str(value))
+        if i < len(perms)-1:
+            out += "\n"
+    return out
+
+
 def output_ami_info(output_media=None, ami=None):
     if output_media == 'console':
         td = [['id', ami.id]]
         td.append(['name', ami.name])
         td.append(['creationDate', dash_if_none(ami.creationDate)])
         td.append(['description', dash_if_none(ami.description)])
-        td.append(['block_device_mapping', dash_if_none(str(ami.block_device_mapping))])
-        td.append(['get_launch permissions', dash_if_none(ami.id)])
-        td.append(['get_ramdisk', dash_if_none(ami.id)])
-        td.append(['hypervisor', dash_if_none(ami.id)])
-        td.append(['is_public', dash_if_none(ami.id)])
-        td.append(['kernel_id', dash_if_none(ami.id)])
-        td.append(['location', dash_if_none(ami.id)])
-        td.append(['owner_id', dash_if_none(ami.id)])
-        td.append(['owner_alias', dash_if_none(ami.id)])
-        td.append(['platform', dash_if_none(ami.id)])
-        td.append(['product_codes', dash_if_none(ami.id)])
-        td.append(['ramdisk_id', dash_if_none(ami.id)])
-        td.append(['region', dash_if_none(ami.id)])
-        td.append(['root_device_name', dash_if_none(ami.id)])
-        td.append(['root_device_type', dash_if_none(ami.id)])
-        td.append(['sriov_net_support', dash_if_none(ami.id)])
-        td.append(['state', dash_if_none(ami.id)])
-        td.append(['type', dash_if_none(ami.id)])
-        td.append(['virtualization_type', dash_if_none(ami.id)])
+        td.append(['block_device_mapping', output_block_device_mapping(bdm=ami.block_device_mapping)])
+        td.append(['get launch permissions', output_ami_permissions(ami.get_launch_permissions())])
+        td.append(['get ramdisk', dash_if_none(str(ami.get_ramdisk()))])
+        td.append(['hypervisor', dash_if_none(ami.hypervisor)])
+        td.append(['is_public', dash_if_none(str(ami.is_public))])
+        td.append(['kernel_id', dash_if_none(ami.kernel_id)])
+        td.append(['location', dash_if_none(ami.location)])
+        td.append(['owner_id', dash_if_none(ami.owner_id)])
+        td.append(['owner_alias', dash_if_none(ami.owner_alias)])
+        td.append(['platform', dash_if_none(ami.platform)])
+        td.append(['product codes', ",".join(ami.product_codes)])
+        td.append(['ramdisk_id', dash_if_none(ami.ramdisk_id)])
+        td.append(['region', dash_if_none(str(ami.region.name))])
+        td.append(['root_device_name', dash_if_none(ami.root_device_name)])
+        td.append(['root_device_type', dash_if_none(ami.root_device_type)])
+        td.append(['sriov_net_support', dash_if_none(ami.sriov_net_support)])
+        td.append(['state', dash_if_none(ami.state)])
+        td.append(['type', dash_if_none(ami.type)])
+        td.append(['virtualization_type', dash_if_none(ami.virtualization_type)])
         output_ascii_table(table_title="AMI Info",
                            table_data=td)
