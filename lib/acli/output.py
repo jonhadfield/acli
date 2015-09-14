@@ -2,6 +2,17 @@
 from terminaltables import AsciiTable
 
 
+def output_ascii_table(table_title=None,
+                       table_data=None,
+                       inner_heading_row_border=False,
+                       inner_row_border=False):
+    table = AsciiTable(table_data)
+    table.inner_heading_row_border = inner_heading_row_border
+    table.inner_row_border = inner_row_border
+    table.title = table_title
+    print(table.table)
+
+
 def get_ec2_instance_name_tag(ec2_instance=None,
                               max_length=40):
     instance_name = ec2_instance.tags.get('Name', '-')
@@ -13,9 +24,8 @@ def get_ec2_instance_name_tag(ec2_instance=None,
 
 def output_ec2_list(output_media=None, instances=None):
     if output_media == 'console':
-        table_data = [['id', 'name', 'state', 'type', 'image',
-                      'public ip', 'private ip', 'profile']]
-
+        td = [['id', 'name', 'state', 'type', 'image',
+                'public ip', 'private ip', 'profile']]
         for instance in instances:
             instance_id = instance[0].id
             instance_state = instance[0].state
@@ -28,17 +38,17 @@ def output_ec2_list(output_media=None, instances=None):
             instance_name = get_ec2_instance_name_tag(ec2_instance=instance[0])
             if instance_profile:
                 instance_profile_out = short_instance_profile(instance_profile)
-            table_data.append([instance_id,
-                               instance_name,
-                               instance_state,
-                               instance_type,
-                               image_id,
-                               public_ip if public_ip else '-',
-                               private_ip if private_ip else '-',
-                               instance_profile_out])
-        table = AsciiTable(table_data)
-        table.title = "EC2 Instances"
-        print(table.table)
+            td.append([instance_id,
+                       instance_name,
+                       instance_state,
+                       instance_type,
+                       image_id,
+                       public_ip if public_ip else '-',
+                       private_ip if private_ip else '-',
+                       instance_profile_out])
+        output_ascii_table(table_title="EC2 Instances",
+                           table_data=td,
+                           inner_heading_row_border=True)
 
 
 def dash_if_none(item=None):
@@ -82,109 +92,99 @@ def output_name_tag(tags):
 
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
-        table_data = [['id', instance.id]]
-        table_data.append(['name', instance.tags.get('Name', '-')])
-        table_data.append(['groups', get_sec_group_names(instance.groups)])
-        table_data.append(['public ip', dash_if_none(instance.ip_address)])
-        table_data.append(['public dns name', dash_if_none(instance.public_dns_name)])
-        table_data.append(['private ip', dash_if_none(instance.private_ip_address)])
-        table_data.append(['private dns name', dash_if_none(instance.private_dns_name)])
-        table_data.append(['state', dash_if_none(instance.state)])
-        table_data.append(['previous state', dash_if_none(instance.previous_state)])
-        table_data.append(['key name', dash_if_none(instance.key_name)])
-        table_data.append(['instance type', dash_if_none(instance.instance_type)])
-        table_data.append(['launch time', dash_if_none(instance.launch_time)])
-        table_data.append(['image id', dash_if_none(instance.image_id)])
-        table_data.append(['placement', dash_if_none(instance.placement)])
-        table_data.append(['monitored', dash_if_none(str(instance.monitored))])
-        table_data.append(['subnet id', dash_if_none(instance.subnet_id)])
-        table_data.append(['vpc id', dash_if_none(instance.vpc_id)])
-        table_data.append(['root device type', dash_if_none(instance.root_device_type)])
-        table_data.append(['state reason', dash_if_none(instance.state_reason)])
-        table_data.append(['interfaces', dash_if_none(get_interface_ids(instance.interfaces))])
-        table_data.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
-        table_data.append(['instance profile', dash_if_none(short_instance_profile(instance.instance_profile))])
-        table_data.append(['tags', output_tags(instance.tags)])
-        table = AsciiTable(table_data)
-        table.inner_heading_row_border = False
-        table.inner_row_border = False
-        table.title = "Instance Info"
-        print(table.table)
+        td = [['id', instance.id]]
+        td.append(['name', instance.tags.get('Name', '-')])
+        td.append(['groups', get_sec_group_names(instance.groups)])
+        td.append(['public ip', dash_if_none(instance.ip_address)])
+        td.append(['public dns name', dash_if_none(instance.public_dns_name)])
+        td.append(['private ip', dash_if_none(instance.private_ip_address)])
+        td.append(['private dns name', dash_if_none(instance.private_dns_name)])
+        td.append(['state', dash_if_none(instance.state)])
+        td.append(['previous state', dash_if_none(instance.previous_state)])
+        td.append(['key name', dash_if_none(instance.key_name)])
+        td.append(['instance type', dash_if_none(instance.instance_type)])
+        td.append(['launch time', dash_if_none(instance.launch_time)])
+        td.append(['image id', dash_if_none(instance.image_id)])
+        td.append(['placement', dash_if_none(instance.placement)])
+        td.append(['monitored', dash_if_none(str(instance.monitored))])
+        td.append(['subnet id', dash_if_none(instance.subnet_id)])
+        td.append(['vpc id', dash_if_none(instance.vpc_id)])
+        td.append(['root device type', dash_if_none(instance.root_device_type)])
+        td.append(['state reason', dash_if_none(instance.state_reason)])
+        td.append(['interfaces', dash_if_none(get_interface_ids(instance.interfaces))])
+        td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
+        td.append(['instance profile', dash_if_none(short_instance_profile(instance.instance_profile))])
+        td.append(['tags', output_tags(instance.tags)])
+        output_ascii_table(table_title="Instance Info",
+                           table_data=td)
         return True
 
 
 def output_elbs(output_media=None, elbs=None):
     if output_media == 'console':
-        table_data = [['name', 'instances', 'dns_name']]
+        td = [['name', 'instances', 'dns_name']]
         for elb in elbs:
-            table_data.append([elb.name, str(len(elb.instances)), elb.dns_name])
-        table = AsciiTable(table_data)
-        table.title = "ELBs"
-        print(table.table)
+            td.append([elb.name, str(len(elb.instances)), elb.dns_name])
+        output_ascii_table(table_title="ELBs",
+                           table_data=td,
+                           inner_heading_row_border=True)
 
 
 def output_elb_info(output_media=None, elb=None):
     if output_media == 'console':
-        table_data = [['name', elb[0].name]]
-        table_data.append(['dns name', elb[0].dns_name])
-        table_data.append(['listeners', str(elb[0].listeners)])
-        table_data.append(['canonical hosted zone name', dash_if_none(elb[0].canonical_hosted_zone_name)])
-        table_data.append(['canonical hosted zone name id', dash_if_none(elb[0].canonical_hosted_zone_name_id)])
-        table_data.append(['connection', str(elb[0].connection)])
-        table_data.append(['policies', str(elb[0].policies)])
-        table_data.append(['health check', str(elb[0].health_check)])
-        table_data.append(['created time', dash_if_none(elb[0].created_time)])
-        table_data.append(['instances', output_elb_instances(elb[0].instances)])
-        table_data.append(['availability zones', ",".join(elb[0].availability_zones)])
-        table_data.append(['source security group', dash_if_none(elb[0].source_security_group.name)])
-        table_data.append(['security groups', ",".join(elb[0].security_groups)])
-        table_data.append(['subnets', ",".join(elb[0].subnets)])
-        table_data.append(['vpc id', dash_if_none(elb[0].vpc_id)])
-
-        table = AsciiTable(table_data)
-        table.inner_heading_row_border = False
-        table.inner_row_border = False
-        table.title = "ELB Info"
-        print(table.table)
+        td = [['name', elb[0].name]]
+        td.append(['dns name', elb[0].dns_name])
+        td.append(['listeners', str(elb[0].listeners)])
+        td.append(['canonical hosted zone name', dash_if_none(elb[0].canonical_hosted_zone_name)])
+        td.append(['canonical hosted zone name id', dash_if_none(elb[0].canonical_hosted_zone_name_id)])
+        td.append(['connection', str(elb[0].connection)])
+        td.append(['policies', str(elb[0].policies)])
+        td.append(['health check', str(elb[0].health_check)])
+        td.append(['created time', dash_if_none(elb[0].created_time)])
+        td.append(['instances', output_elb_instances(elb[0].instances)])
+        td.append(['availability zones', ",".join(elb[0].availability_zones)])
+        td.append(['source security group', dash_if_none(elb[0].source_security_group.name)])
+        td.append(['security groups', ",".join(elb[0].security_groups)])
+        td.append(['subnets', ",".join(elb[0].subnets)])
+        td.append(['vpc id', dash_if_none(elb[0].vpc_id)])
+        output_ascii_table(table_title="ELB Info",
+                           table_data=td)
 
 
 def output_amis(output_media=None, amis=None):
     if output_media == 'console':
-        table_data = [['id', 'name', 'created']]
+        td = [['id', 'name', 'created']]
         for ami in amis:
-            table_data.append([ami.id, ami.name, ami.creationDate])
-        table = AsciiTable(table_data)
-        table.title = "AMIs"
-        print(table.table)
+            td.append([ami.id, ami.name, ami.creationDate])
+        output_ascii_table(table_title="AMIs",
+                           inner_heading_row_border=True,
+                           table_data=td)
+
 
 def output_ami_info(output_media=None, ami=None):
     if output_media == 'console':
-        table_data = [['id', ami.id]]
-        table_data.append(['name', ami.name])
-        table_data.append(['creationDate', dash_if_none(ami.creationDate)])
-        table_data.append(['description', dash_if_none(ami.description)])
-        table_data.append(['block_device_mapping', dash_if_none(str(ami.block_device_mapping))])
-        table_data.append(['get_launch permissions', dash_if_none(ami.id)])
-        table_data.append(['get_ramdisk', dash_if_none(ami.id)])
-        table_data.append(['hypervisor', dash_if_none(ami.id)])
-        table_data.append(['is_public', dash_if_none(ami.id)])
-        table_data.append(['kernel_id', dash_if_none(ami.id)])
-        table_data.append(['location', dash_if_none(ami.id)])
-        table_data.append(['owner_id', dash_if_none(ami.id)])
-        table_data.append(['owner_alias', dash_if_none(ami.id)])
-        table_data.append(['platform', dash_if_none(ami.id)])
-        table_data.append(['product_codes', dash_if_none(ami.id)])
-        table_data.append(['ramdisk_id', dash_if_none(ami.id)])
-        table_data.append(['region', dash_if_none(ami.id)])
-        table_data.append(['root_device_name', dash_if_none(ami.id)])
-        table_data.append(['root_device_type', dash_if_none(ami.id)])
-        table_data.append(['sriov_net_support', dash_if_none(ami.id)])
-        table_data.append(['state', dash_if_none(ami.id)])
-        table_data.append(['type', dash_if_none(ami.id)])
-        table_data.append(['virtualization_type', dash_if_none(ami.id)])
-
-        table = AsciiTable(table_data)
-        table.inner_heading_row_border = False
-        table.inner_row_border = False
-        table.title = "AMI Info"
-        print(table.table)
+        td = [['id', ami.id]]
+        td.append(['name', ami.name])
+        td.append(['creationDate', dash_if_none(ami.creationDate)])
+        td.append(['description', dash_if_none(ami.description)])
+        td.append(['block_device_mapping', dash_if_none(str(ami.block_device_mapping))])
+        td.append(['get_launch permissions', dash_if_none(ami.id)])
+        td.append(['get_ramdisk', dash_if_none(ami.id)])
+        td.append(['hypervisor', dash_if_none(ami.id)])
+        td.append(['is_public', dash_if_none(ami.id)])
+        td.append(['kernel_id', dash_if_none(ami.id)])
+        td.append(['location', dash_if_none(ami.id)])
+        td.append(['owner_id', dash_if_none(ami.id)])
+        td.append(['owner_alias', dash_if_none(ami.id)])
+        td.append(['platform', dash_if_none(ami.id)])
+        td.append(['product_codes', dash_if_none(ami.id)])
+        td.append(['ramdisk_id', dash_if_none(ami.id)])
+        td.append(['region', dash_if_none(ami.id)])
+        td.append(['root_device_name', dash_if_none(ami.id)])
+        td.append(['root_device_type', dash_if_none(ami.id)])
+        td.append(['sriov_net_support', dash_if_none(ami.id)])
+        td.append(['state', dash_if_none(ami.id)])
+        td.append(['type', dash_if_none(ami.id)])
+        td.append(['virtualization_type', dash_if_none(ami.id)])
+        output_ascii_table(table_title="AMI Info",
+                           table_data=td)
