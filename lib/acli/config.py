@@ -1,5 +1,7 @@
 from __future__ import (absolute_import, print_function)
 import ConfigParser
+import os
+import sys
 
 
 class Config(object):
@@ -9,14 +11,24 @@ class Config(object):
         self.region = None
         self.config_loader(cli_args)
 
+    def is_config_loaded(self):
+        # Add some validation checks
+        if self.access_key_id and self.secret_access_key and self.region:
+            return True
+
     def config_loader(self, cli_args):
         """ Load configuration from sources in order of precedence:
         CLI, ACLI_CONFIG, BOTO, ENV
         """
         self.from_cli(cli_args)
-        self.from_acli_config_file()
-        self.from_boto_file()
-        self.from_env()
+        if not self.is_config_loaded():
+            self.from_acli_config_file()
+        if not self.is_config_loaded():
+            self.from_boto_file()
+        if not self.is_config_loaded():
+            self.from_env()
+        if not self.is_config_loaded():
+            sys.exit('Could not load configuration.') 
 
     def from_cli(self, cli_args):
         cli_aws_region = cli_args.get('--region')
@@ -36,18 +48,19 @@ class Config(object):
         pass
 
     def from_acli_config_file(self):
-        config_parser = ConfigParser.RawConfigParser()
-        config_parser.read('acli.cfg')
-        file_aws_access_key_id = config_parser.get('main', 'aws_access_key_id')
-        file_aws_secret_access_key_id = config_parser.get('main', 'aws_secret_access_key')
-        file_aws_region = config_parser.get('main', 'aws_region')
+        if os.path.isfile('acli.cfg'):
+            config_parser = ConfigParser.RawConfigParser()
+            config_parser.read('acli.cfg')
+            file_aws_access_key_id = config_parser.get('main', 'aws_access_key_id')
+            file_aws_secret_access_key_id = config_parser.get('main', 'aws_secret_access_key')
+            file_aws_region = config_parser.get('main', 'aws_region')
 
-        if file_aws_access_key_id:
-            self.access_key_id = file_aws_access_key_id
-        if file_aws_secret_access_key_id:
-            self.secret_access_key = file_aws_secret_access_key_id
-        if file_aws_region:
-            self.region = file_aws_region
+            if file_aws_access_key_id:
+                self.access_key_id = file_aws_access_key_id
+            if file_aws_secret_access_key_id:
+                self.secret_access_key = file_aws_secret_access_key_id
+            if file_aws_region:
+                self.region = file_aws_region
 
 
 
