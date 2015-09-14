@@ -7,6 +7,8 @@ Usage:
   acli ec2 info <instance_id>
   acli elb list
   acli elb info <elb_name>
+  acli ami list
+  acli ami info <ami_id>
   acli --version
 
 Options:
@@ -22,7 +24,9 @@ from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb)
 from acli.config import Config
-from acli.output import (output_ec2_list, output_ec2_info, output_elbs, output_elb_info)
+from acli.output import (output_ec2_list, output_ec2_info,
+                         output_elbs, output_elb_info,
+                         output_amis, output_ami_info)
 init(autoreset=True)
 
 
@@ -51,3 +55,13 @@ def real_main():
                                 elb=elb.get_elb(aws_config,
                                                 elb_name=args.get('<elb_name>')))
 
+    if args.get('ami'):
+        if args.get('list'):
+            output_amis(
+                output_media='console',
+                amis=ec2.get_ami_list(aws_config))
+        if args.get('info'):
+            if args.get('<ami_id>'):
+                output_ami_info(output_media='console',
+                                ami=ec2.get_ami(aws_config,
+                                                     ami_id=args.get('<ami_id>')))

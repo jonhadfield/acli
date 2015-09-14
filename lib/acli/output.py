@@ -73,6 +73,12 @@ def output_tags(tags):
         return ", ".join(tag_list)
     return "-"
 
+def output_name_tag(tags):
+    for tag_name, tag_value in tags.iteritems():
+        if tag_name == 'Name':
+            return tag_value
+    return "-"
+
 
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
@@ -141,3 +147,44 @@ def output_elb_info(output_media=None, elb=None):
         table.title = "ELB Info"
         print(table.table)
 
+
+def output_amis(output_media=None, amis=None):
+    if output_media == 'console':
+        table_data = [['id', 'name', 'created']]
+        for ami in amis:
+            table_data.append([ami.id, ami.name, ami.creationDate])
+        table = AsciiTable(table_data)
+        table.title = "AMIs"
+        print(table.table)
+
+def output_ami_info(output_media=None, ami=None):
+    if output_media == 'console':
+        table_data = [['id', ami.id]]
+        table_data.append(['name', ami.name])
+        table_data.append(['creationDate', dash_if_none(ami.creationDate)])
+        table_data.append(['description', dash_if_none(ami.description)])
+        table_data.append(['block_device_mapping', dash_if_none(str(ami.block_device_mapping))])
+        table_data.append(['get_launch permissions', dash_if_none(ami.id)])
+        table_data.append(['get_ramdisk', dash_if_none(ami.id)])
+        table_data.append(['hypervisor', dash_if_none(ami.id)])
+        table_data.append(['is_public', dash_if_none(ami.id)])
+        table_data.append(['kernel_id', dash_if_none(ami.id)])
+        table_data.append(['location', dash_if_none(ami.id)])
+        table_data.append(['owner_id', dash_if_none(ami.id)])
+        table_data.append(['owner_alias', dash_if_none(ami.id)])
+        table_data.append(['platform', dash_if_none(ami.id)])
+        table_data.append(['product_codes', dash_if_none(ami.id)])
+        table_data.append(['ramdisk_id', dash_if_none(ami.id)])
+        table_data.append(['region', dash_if_none(ami.id)])
+        table_data.append(['root_device_name', dash_if_none(ami.id)])
+        table_data.append(['root_device_type', dash_if_none(ami.id)])
+        table_data.append(['sriov_net_support', dash_if_none(ami.id)])
+        table_data.append(['state', dash_if_none(ami.id)])
+        table_data.append(['type', dash_if_none(ami.id)])
+        table_data.append(['virtualization_type', dash_if_none(ami.id)])
+
+        table = AsciiTable(table_data)
+        table.inner_heading_row_border = False
+        table.inner_row_border = False
+        table.title = "AMI Info"
+        print(table.table)
