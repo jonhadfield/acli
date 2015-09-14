@@ -53,6 +53,7 @@ setup(
     install_requires=['docopt==0.6.2',
                       'colorama==0.3.3',
                       'boto>=2.38.0',
+                      'requests>=2.7.0',
                       'terminaltables>=1.2.1'],
     description='A CLI to manage AWS resources',
     long_description=long_description,
@@ -76,6 +77,6 @@ setup(
     keywords=(
         'aws, Python, cli'
     ),
-    tests_require=['pytest>=2.7.2', 'moto>=0.4.12', 'docopt>=0.6.2', 'boto>=2.38.0'],
+    tests_require=['requests>=2.7.0', 'pytest-cov>=2.1.0', 'pytest>=2.7.2', 'moto>=0.4.12', 'docopt>=0.6.2', 'boto>=2.38.0'],
     cmdclass={'test': PyTest},
 )
