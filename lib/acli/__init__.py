@@ -3,7 +3,7 @@
 """acli.
 
 Usage:
-  acli [account|acc]
+  acli account
   acli ec2 list
   acli ec2 info <instance_id>
   acli elb list
@@ -35,7 +35,7 @@ def real_main():
     args = docopt(__doc__, version='0.0.1')
     aws_config = Config(args)
 
-    if args.get('account') or args.get('acc'):
+    if args.get('account'):
         iam_conn = account.get_iam_conn(aws_config)
         print(account.get_account_id(iam_conn))
         print(account.get_account_aliases(iam_conn))
