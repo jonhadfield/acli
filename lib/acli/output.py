@@ -64,11 +64,15 @@ def output_elb_instances(instances=None):
     instance_ids = [x.id for x in instances]
     return ",".join(instance_ids)
 
+
 def output_tags(tags):
     tag_list = []
     for tag_name, tag_value in tags.iteritems():
         tag_list.append("{0}:{1}".format(tag_name, tag_value))
-    return ", ".join(tag_list)
+    if tag_list:
+        return ", ".join(tag_list)
+    return "-"
+
 
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
