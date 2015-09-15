@@ -37,8 +37,8 @@ def real_main():
 
     if args.get('account'):
         iam_conn = account.get_iam_conn(aws_config)
-        print(account.get_account_id(iam_conn))
-        print(account.get_account_aliases(iam_conn))
+        print("alias: {0} | id: {1}".format(", ".join(account.get_account_aliases(iam_conn)),
+                                            account.get_account_id(iam_conn)))
 
     if args.get('ec2'):
         if args.get('list'):
