@@ -15,7 +15,32 @@ def _get_cpu_utilisation_avg(conn=None, instance_id=None, period=None):
                    'CPUUtilization',
                    'AWS/EC2',
                    'Average',
-                   dimensions={'InstanceId': instance_id})
+                   dimensions={'InstanceId': instance_id},
+                   unit='Percent')
+    return stat
+
+
+def _get_network_in_utilisation_avg(conn=None, instance_id=None, period=None):
+    stat = conn.get_metric_statistics(
+                   period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
+                   datetime.datetime.utcnow(),
+                   'NetworkIn',
+                   'AWS/EC2',
+                   'Average',
+                   dimensions={'InstanceId': instance_id},
+                   unit='Kilobits/Second')
+    return stat
+
+
+def _get_network_out_utilisation_avg(conn=None, instance_id=None, period=None):
+    stat = conn.get_metric_statistics(
+                   period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
+                   datetime.datetime.utcnow(),
+                   'NetworkOut',
+                   'AWS/EC2',
+                   'Average',
+                   dimensions={'InstanceId': instance_id},
+                   unit='Kilobits/Second')
     return stat
 
 
@@ -40,3 +65,34 @@ def get_ec2_cpu_stats(aws_config=None, instance_id=None):
     return {'one_min': one_min,
             'five_mins': five_mins,
             'fifteen_mins': fifteen_mins}
+
+
+def get_ec2_network_stats(aws_config=None, instance_id=None):
+    conn = get_cw_conn(aws_config)
+    one_hour_in, six_hours_in, twelve_hours_in = "-", "-", "-"
+    one_hour_out, six_hours_out, twelve_hours_out = "-", "-", "-"
+    _one_hour_in = _get_network_in_utilisation_avg(conn, instance_id=instance_id, period=3600)
+    if _one_hour_in:
+        one_hour_in = round_to_two(_one_hour_in[0].get('Average'))
+    _six_hours_in = _get_network_in_utilisation_avg(conn, instance_id=instance_id, period=21600)
+    if _six_hours_in:
+        six_hours_in = round_to_two(_six_hours_in[0].get('Average'))
+    _twelve_hours_in = _get_network_in_utilisation_avg(conn, instance_id=instance_id, period=43200)
+    if _twelve_hours_in:
+        twelve_hours_in = round_to_two(_twelve_hours_in[0].get('Average'))
+    _one_hour_out = _get_network_out_utilisation_avg(conn, instance_id=instance_id, period=3600)
+    if _one_hour_out:
+        one_hour_out = round_to_two(_one_hour_out[0].get('Average'))
+    _six_hours_out = _get_network_out_utilisation_avg(conn, instance_id=instance_id, period=21600)
+    if _six_hours_out:
+        six_hours_out = round_to_two(_six_hours_out[0].get('Average'))
+    _twelve_hours_out = _get_network_out_utilisation_avg(conn, instance_id=instance_id, period=43200)
+    if _twelve_hours_out:
+        twelve_hours_out = round_to_two(_twelve_hours_out[0].get('Average'))
+    return {'one_hour_in': one_hour_in,
+            'six_hours_in': six_hours_in,
+            'twelve_hours_in': twelve_hours_in,
+            'one_hour_out': one_hour_out,
+            'six_hours_out': six_hours_out,
+            'twelve_hours_out': twelve_hours_out}
+
