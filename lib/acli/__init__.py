@@ -6,6 +6,7 @@ Usage:
   acli account
   acli ec2 list
   acli ec2 info <instance_id>
+  acli ec2 stats <instance_id>
   acli elb list
   acli elb info <elb_name>
   acli ami list
@@ -23,9 +24,11 @@ Options:
 from __future__ import (absolute_import, print_function)
 from docopt import docopt
 from colorama import init
-from acli.services import (ec2, elb, account)
+from acli.services import (ec2, elb, account, cloudwatch)
 from acli.config import Config
-from acli.output.ec2 import (output_ec2_list, output_ec2_info, output_amis, output_ami_info)
+from acli.output.ec2 import (output_ec2_list, output_ec2_info,
+                             output_amis, output_ami_info)
+from acli.output.cloudwatch import output_ec2_stats
 from acli.output.elb import (output_elbs, output_elb_info)
 init(autoreset=True)
 
@@ -49,6 +52,12 @@ def real_main():
                 output_ec2_info(output_media='console',
                                 instance=ec2.get_ec2_instance(aws_config,
                                                               instance_id=args.get('<instance_id>')))
+        if args.get('stats'):
+            output_ec2_stats(output_media='console',
+                             instance=ec2.get_ec2_instance(aws_config,
+                                                           instance_id=args.get('<instance_id>')),
+                             cpu_stats=cloudwatch.get_ec2_cpu_stats(aws_config=aws_config,
+                                                                    instance_id=args.get('<instance_id>')))
 
     if args.get('elb'):
         if args.get('list'):
