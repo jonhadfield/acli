@@ -27,8 +27,7 @@ def _get_network_in_utilisation_avg(conn=None, instance_id=None, period=None):
                    'NetworkIn',
                    'AWS/EC2',
                    'Average',
-                   dimensions={'InstanceId': instance_id},
-                   unit='Kilobits/Second')
+                   dimensions={'InstanceId': instance_id})
     return stat
 
 
@@ -39,8 +38,7 @@ def _get_network_out_utilisation_avg(conn=None, instance_id=None, period=None):
                    'NetworkOut',
                    'AWS/EC2',
                    'Average',
-                   dimensions={'InstanceId': instance_id},
-                   unit='Kilobits/Second')
+                   dimensions={'InstanceId': instance_id})
     return stat
 
 
@@ -50,21 +48,19 @@ def round_to_two(num=None):
 
 def get_ec2_cpu_stats(aws_config=None, instance_id=None):
     conn = get_cw_conn(aws_config)
-    one_min = "-"
-    five_mins = "-"
-    fifteen_mins = "-"
-    _one_min = _get_cpu_utilisation_avg(conn, instance_id=instance_id, period=60)
-    if _one_min:
-        one_min = round_to_two(_one_min[0].get('Average'))
-    _five_mins = _get_cpu_utilisation_avg(conn, instance_id=instance_id, period=300)
-    if _five_mins:
-        five_mins = round_to_two(_five_mins[0].get('Average'))
+    fifteen_mins, thirty_mins, one_hour = "-", "-", "-"
     _fifteen_mins = _get_cpu_utilisation_avg(conn, instance_id=instance_id, period=900)
     if _fifteen_mins:
         fifteen_mins = round_to_two(_fifteen_mins[0].get('Average'))
-    return {'one_min': one_min,
-            'five_mins': five_mins,
-            'fifteen_mins': fifteen_mins}
+    _thirty_mins = _get_cpu_utilisation_avg(conn, instance_id=instance_id, period=1800)
+    if _thirty_mins:
+        thirty_mins = round_to_two(_thirty_mins[0].get('Average'))
+    _one_hour = _get_cpu_utilisation_avg(conn, instance_id=instance_id, period=3600)
+    if _one_hour:
+        one_hour = round_to_two(_one_hour[0].get('Average'))
+    return {'fifteen_mins': fifteen_mins,
+            'thirty_mins': thirty_mins,
+            'one_hour': one_hour}
 
 
 def get_ec2_network_stats(aws_config=None, instance_id=None):
