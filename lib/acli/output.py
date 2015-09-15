@@ -24,8 +24,9 @@ def get_ec2_instance_name_tag(ec2_instance=None,
 
 def output_ec2_list(output_media=None, instances=None):
     if output_media == 'console':
-        td = [['id', 'name', 'state', 'type', 'image',
-                'public ip', 'private ip', 'profile']]
+        td = list()
+        td.append(['id', 'name', 'state', 'type', 'image',
+                   'public ip', 'private ip', 'profile'])
         for instance in instances:
             instance_id = instance[0].id
             instance_state = instance[0].state
@@ -83,6 +84,7 @@ def output_tags(tags):
         return ", ".join(tag_list)
     return "-"
 
+
 def output_name_tag(tags):
     for tag_name, tag_value in tags.iteritems():
         if tag_name == 'Name':
@@ -92,7 +94,8 @@ def output_name_tag(tags):
 
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
-        td = [['id', instance.id]]
+        td = list()
+        td.append(['id', instance.id])
         td.append(['name', instance.tags.get('Name', '-')])
         td.append(['groups', get_sec_group_names(instance.groups)])
         td.append(['public ip', dash_if_none(instance.ip_address)])
@@ -132,7 +135,8 @@ def output_elbs(output_media=None, elbs=None):
 
 def output_elb_info(output_media=None, elb=None):
     if output_media == 'console':
-        td = [['name', elb[0].name]]
+        td = list()
+        td.append(['name', elb[0].name])
         td.append(['dns name', elb[0].dns_name])
         td.append(['listeners', str(elb[0].listeners)])
         td.append(['canonical hosted zone name', dash_if_none(elb[0].canonical_hosted_zone_name)])
@@ -181,7 +185,8 @@ def output_ami_permissions(perms=None):
 
 def output_ami_info(output_media=None, ami=None):
     if output_media == 'console':
-        td = [['id', ami.id]]
+        td = list()
+        td.append(['id', ami.id])
         td.append(['name', ami.name])
         td.append(['creationDate', dash_if_none(ami.creationDate)])
         td.append(['description', dash_if_none(ami.description)])
