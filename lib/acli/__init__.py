@@ -25,9 +25,8 @@ from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb, account)
 from acli.config import Config
-from acli.output import (output_ec2_list, output_ec2_info,
-                         output_elbs, output_elb_info,
-                         output_amis, output_ami_info)
+from acli.output.ec2 import (output_ec2_list, output_ec2_info, output_amis, output_ami_info)
+from acli.output.elb import (output_elbs, output_elb_info)
 init(autoreset=True)
 
 

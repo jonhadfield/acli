@@ -14,4 +14,3 @@ def get_account_aliases(iam_conn):
 
 def get_account_id(iam_conn):
     return iam_conn.get_user()['get_user_response']['get_user_result']['user']['arn'].split(':')[4]
-
