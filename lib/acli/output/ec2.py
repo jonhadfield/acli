@@ -14,7 +14,7 @@ def output_ec2_list(output_media=None, instances=None):
     if output_media == 'console':
         td = list()
         td.append(['id', 'name', 'state', 'type', 'image',
-                   'public ip', 'private ip', 'profile'])
+                   'public ip', 'private ip'])
         for instance in instances:
             instance_id = instance[0].id
             instance_state = instance[0].state
@@ -22,19 +22,14 @@ def output_ec2_list(output_media=None, instances=None):
             image_id = instance[0].image_id
             public_ip = instance[0].ip_address
             private_ip = instance[0].private_ip_address
-            instance_profile = instance[0].instance_profile
-            instance_profile_out = '-'
             instance_name = get_ec2_instance_name_tag(ec2_instance=instance[0])
-            if instance_profile:
-                instance_profile_out = short_instance_profile(instance_profile)
             td.append([instance_id,
                        instance_name,
                        instance_state,
                        instance_type,
                        image_id,
                        public_ip if public_ip else '-',
-                       private_ip if private_ip else '-',
-                       instance_profile_out])
+                       private_ip if private_ip else '-'])
         output_ascii_table(table_title="EC2 Instances",
                            table_data=td,
                            inner_heading_row_border=True)
