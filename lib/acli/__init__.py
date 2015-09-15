@@ -71,4 +71,4 @@ def real_main():
             if args.get('<ami_id>'):
                 output_ami_info(output_media='console',
                                 ami=ec2.get_ami(aws_config,
-                                                     ami_id=args.get('<ami_id>')))
+                                                ami_id=args.get('<ami_id>')))
