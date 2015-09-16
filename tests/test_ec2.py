@@ -1,10 +1,7 @@
 from __future__ import (absolute_import, print_function)
-from acli.services import (ec2, elb)
-from acli.config import Config
-from acli.output import (output_ec2_list, output_ec2_info, output_elbs, output_elb_info)
+from acli.output.ec2 import (output_ec2_info)
 from moto import mock_ec2
 import pytest
-import boto.ec2
 from boto.ec2.tag import Tag
 import boto
 
