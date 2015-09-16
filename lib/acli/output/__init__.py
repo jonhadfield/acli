@@ -21,7 +21,7 @@ def output_tags(tags):
     for tag_name, tag_value in tags.iteritems():
         tag_list.append("{0}:{1}".format(tag_name, tag_value))
     if tag_list:
-        return ", ".join(tag_list)
+        return ",\n".join(tag_list)
     return "-"
 
 
