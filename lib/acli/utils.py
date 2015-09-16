@@ -13,7 +13,7 @@ def install_completion():
         if os.path.exists(BASH_COMPLETION_PATH_OSX):
             with open("{0}/acli".format(BASH_COMPLETION_PATH_OSX), 'w') as acli_file:
                 acli_file.write(base64.b64decode(BASH_COMPLETION_SCRIPT))
-        sys.exit("OS X detected.")
+        sys.exit("bash completion script written to: {0}/acli".format(BASH_COMPLETION_PATH_OSX))
     elif platform.system() == 'Linux':
         sys.exit("Linux detected.")
     else:
