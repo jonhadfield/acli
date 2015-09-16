@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, print_function)
 import boto.ec2
-from acli.output.ec2 import output_ec2_list, output_ec2_info
+from acli.output.ec2 import (output_ec2_list, output_ec2_info,
+                             output_amis, output_ami_info)
 
 
 def get_ec2_conn(aws_config):
@@ -26,9 +27,8 @@ def get_ec2_instance(aws_config, instance_id=None):
 
 
 def ec2_list(aws_config):
-    output_ec2_list(
-        output_media='console',
-        instances=get_ec2_list(aws_config))
+    output_ec2_list(output_media='console',
+                    instances=get_ec2_list(aws_config))
 
 
 def ec2_info(aws_config=None, instance_id=None):
@@ -39,6 +39,17 @@ def ec2_info(aws_config=None, instance_id=None):
 def get_ami_list(aws_config):
     ec2_conn = get_ec2_conn(aws_config)
     return ec2_conn.get_all_images(owners=['self'])
+
+
+def ami_info(aws_config=None, ami_id=None):
+    output_ami_info(output_media='console',
+                    ami=get_ami(aws_config,
+                                ami_id=ami_id))
+
+
+def list_amis(aws_config):
+    output_amis(output_media='console',
+                amis=get_ami_list(aws_config))
 
 
 def get_ami(aws_config, ami_id=None):

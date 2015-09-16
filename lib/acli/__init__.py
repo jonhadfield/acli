@@ -59,11 +59,7 @@ def real_main():
 
     if args.get('ami'):
         if args.get('list'):
-            output_amis(
-                output_media='console',
-                amis=ec2.get_ami_list(aws_config))
+            ec2.list_amis(aws_config)
         if args.get('info'):
-            if args.get('<ami_id>'):
-                output_ami_info(output_media='console',
-                                ami=ec2.get_ami(aws_config,
-                                                ami_id=args.get('<ami_id>')))
+            ec2.ami_info(aws_config, ami_id=args.get('<ami_id>'))
+
