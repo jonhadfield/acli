@@ -47,17 +47,8 @@ def real_main():
             ec2.ec2_list(aws_config)
         if args.get('info'):
             ec2.ec2_info(aws_config, instance_id=args.get('<instance_id>'))
-
         if args.get('stats'):
             ec2.ec2_stats(aws_config=aws_config, instance_id=args.get('<instance_id>'))
-            output_ec2_stats(output_media='console',
-                             instance=ec2.get_ec2_instance(aws_config,
-                                                           instance_id=args.get('<instance_id>')),
-                             cpu_stats=cloudwatch.get_ec2_cpu_stats(aws_config=aws_config,
-                                                                    instance_id=args.get('<instance_id>')),
-                             network_stats=cloudwatch.get_ec2_network_stats(aws_config=aws_config,
-                                                                            instance_id=args.get('<instance_id>'))
-                             )
 
     if args.get('elb'):
         if args.get('list'):

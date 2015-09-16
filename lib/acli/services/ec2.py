@@ -1,5 +1,6 @@
 import boto.ec2
 from acli.output.ec2 import output_ec2_list, output_ec2_info
+from acli.output.cloudwatch import output_ec2_stats
 
 
 def get_ec2_conn(aws_config):
@@ -40,6 +41,7 @@ def get_ec2_stats(aws_config, instance_id=None):
         ec2_conn = get_ec2_conn(aws_config)
         reservations = ec2_conn.get_all_instances(instance_ids=[instance_id])
         return reservations[0].instances[0]
+
 
 
 def get_ami_list(aws_config):
