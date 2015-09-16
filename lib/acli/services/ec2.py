@@ -1,4 +1,5 @@
 import boto.ec2
+from acli.output.ec2 import output_ec2_list, output_ec2_info
 
 
 def get_ec2_conn(aws_config):
@@ -21,6 +22,17 @@ def get_ec2_instance(aws_config, instance_id=None):
         ec2_conn = get_ec2_conn(aws_config)
         reservations = ec2_conn.get_all_instances(instance_ids=[instance_id])
         return reservations[0].instances[0]
+
+
+def ec2_list(aws_config):
+    output_ec2_list(
+        output_media='console',
+        instances=get_ec2_list(aws_config))
+
+
+def ec2_info(aws_config=None, instance_id=None):
+    output_ec2_info(output_media='console',
+                    instance=get_ec2_instance(aws_config, instance_id=instance_id))
 
 
 def get_ec2_stats(aws_config, instance_id=None):

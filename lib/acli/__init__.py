@@ -44,15 +44,12 @@ def real_main():
 
     if args.get('ec2'):
         if args.get('list'):
-            output_ec2_list(
-                output_media='console',
-                instances=ec2.get_ec2_list(aws_config))
+            ec2.ec2_list(aws_config)
         if args.get('info'):
-            if args.get('<instance_id>'):
-                output_ec2_info(output_media='console',
-                                instance=ec2.get_ec2_instance(aws_config,
-                                                              instance_id=args.get('<instance_id>')))
+            ec2.ec2_info(aws_config, instance_id=args.get('<instance_id>'))
+
         if args.get('stats'):
+            ec2.ec2_stats(aws_config=aws_config, instance_id=args.get('<instance_id>'))
             output_ec2_stats(output_media='console',
                              instance=ec2.get_ec2_instance(aws_config,
                                                            instance_id=args.get('<instance_id>')),
