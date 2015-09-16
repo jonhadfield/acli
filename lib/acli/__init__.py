@@ -12,6 +12,7 @@ Usage:
   acli ami list
   acli ami info <ami_id>
   acli --version
+  acli --install-completion
 
 Options:
   -h --help                             show this help message and exit
@@ -30,11 +31,16 @@ from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_amis, output_ami_info)
 from acli.output.cloudwatch import output_ec2_stats
 from acli.output.elb import (output_elbs, output_elb_info)
+from acli import utils
 init(autoreset=True)
 
 
 def real_main():
     args = docopt(__doc__, version='0.0.1')
+
+    if args.get('--install-completion'):
+        utils.install_completion()
+
     aws_config = Config(args)
 
     if args.get('account'):
@@ -62,4 +68,3 @@ def real_main():
             ec2.list_amis(aws_config)
         if args.get('info'):
             ec2.ami_info(aws_config, ami_id=args.get('<ami_id>'))
-
