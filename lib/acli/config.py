@@ -12,7 +12,6 @@ class Config(object):
         self.config_loader(cli_args)
 
     def is_config_loaded(self):
-        # Add some validation checks
         if self.access_key_id and self.secret_access_key and self.region:
             return True
 
@@ -61,6 +60,3 @@ class Config(object):
                 self.secret_access_key = file_aws_secret_access_key_id
             if file_aws_region:
                 self.region = file_aws_region
-
-
-

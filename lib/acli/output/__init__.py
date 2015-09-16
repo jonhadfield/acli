@@ -1,4 +1,3 @@
-# from tabulate import tabulate
 from terminaltables import AsciiTable
 
 

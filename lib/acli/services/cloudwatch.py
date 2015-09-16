@@ -1,3 +1,4 @@
+from __future__ import (absolute_import, print_function)
 import datetime
 import boto.ec2.cloudwatch as cw
 from acli.output.cloudwatch import output_ec2_stats

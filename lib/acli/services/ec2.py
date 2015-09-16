@@ -1,3 +1,4 @@
+from __future__ import (absolute_import, print_function)
 import boto.ec2
 from acli.output.ec2 import output_ec2_list, output_ec2_info
 
