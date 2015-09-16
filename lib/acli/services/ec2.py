@@ -36,13 +36,6 @@ def ec2_info(aws_config=None, instance_id=None):
                     instance=get_ec2_instance(aws_config, instance_id=instance_id))
 
 
-def get_ec2_stats(aws_config, instance_id=None):
-    if instance_id:
-        ec2_conn = get_ec2_conn(aws_config)
-        reservations = ec2_conn.get_all_instances(instance_ids=[instance_id])
-        return reservations[0].instances[0]
-
-
 def get_ami_list(aws_config):
     ec2_conn = get_ec2_conn(aws_config)
     return ec2_conn.get_all_images(owners=['self'])

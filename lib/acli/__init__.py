@@ -48,7 +48,7 @@ def real_main():
         if args.get('info'):
             ec2.ec2_info(aws_config, instance_id=args.get('<instance_id>'))
         if args.get('stats'):
-            ec2.ec2_stats(aws_config=aws_config, instance_id=args.get('<instance_id>'))
+            cloudwatch.ec2_stats(aws_config=aws_config, instance_id=args.get('<instance_id>'))
 
     if args.get('elb'):
         if args.get('list'):
@@ -56,7 +56,6 @@ def real_main():
 
         if args.get('info'):
             elb.elb_info(aws_config, elb_name=args.get('<elb_name>'))
-
 
     if args.get('ami'):
         if args.get('list'):
