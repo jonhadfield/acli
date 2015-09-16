@@ -52,14 +52,11 @@ def real_main():
 
     if args.get('elb'):
         if args.get('list'):
-            output_elbs(
-                output_media='console',
-                elbs=elb.get_elb_list(aws_config))
+            elb.elb_list(aws_config)
+
         if args.get('info'):
-            if args.get('<elb_name>'):
-                output_elb_info(output_media='console',
-                                elb=elb.get_elb(aws_config,
-                                                elb_name=args.get('<elb_name>')))
+            elb.elb_info(aws_config, elb_name=args.get('<elb_name>'))
+
 
     if args.get('ami'):
         if args.get('list'):

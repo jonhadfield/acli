@@ -12,35 +12,35 @@ def get_cw_conn(aws_config):
 
 def _get_cpu_utilisation_avg(conn=None, instance_id=None, period=None):
     stat = conn.get_metric_statistics(
-                   period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
-                   datetime.datetime.utcnow(),
-                   'CPUUtilization',
-                   'AWS/EC2',
-                   'Average',
-                   dimensions={'InstanceId': instance_id},
-                   unit='Percent')
+        period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
+        datetime.datetime.utcnow(),
+        'CPUUtilization',
+        'AWS/EC2',
+        'Average',
+        dimensions={'InstanceId': instance_id},
+        unit='Percent')
     return stat
 
 
 def _get_network_in_utilisation_avg(conn=None, instance_id=None, period=None):
     stat = conn.get_metric_statistics(
-                   period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
-                   datetime.datetime.utcnow(),
-                   'NetworkIn',
-                   'AWS/EC2',
-                   'Average',
-                   dimensions={'InstanceId': instance_id})
+        period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
+        datetime.datetime.utcnow(),
+        'NetworkIn',
+        'AWS/EC2',
+        'Average',
+        dimensions={'InstanceId': instance_id})
     return stat
 
 
 def _get_network_out_utilisation_avg(conn=None, instance_id=None, period=None):
     stat = conn.get_metric_statistics(
-                   period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
-                   datetime.datetime.utcnow(),
-                   'NetworkOut',
-                   'AWS/EC2',
-                   'Average',
-                   dimensions={'InstanceId': instance_id})
+        period, datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
+        datetime.datetime.utcnow(),
+        'NetworkOut',
+        'AWS/EC2',
+        'Average',
+        dimensions={'InstanceId': instance_id})
     return stat
 
 
@@ -71,9 +71,9 @@ def ec2_stats(aws_config=None, instance_id=None):
                                                instance_id=instance_id),
                      cpu_stats=get_ec2_cpu_stats(aws_config=aws_config,
                                                  instance_id=instance_id),
-                                                 network_stats=get_ec2_network_stats(aws_config=aws_config,
-                                                                                     instance_id=instance_id)
-                             )
+                     network_stats=get_ec2_network_stats(aws_config=aws_config,
+                                                         instance_id=instance_id)
+                     )
 
 
 def get_ec2_network_stats(aws_config=None, instance_id=None):
@@ -104,4 +104,3 @@ def get_ec2_network_stats(aws_config=None, instance_id=None):
             'one_hour_out': one_hour_out,
             'six_hours_out': six_hours_out,
             'twelve_hours_out': twelve_hours_out}
-
