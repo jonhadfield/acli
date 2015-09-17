@@ -17,6 +17,21 @@ def output_elbs(output_media=None, elbs=None):
                            inner_heading_row_border=True)
 
 
+def get_elb_policies(policies=None):
+    output = "-"
+    if policies.app_cookie_stickiness_policies:
+        for acsp in policies.app_cookie_stickiness_policies:
+            output += "{0}\n".format(str(acsp))
+    if policies.lb_cookie_stickiness_policies:
+        for lcsp in policies.lb_cookie_stickiness_policies:
+            output += "{0}\n".format(str(lcsp))
+    if policies.other_policies:
+        for op in policies.lb_cookie_stickiness_policies:
+            output += "{0}\n".format(str(op))
+    print(output)
+    return output[-1]
+
+
 def output_elb_info(output_media=None, elb=None):
     if output_media == 'console':
         td = list()
@@ -26,7 +41,7 @@ def output_elb_info(output_media=None, elb=None):
         td.append(['canonical hosted zone name', dash_if_none(elb[0].canonical_hosted_zone_name)])
         td.append(['canonical hosted zone name id', dash_if_none(elb[0].canonical_hosted_zone_name_id)])
         td.append(['connection', str(elb[0].connection)])
-        td.append(['policies', str(elb[0].policies)])
+        td.append(['policies', get_elb_policies(elb[0].policies)])
         td.append(['health check', str(elb[0].health_check)])
         td.append(['created time', dash_if_none(elb[0].created_time)])
         td.append(['instances', output_elb_instances(elb[0].instances)])
