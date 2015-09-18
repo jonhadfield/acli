@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-usage: acli [--version]  [--help]
-            <command>  [<args>...]
+usage: acli [--version] [--help]
+            <command> [<args>...]
 
 options:
    -h, --help  help
