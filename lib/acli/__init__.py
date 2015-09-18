@@ -4,7 +4,6 @@
 usage: acli [--version]  [--help]
             <command>  [<args>...]
 
-
 options:
    -h, --help  help
 
