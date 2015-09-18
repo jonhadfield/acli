@@ -1,5 +1,5 @@
 from __future__ import (absolute_import, print_function)
-from acli.output.ec2 import (output_ec2_info)
+from acli.output.ec2 import (output_ec2_list, output_ec2_info)
 from moto import mock_ec2
 import pytest
 from boto.ec2.tag import Tag
@@ -24,6 +24,9 @@ def ec2():
 
 def test_ec2_list(ec2):
     with pytest.raises(SystemExit):
+        assert output_ec2_list(output_media='console')
+
+
+def test_ec2_info(ec2):
+    with pytest.raises(SystemExit):
         assert output_ec2_info(output_media='console', instance=ec2.get('servers').instances[0])
-
-
