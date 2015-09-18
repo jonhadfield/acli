@@ -2,7 +2,7 @@ from __future__ import (absolute_import, print_function)
 from acli.output import output_ascii_table, dash_if_none
 
 
-def output_elb_instances(instances=None):
+def get_elb_instances(instances=None):
     instance_ids = [x.id for x in instances]
     return ",".join(instance_ids)
 
@@ -15,6 +15,7 @@ def output_elbs(output_media=None, elbs=None):
         output_ascii_table(table_title="ELBs",
                            table_data=td,
                            inner_heading_row_border=True)
+    exit(0)
 
 
 def get_elb_policies(policies=None):
@@ -52,7 +53,7 @@ def output_elb_info(output_media=None, elb=None):
         td.append(['policies', dash_if_none(get_elb_policies(elb[0].policies))])
         td.append(['health check', str(elb[0].health_check)])
         td.append(['created time', dash_if_none(elb[0].created_time)])
-        td.append(['instances', output_elb_instances(elb[0].instances)])
+        td.append(['instances', get_elb_instances(elb[0].instances)])
         td.append(['availability zones', ",".join(elb[0].availability_zones)])
         td.append(['source security group', dash_if_none(elb[0].source_security_group.name)])
         td.append(['security groups', ",".join(elb[0].security_groups)])
@@ -60,3 +61,4 @@ def output_elb_info(output_media=None, elb=None):
         td.append(['vpc id', dash_if_none(elb[0].vpc_id)])
         output_ascii_table(table_title="ELB Info",
                            table_data=td)
+    exit(0)

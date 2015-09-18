@@ -9,3 +9,4 @@ def output_account_info(output_media=None, account_id=None, account_aliases=None
         td.append(['aliases', dash_if_none(", ".join(account_aliases))])
         output_ascii_table(table_title="Account Info",
                            table_data=td)
+    exit(0)

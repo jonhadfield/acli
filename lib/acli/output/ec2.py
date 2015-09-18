@@ -34,6 +34,7 @@ def output_ec2_list(output_media=None, instances=None):
         output_ascii_table(table_title="EC2 Instances",
                            table_data=td,
                            inner_heading_row_border=True)
+    exit(0)
 
 
 def short_instance_profile(instance_profile):
@@ -79,7 +80,7 @@ def output_ec2_info(output_media=None, instance=None):
         td.append(['tags', output_tags(instance.tags)])
         output_ascii_table(table_title="Instance Info",
                            table_data=td)
-        return True
+    exit(0)
 
 
 def output_amis(output_media=None, amis=None):
@@ -90,6 +91,7 @@ def output_amis(output_media=None, amis=None):
         output_ascii_table(table_title="AMIs",
                            inner_heading_row_border=True,
                            table_data=td)
+    exit(0)
 
 
 def output_block_device_mapping(bdm=None):
@@ -138,3 +140,4 @@ def output_ami_info(output_media=None, ami=None):
         td.append(['virtualization_type', dash_if_none(ami.virtualization_type)])
         output_ascii_table(table_title="AMI Info",
                            table_data=td)
+    exit(0)

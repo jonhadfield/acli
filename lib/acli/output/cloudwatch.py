@@ -21,3 +21,4 @@ def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_s
                                             network_stats.get('twelve_hours_out'))])
         output_ascii_table(table_title="EC2 Stats",
                            table_data=td)
+    exit(0)
