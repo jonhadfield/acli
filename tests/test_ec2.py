@@ -23,4 +23,7 @@ def ec2():
 
 
 def test_ec2_list(ec2):
-    assert output_ec2_info(output_media='console', instance=ec2.get('servers').instances[0])
+    with pytest.raises(SystemExit):
+        assert output_ec2_info(output_media='console', instance=ec2.get('servers').instances[0])
+
+
