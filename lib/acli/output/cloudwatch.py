@@ -1,5 +1,5 @@
 from __future__ import (absolute_import, print_function)
-from acli.output import output_ascii_table, dash_if_none
+from acli.output import output_ascii_table
 
 
 def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_stats=None):

@@ -25,10 +25,6 @@ from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb, account, cloudwatch)
 from acli.config import Config
-from acli.output.ec2 import (output_ec2_list, output_ec2_info,
-                             output_amis, output_ami_info)
-from acli.output.cloudwatch import output_ec2_stats
-from acli.output.elb import (output_elbs, output_elb_info)
 from acli import utils
 init(autoreset=True)
 
@@ -43,9 +39,7 @@ def real_main():
     if args['<command>'] == 'account':
         from acli.commands import account as command_account
         # acc_res = docopt(command_account.__doc__, argv=argv)
-        iam_conn = account.get_iam_conn(aws_config)
-        print("alias: {0} | id: {1}".format(", ".join(account.get_account_aliases(iam_conn)),
-                                            account.get_account_id(iam_conn)))
+        account.account_info(aws_config)
         exit()
     if args['<command>'] == 'ec2':
         from acli.commands import ec2 as command_ec2
