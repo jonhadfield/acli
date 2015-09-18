@@ -1,25 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""acli.
+"""
+usage: acli [--version]  [--help]
+            <command>  [<args>...]
 
-Usage:
-  acli account
-  acli ec2 list
-  acli ec2 info <instance_id>
-  acli ec2 stats <instance_id>
-  acli elb list
-  acli elb info <elb_name>
-  acli ami list
-  acli ami info <ami_id>
-  acli --version
-  acli --install-completion
 
-Options:
-  -h --help                             show this help message and exit
-  -r --region=REGION                    set aws region
-  --access_key_id=ACCESS_KEY_ID         set access key id
-  --secret_access_id=SECRET_ACCESS_KEY  set secret access key
-  --version                             show version and exit
+options:
+   -h, --help  help
+
+The most common commands are:
+   account      Get account info
+   ec2          Manage ec2 instances
+   elb          Manage elb instances
+   ami          Manage amis
+   asg          Manage auto-scaling groups
+   lc           Manage launch configurations
+   eip          Manage elastic ips
+   secgroup     Manage security groups
+
+See 'acli help <command>'
 """
 
 from __future__ import (absolute_import, print_function)
@@ -36,35 +35,50 @@ init(autoreset=True)
 
 
 def real_main():
-    args = docopt(__doc__, version='0.0.1')
-
-    if args.get('--install-completion'):
-        utils.install_completion()
-
+    args = docopt(__doc__,
+                  version='0.0.1',
+                  options_first=True)
     aws_config = Config(args)
+    argv = [args['<command>']] + args['<args>']
 
-    if args.get('account'):
+    if args['<command>'] == 'account':
+        from acli.commands import account as command_account
+        # acc_res = docopt(command_account.__doc__, argv=argv)
         iam_conn = account.get_iam_conn(aws_config)
         print("alias: {0} | id: {1}".format(", ".join(account.get_account_aliases(iam_conn)),
                                             account.get_account_id(iam_conn)))
-
-    if args.get('ec2'):
-        if args.get('list'):
+        exit()
+    if args['<command>'] == 'ec2':
+        from acli.commands import ec2 as command_ec2
+        ec2_res = docopt(command_ec2.__doc__, argv=argv)
+        if ec2_res.get('list'):
             ec2.ec2_list(aws_config)
-        if args.get('info'):
-            ec2.ec2_info(aws_config, instance_id=args.get('<instance_id>'))
-        if args.get('stats'):
-            cloudwatch.ec2_stats(aws_config=aws_config, instance_id=args.get('<instance_id>'))
-
-    if args.get('elb'):
-        if args.get('list'):
+        elif ec2_res.get('info'):
+            ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
+        elif ec2_res.get('stats'):
+            cloudwatch.ec2_stats(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
+        exit()
+    if args['<command>'] == 'elb':
+        from acli.commands import elb as command_elb
+        elb_res = docopt(command_elb.__doc__, argv=argv)
+        if elb_res.get('list'):
             elb.elb_list(aws_config)
-
-        if args.get('info'):
-            elb.elb_info(aws_config, elb_name=args.get('<elb_name>'))
-
-    if args.get('ami'):
-        if args.get('list'):
+        elif elb_res.get('info'):
+            elb.elb_info(aws_config, elb_name=elb_res.get('<elb_name>'))
+        exit()
+    if args['<command>'] == 'ami':
+        from acli.commands import ami as command_ami
+        ami_res = docopt(command_ami.__doc__, argv=argv)
+        if ami_res.get('list'):
             ec2.list_amis(aws_config)
-        if args.get('info'):
-            ec2.ami_info(aws_config, ami_id=args.get('<ami_id>'))
+        elif ami_res.get('info'):
+            ec2.ami_info(aws_config, ami_id=ami_res.get('<ami_id>'))
+        exit()
+    elif args['<command>'] in ['help', None] and args['<args>']:
+        if args['<args>'][0] == 'ec2':
+            from acli.commands import ec2 as command_ec2
+            print(docopt(command_ec2.__doc__, argv=argv))
+    elif args['<command>'] in ['help', None] and not args['<args>']:
+        print("usage: acli help <command>")
+    else:
+        exit("%r is not an acli command. See 'acli help." % args['<command>'])
