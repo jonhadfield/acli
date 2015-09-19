@@ -1,19 +1,19 @@
 from __future__ import (absolute_import, print_function)
-from acli.output import (output_ascii_table, dash_if_none, get_tags)
+from acli.output import (output_ascii_table, dash_if_none)
 from boto.resultset import ResultSet
 
 
 def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
-                              max_length=40):
+                          max_length=40):
+    ret = []
     for tag in ec2_instance.tags:
-        ret = []
         if tag_key and tag.get('Key') == tag_key:
             return tag.get('Value', "-")
         else:
             val = tag.get('Value', None)
             if val and len(val) > max_length:
                 val = "{0}...".format(val[:max_length-3])
-            ret.append('{0}:{1}\n'.format(tag, val))
+            ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
     return "".join(ret).rstrip()
 
 
@@ -123,7 +123,7 @@ def output_ec2_info(output_media=None, instance=None):
 
         td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
         td.append(['instance profile', str(instance.iam_instance_profile.get('Arn', None))])
-        td.append(['tags', get_tags(instance.tags)])
+        td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
         td.append(['interfaces', get_interfaces(instance.network_interfaces)])
         output_ascii_table(table_title="Instance Info",
                            table_data=td)
