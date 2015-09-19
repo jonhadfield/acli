@@ -3,16 +3,18 @@ from acli.output import (output_ascii_table, dash_if_none, get_tags)
 from boto.resultset import ResultSet
 
 
-def get_ec2_instance_name_tag(ec2_instance=None,
+def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
                               max_length=40):
     for tag in ec2_instance.tags:
-        if tag.get('Key') == "Name":
-            name_tag = tag.get('Value', None)
-            if name_tag:
-                if len(name_tag) > max_length:
-                    return "{0}...".format(name_tag[:max_length-3])
-                else:
-                    return name_tag
+        ret = []
+        if tag_key and tag.get('Key') == tag_key:
+            return tag.get('Value', "-")
+        else:
+            val = tag.get('Value', None)
+            if val and len(val) > max_length:
+                val = "{0}...".format(val[:max_length-3])
+            ret.append('{0}:{1}\n'.format(tag, val))
+    return "".join(ret).rstrip()
 
 
 def get_interfaces(interfaces):
@@ -67,7 +69,7 @@ def output_ec2_list(output_media=None, instances=None):
             image_id = dash_if_none(instance.image_id)
             public_ip = dash_if_none(instance.public_ip_address)
             private_ip = instance.private_ip_address
-            instance_name = dash_if_none(get_ec2_instance_name_tag(ec2_instance=instance))
+            instance_name = dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))
             td.append([instance_id,
                        instance_name,
                        instance_state,
@@ -100,7 +102,7 @@ def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
         td = list()
         td.append(['id', instance.id])
-        td.append(['name', dash_if_none(get_ec2_instance_name_tag(ec2_instance=instance))])
+        td.append(['name', dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))])
         td.append(['groups', str(instance.security_groups)])
         td.append(['public ip', dash_if_none(instance.public_ip_address)])
         td.append(['public dns name', dash_if_none(instance.public_dns_name)])
@@ -121,7 +123,7 @@ def output_ec2_info(output_media=None, instance=None):
 
         td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
         td.append(['instance profile', str(instance.iam_instance_profile.get('Arn', None))])
-        #td.append(['tags', get_tags(instance.tags)])
+        td.append(['tags', get_tags(instance.tags)])
         td.append(['interfaces', get_interfaces(instance.network_interfaces)])
         output_ascii_table(table_title="Instance Info",
                            table_data=td)
