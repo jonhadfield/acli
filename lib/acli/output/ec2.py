@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, print_function)
 from acli.output import (output_ascii_table, dash_if_none, output_tags)
+from boto.resultset import ResultSet
 
 
 def get_ec2_instance_name_tag(ec2_instance=None,
@@ -17,13 +18,15 @@ def output_ec2_list(output_media=None, instances=None):
         td.append(['id', 'name', 'state', 'type', 'image',
                    'public ip', 'private ip'])
         for instance in instances:
-            instance_id = instance[0].id
-            instance_state = instance[0].state
-            instance_type = instance[0].instance_type
-            image_id = instance[0].image_id
-            public_ip = instance[0].ip_address
-            private_ip = instance[0].private_ip_address
-            instance_name = get_ec2_instance_name_tag(ec2_instance=instance[0])
+            if isinstance(instance, ResultSet):
+                instance = instance[0]
+            instance_id = instance.id
+            instance_state = instance.state
+            instance_type = instance.instance_type
+            image_id = instance.image_id
+            public_ip = instance.ip_address
+            private_ip = instance.private_ip_address
+            instance_name = get_ec2_instance_name_tag(ec2_instance=instance)
             td.append([instance_id,
                        instance_name,
                        instance_state,
