@@ -29,5 +29,3 @@ def get_name_tag(tags):
         if tag_name == 'Name':
             return tag_value
     return "-"
-
-

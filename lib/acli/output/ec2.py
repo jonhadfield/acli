@@ -27,7 +27,6 @@ def get_interfaces(interfaces):
         ret.append(" Private IP Addresses:\n")
         for private_ip_address in interface.get('PrivateIpAddresses'):
                 for pkey, pvalue in private_ip_address.iteritems():
-                    print(pkey)
                     if pkey == "Association":
                         ret.append("  Association:\n")
                         for qqkey, qqvalue in pvalue.iteritems():
@@ -42,7 +41,6 @@ def get_interfaces(interfaces):
             if str(key) not in ("Attachment", "NetworkInterfaceId",
                                 "PrivateIpAddresses", "Groups", "Association",
                                 "PrivateIpAddress"):
-                print(str(key))
                 ret.append(" {}:{}\n".format(str(key), str(value)))
     return ("".join(ret)).rstrip()
 
@@ -127,7 +125,6 @@ def output_ec2_info(output_media=None, instance=None):
         td.append(['root device type', dash_if_none(instance.root_device_type)])
         td.append(['state reason', dash_if_none(instance.state_reason)])
         td.append(['state transition reason', dash_if_none(instance.state_transition_reason)])
-
         td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
         td.append(['instance profile', str(instance.iam_instance_profile.get('Arn', None))])
         td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
@@ -137,11 +134,11 @@ def output_ec2_info(output_media=None, instance=None):
     exit(0)
 
 
-def output_amis(output_media=None, amis=None):
+def output_ami_list(output_media=None, amis=None):
     if output_media == 'console':
         td = [['id', 'name', 'created']]
         for ami in amis:
-            td.append([ami.id, ami.name, ami.creationDate])
+            td.append([ami.id, ami.name, ami.creation_date])
         output_ascii_table(table_title="AMIs",
                            inner_heading_row_border=True,
                            table_data=td)
@@ -150,10 +147,12 @@ def output_amis(output_media=None, amis=None):
 
 def output_block_device_mapping(bdm=None):
     out = ""
-    for i, (key, value) in enumerate(bdm.iteritems()):
-        out += "{0},{1},{2}".format(key, value.volume_type, value.size)
-        if i < len(bdm)-1:
-            out += "\n"
+    for item in bdm:
+        out += "Device Name:{0}\n".format(item.get('DeviceName'))
+        if item.get('Ebs'):
+            out += " Type: Ebs\n"
+            for key, value in item.get('Ebs').iteritems():
+                out += " {0}:{1}\n".format(key, value)
     return out
 
 
@@ -166,32 +165,34 @@ def output_ami_permissions(perms=None):
     return out
 
 
+def get_product_codes(product_codes=None):
+    out = ""
+    for prodcode in product_codes:
+        out += "{0}/{1}".format(prodcode.get('ProductCodeId'),prodcode.get('ProductCodeType'))
+    return out
+
+
 def output_ami_info(output_media=None, ami=None):
     if output_media == 'console':
         td = list()
         td.append(['id', ami.id])
         td.append(['name', ami.name])
-        td.append(['creationDate', dash_if_none(ami.creationDate)])
+        td.append(['creationDate', dash_if_none(ami.creation_date)])
         td.append(['description', dash_if_none(ami.description)])
-        td.append(['block_device_mapping', output_block_device_mapping(bdm=ami.block_device_mapping)])
-        td.append(['get launch permissions', output_ami_permissions(ami.get_launch_permissions())])
-        td.append(['get ramdisk', dash_if_none(str(ami.get_ramdisk()))])
         td.append(['hypervisor', dash_if_none(ami.hypervisor)])
-        td.append(['is_public', dash_if_none(str(ami.is_public))])
+        td.append(['is_public', dash_if_none(str(ami.public))])
         td.append(['kernel_id', dash_if_none(ami.kernel_id)])
-        td.append(['location', dash_if_none(ami.location)])
+        td.append(['location', dash_if_none(ami.image_location)])
         td.append(['owner_id', dash_if_none(ami.owner_id)])
-        td.append(['owner_alias', dash_if_none(ami.owner_alias)])
+        td.append(['owner_alias', dash_if_none(ami.image_owner_alias)])
         td.append(['platform', dash_if_none(ami.platform)])
-        td.append(['product codes', ",".join(ami.product_codes)])
-        td.append(['ramdisk_id', dash_if_none(ami.ramdisk_id)])
-        td.append(['region', dash_if_none(str(ami.region.name))])
+        td.append(['product codes', get_product_codes(ami.product_codes)])
         td.append(['root_device_name', dash_if_none(ami.root_device_name)])
         td.append(['root_device_type', dash_if_none(ami.root_device_type)])
         td.append(['sriov_net_support', dash_if_none(ami.sriov_net_support)])
         td.append(['state', dash_if_none(ami.state)])
-        td.append(['type', dash_if_none(ami.type)])
         td.append(['virtualization_type', dash_if_none(ami.virtualization_type)])
+        td.append(['block_device_mapping', output_block_device_mapping(bdm=ami.block_device_mappings)])
         output_ascii_table(table_title="AMI Info",
                            table_data=td)
     exit(0)
