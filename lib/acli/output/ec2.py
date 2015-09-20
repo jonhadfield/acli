@@ -93,6 +93,13 @@ def get_sec_group_names(groups=None):
     return ",".join(sec_group_names)
 
 
+def get_sec_groups_name_and_id(groups=None):
+    ret = []
+    for group in groups:
+        ret.append('GroupName:{}, GroupId:{}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
+    return "\n".join(ret).rstrip()
+
+
 def get_interface_ids(interfaces=None):
     interface_ids = [x.id for x in interfaces]
     return ",".join(interface_ids)
@@ -103,7 +110,7 @@ def output_ec2_info(output_media=None, instance=None):
         td = list()
         td.append(['id', instance.id])
         td.append(['name', dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))])
-        td.append(['groups', str(instance.security_groups)])
+        td.append(['groups', get_sec_groups_name_and_id(instance.security_groups)])
         td.append(['public ip', dash_if_none(instance.public_ip_address)])
         td.append(['public dns name', dash_if_none(instance.public_dns_name)])
         td.append(['private ip', dash_if_none(instance.private_ip_address)])
