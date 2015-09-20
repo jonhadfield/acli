@@ -27,6 +27,7 @@ if sys.argv[-1] == 'readme':
     print(long_description)
     sys.exit()
 
+
 class PyTest(TestCommand):
     user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
 
@@ -53,6 +54,7 @@ setup(
     install_requires=['docopt==0.6.2',
                       'colorama==0.3.3',
                       'boto>=2.38.0',
+                      'boto3>=1.1.3',
                       'requests>=2.7.0',
                       'terminaltables>=1.2.1'],
     description='A CLI to manage AWS resources',
