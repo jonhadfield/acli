@@ -12,8 +12,6 @@ def get_boto3_session(aws_config):
 def ec2_stats(aws_config=None, instance_id=None):
     session = get_boto3_session(aws_config)
     cloudwatch_client = session.client('cloudwatch')
-    #import datetime
-    #print(instance_id)
     out = cloudwatch_client.get_metric_statistics(
             Namespace='AWS/EC2',
             MetricName='CPUUtilization',
@@ -35,18 +33,6 @@ def ec2_stats(aws_config=None, instance_id=None):
     # Unit='Seconds'|'Microseconds'|'Milliseconds'|'Bytes'|'Kilobytes'|'Megabytes'|'Gigabytes'|'Terabytes'|'Bits'|'Kilobits'|'Megabits'|'Gigabits'|'Terabits'|'Percent'|'Count'|'Bytes/Second'|'Kilobytes/Second'|'Megabytes/Second'|'Gigabytes/Second'|'Terabytes/Second'|'Bits/Second'|'Kilobits/Second'|'Megabits/Second'|'Gigabits/Second'|'Terabits/Second'|'Count/Second'|'None'
 
     print(out)
-    #account_id = iam_client.get_user().get('User').get('Arn').split(':')[4]
-    #output_account_info(output_media='console',
-    #                    account_id=account_id,
-    #                    account_aliases=aliases)
-
-
-    #session = get_boto3_session(aws_config)
-    #conn = session.resource('ec2')
-    #instance = conn.Instance(instance_id)
-    #print(instance.monitoring)
-    #output_ec2_info(output_media='console',
-    #                instance=conn.Instance(instance_id))
     exit(0)
 
 
