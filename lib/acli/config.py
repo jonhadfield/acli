@@ -44,7 +44,9 @@ class Config(object):
         pass
 
     def from_env(self):
-        pass
+        self.region = os.environ.get('AWS_REGION')
+        self.access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+        self.secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
     def from_acli_config_file(self):
         if os.path.isfile('acli.cfg'):
