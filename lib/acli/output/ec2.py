@@ -64,7 +64,7 @@ def output_ec2_list(output_media=None, instances=None):
             if isinstance(instance, ResultSet):
                 instance = instance[0]
             instance_id = instance.instance_id
-            instance_state = dash_if_none(str(instance.state))
+            instance_state = dash_if_none(instance.state.get('Name', None))
             instance_type = dash_if_none(str(instance.instance_type))
             image_id = dash_if_none(instance.image_id)
             public_ip = dash_if_none(instance.public_ip_address)
