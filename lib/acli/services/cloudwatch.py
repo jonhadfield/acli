@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, print_function)
 from boto3.session import Session
 import datetime
-from acli.output.cloudwatch import output_ec2_cpu
+from acli.output.cloudwatch import output_ec2_cpu, output_asg_cpu
 
 
 def get_boto3_session(aws_config):
@@ -40,6 +40,40 @@ def ec2_stats(aws_config=None, instance_id=None, period=72000, intervals=60):
         dates.append(datapoint.get('Timestamp'))
         values.append(datapoint.get('Average'))
     output_ec2_cpu(dates=dates, values=values)
+    exit(0)
+
+
+def asg_stats(aws_config=None, asg_name=None, period=72000, intervals=60):
+    session = get_boto3_session(aws_config)
+    cloudwatch_client = session.client('cloudwatch')
+    out = cloudwatch_client.get_metric_statistics(
+            Namespace='AWS/EC2',
+            MetricName='CPUUtilization',
+            Dimensions=[
+                {
+                 'Name': 'AutoScalingGroupName',
+                 'Value': asg_name
+                }
+            ],
+            StartTime=datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
+            EndTime=datetime.datetime.utcnow(),
+            Period=intervals,
+            Statistics=[
+                'Average',
+            ],
+            Unit='Percent'
+        )
+    # 'SampleCount'|'Average'|'Sum'|'Minimum'|'Maximum',
+    # Unit='Seconds'|'Microseconds'|'Milliseconds'|'Bytes'|'Kilobytes'|'Megabytes'|'Gigabytes'|'Terabytes'|'Bits'|'Kilobits'|'Megabits'|'Gigabits'|'Terabits'|'Percent'|'Count'|'Bytes/Second'|'Kilobytes/Second'|'Megabytes/Second'|'Gigabytes/Second'|'Terabytes/Second'|'Bits/Second'|'Kilobits/Second'|'Megabits/Second'|'Gigabits/Second'|'Terabits/Second'|'Count/Second'|'None'
+    datapoints = out.get('Datapoints')
+    print(datapoints)
+    sorted_datapoints = sorted(datapoints, key=lambda v: v.get('Timestamp'))
+    dates = list()
+    values = list()
+    for datapoint in sorted_datapoints:
+        dates.append(datapoint.get('Timestamp'))
+        values.append(datapoint.get('Average'))
+    output_asg_cpu(dates=dates, values=values)
     exit(0)
 
 

@@ -39,3 +39,15 @@ def output_ec2_cpu(dates=None, values=None):
     exit(0)
 
 
+def output_asg_cpu(dates=None, values=None):
+    plt.subplots_adjust(bottom=0.2)
+    plt.xticks(rotation=25)
+    ax = plt.gca()
+    xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+    ax.xaxis.set_major_formatter(xfmt)
+    plt.plot(dates, values)
+    plt.gcf().autofmt_xdate()
+    plt.show()
+    exit(0)
+
+

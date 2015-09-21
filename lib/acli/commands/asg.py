@@ -1,4 +1,4 @@
-"""usage: acli asg (list | info <asg_name>)
+"""usage: acli asg (list | info <asg_name> | stats <asg_name>)
 
     -h, --help
 """
