@@ -1,8 +1,7 @@
 from __future__ import (absolute_import, print_function)
 from boto3.session import Session
 import datetime
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+from acli.output.cloudwatch import output_ec2_cpu
 
 
 def get_boto3_session(aws_config):
@@ -11,7 +10,7 @@ def get_boto3_session(aws_config):
                    aws_secret_access_key=aws_config.secret_access_key)
 
 
-def ec2_stats(aws_config=None, instance_id=None):
+def ec2_stats(aws_config=None, instance_id=None, period=3600, intervals=60):
     session = get_boto3_session(aws_config)
     cloudwatch_client = session.client('cloudwatch')
     out = cloudwatch_client.get_metric_statistics(
@@ -23,9 +22,9 @@ def ec2_stats(aws_config=None, instance_id=None):
                  'Value': instance_id
                 }
             ],
-            StartTime=datetime.datetime.utcnow() - datetime.timedelta(seconds=3600),
+            StartTime=datetime.datetime.utcnow() - datetime.timedelta(seconds=period),
             EndTime=datetime.datetime.utcnow(),
-            Period=60,
+            Period=intervals,
             Statistics=[
                 'Average',
             ],
@@ -40,16 +39,7 @@ def ec2_stats(aws_config=None, instance_id=None):
     for datapoint in sorted_datapoints:
         dates.append(datapoint.get('Timestamp'))
         values.append(datapoint.get('Average'))
-
-    plt.subplots_adjust(bottom=0.2)
-    plt.xticks(rotation=25)
-    ax = plt.gca()
-    xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
-    ax.xaxis.set_major_formatter(xfmt)
-    plt.plot(dates, values)
-    plt.gcf().autofmt_xdate()
-    print(out)
-    plt.show()
+    output_ec2_cpu(dates=dates, values=values)
     exit(0)
 
 

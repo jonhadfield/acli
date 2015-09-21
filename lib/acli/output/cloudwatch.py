@@ -1,5 +1,8 @@
 from __future__ import (absolute_import, print_function)
 from acli.output import output_ascii_table
+import datetime
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 
 def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_stats=None):
@@ -22,3 +25,17 @@ def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_s
         output_ascii_table(table_title="EC2 Stats",
                            table_data=td)
     exit(0)
+
+
+def output_ec2_cpu(dates=None, values=None):
+    plt.subplots_adjust(bottom=0.2)
+    plt.xticks(rotation=25)
+    ax = plt.gca()
+    xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+    ax.xaxis.set_major_formatter(xfmt)
+    plt.plot(dates, values)
+    plt.gcf().autofmt_xdate()
+    plt.show()
+    exit(0)
+
+
