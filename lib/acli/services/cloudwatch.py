@@ -66,7 +66,6 @@ def asg_stats(aws_config=None, asg_name=None, period=72000, intervals=60):
     # 'SampleCount'|'Average'|'Sum'|'Minimum'|'Maximum',
     # Unit='Seconds'|'Microseconds'|'Milliseconds'|'Bytes'|'Kilobytes'|'Megabytes'|'Gigabytes'|'Terabytes'|'Bits'|'Kilobits'|'Megabits'|'Gigabits'|'Terabits'|'Percent'|'Count'|'Bytes/Second'|'Kilobytes/Second'|'Megabytes/Second'|'Gigabytes/Second'|'Terabytes/Second'|'Bits/Second'|'Kilobits/Second'|'Megabits/Second'|'Gigabits/Second'|'Terabits/Second'|'Count/Second'|'None'
     datapoints = out.get('Datapoints')
-    print(datapoints)
     sorted_datapoints = sorted(datapoints, key=lambda v: v.get('Timestamp'))
     dates = list()
     values = list()
