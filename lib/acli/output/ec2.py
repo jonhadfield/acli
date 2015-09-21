@@ -81,9 +81,9 @@ def output_ec2_list(output_media=None, instances=None):
     exit(0)
 
 
-def short_instance_profile(instance_profile):
-    if instance_profile:
-        return instance_profile.get('arn').split('/')[-1]
+def short_instance_profile(instance_profile=None):
+    if instance_profile and instance_profile.get('Arn', None):
+        return instance_profile.get('Arn', None)
 
 
 def get_sec_group_names(groups=None):
@@ -126,7 +126,8 @@ def output_ec2_info(output_media=None, instance=None):
         td.append(['state reason', dash_if_none(instance.state_reason)])
         td.append(['state transition reason', dash_if_none(instance.state_transition_reason)])
         td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
-        td.append(['instance profile', str(instance.iam_instance_profile.get('Arn', None))])
+        #td.append(['instance profile', str(instance.iam_instance_profile.get('Arn', None))])
+        td.append(['instance profile', dash_if_none(short_instance_profile(instance.iam_instance_profile))])
         td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
         td.append(['interfaces', get_interfaces(instance.network_interfaces)])
         output_ascii_table(table_title="Instance Info",
