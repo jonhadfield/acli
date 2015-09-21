@@ -66,7 +66,7 @@ def output_ec2_list(output_media=None, instances=None):
             instance_type = dash_if_none(str(instance.instance_type))
             image_id = dash_if_none(instance.image_id)
             public_ip = dash_if_none(instance.public_ip_address)
-            private_ip = instance.private_ip_address
+            private_ip = dash_if_none(instance.private_ip_address)
             instance_name = dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))
             td.append([instance_id,
                        instance_name,
