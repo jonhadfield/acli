@@ -56,13 +56,6 @@ def real_main():
             elb.elb_list(aws_config)
         elif elb_res.get('info'):
             elb.elb_info(aws_config, elb_name=elb_res.get('<elb_name>'))
-    if args['<command>'] == 'elb':
-        from acli.commands import elb as command_elb
-        elb_res = docopt(command_elb.__doc__, argv=argv)
-        if elb_res.get('list'):
-            elb.elb_list(aws_config)
-        elif elb_res.get('info'):
-            elb.elb_info(aws_config, elb_name=elb_res.get('<elb_name>'))
     if args['<command>'] == 'asg':
         from acli.commands import asg as command_asg
         asg_res = docopt(command_asg.__doc__, argv=argv)
@@ -70,6 +63,13 @@ def real_main():
             asg.asg_list(aws_config)
         elif asg_res.get('info'):
             asg.asg_info(aws_config, asg_name=asg_res.get('<asg_name>'))
+    if args['<command>'] == 'ami':
+        from acli.commands import ami as command_ami
+        ami_res = docopt(command_ami.__doc__, argv=argv)
+        if ami_res.get('list'):
+            ec2.ami_list(aws_config)
+        elif ami_res.get('info'):
+            ec2.ami_info(aws_config, ami_id=ami_res.get('<ami_id>'))
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
             from acli.commands import ec2 as command_ec2
