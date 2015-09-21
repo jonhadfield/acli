@@ -16,8 +16,15 @@ def asg_list(aws_config=None):
                     asg_list=conn.describe_auto_scaling_groups().get('AutoScalingGroups', None))
 
 
-def asg_info(aws_config=None, instance_id=None):
+def asg_info(aws_config=None, asg_name=None):
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
-    output_asg_info(output_media='console',
-                    instance=conn.Instance(instance_id))
+    asg = conn.describe_auto_scaling_groups(AutoScalingGroupNames=[asg_name])
+    print(asg.__class__.__name__)
+    print(str(asg))
+    if asg:
+        asg_details = asg.get('AutoScalingGroups')[0]
+        print(asg_details.__class__.__name__)
+        output_asg_info(output_media='console', asg=asg.get('AutoScalingGroups')[0])
+    else:
+        exit("Auto Scaling Group: {0} not found.".format(asg_name))

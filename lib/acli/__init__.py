@@ -63,6 +63,8 @@ def real_main():
             asg.asg_list(aws_config)
         elif asg_res.get('info'):
             asg.asg_info(aws_config, asg_name=asg_res.get('<asg_name>'))
+        else:
+            print("poo")
     if args['<command>'] == 'ami':
         from acli.commands import ami as command_ami
         ami_res = docopt(command_ami.__doc__, argv=argv)
