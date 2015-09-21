@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, print_function)
 from boto3.session import Session
 import datetime
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 
 def get_boto3_session(aws_config):
@@ -23,7 +25,7 @@ def ec2_stats(aws_config=None, instance_id=None):
             ],
             StartTime=datetime.datetime.utcnow() - datetime.timedelta(seconds=3600),
             EndTime=datetime.datetime.utcnow(),
-            Period=1800,
+            Period=60,
             Statistics=[
                 'Average',
             ],
@@ -31,8 +33,23 @@ def ec2_stats(aws_config=None, instance_id=None):
         )
     # 'SampleCount'|'Average'|'Sum'|'Minimum'|'Maximum',
     # Unit='Seconds'|'Microseconds'|'Milliseconds'|'Bytes'|'Kilobytes'|'Megabytes'|'Gigabytes'|'Terabytes'|'Bits'|'Kilobits'|'Megabits'|'Gigabits'|'Terabits'|'Percent'|'Count'|'Bytes/Second'|'Kilobytes/Second'|'Megabytes/Second'|'Gigabytes/Second'|'Terabytes/Second'|'Bits/Second'|'Kilobits/Second'|'Megabits/Second'|'Gigabits/Second'|'Terabits/Second'|'Count/Second'|'None'
+    datapoints = out.get('Datapoints')
+    sorted_datapoints = sorted(datapoints, key=lambda v: v.get('Timestamp'))
+    dates = list()
+    values = list()
+    for datapoint in sorted_datapoints:
+        dates.append(datapoint.get('Timestamp'))
+        values.append(datapoint.get('Average'))
 
+    plt.subplots_adjust(bottom=0.2)
+    plt.xticks(rotation=25)
+    ax = plt.gca()
+    xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+    ax.xaxis.set_major_formatter(xfmt)
+    plt.plot(dates, values)
+    plt.gcf().autofmt_xdate()
     print(out)
+    plt.show()
     exit(0)
 
 
