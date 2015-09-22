@@ -39,7 +39,7 @@ def ec2_stats(aws_config=None, instance_id=None, period=72000, intervals=60):
     for datapoint in sorted_datapoints:
         dates.append(datapoint.get('Timestamp'))
         values.append(datapoint.get('Average'))
-    output_ec2_cpu(dates=dates, values=values)
+    output_ec2_cpu(dates=dates, values=values, instance_id=instance_id)
     exit(0)
 
 
@@ -72,7 +72,7 @@ def asg_stats(aws_config=None, asg_name=None, period=72000, intervals=60):
     for datapoint in sorted_datapoints:
         dates.append(datapoint.get('Timestamp'))
         values.append(datapoint.get('Average'))
-    output_asg_cpu(dates=dates, values=values)
+    output_asg_cpu(dates=dates, values=values, asg_name=asg_name)
     exit(0)
 
 
