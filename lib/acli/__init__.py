@@ -10,6 +10,7 @@ options:
 The most common commands are:
    account      Get account info
    ec2          Manage ec2 instances
+   cw           Get CloudWatch metrics
    elb          Manage elb instances
    ami          Manage amis
    asg          Manage auto-scaling groups
@@ -43,12 +44,33 @@ def real_main():
     if args['<command>'] == 'ec2':
         from acli.commands import ec2 as command_ec2
         ec2_res = docopt(command_ec2.__doc__, argv=argv)
+        print(ec2_res)
         if ec2_res.get('list'):
             ec2.ec2_list(aws_config)
         elif ec2_res.get('info'):
             ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
-        elif ec2_res.get('stats'):
-            cloudwatch.ec2_stats(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
+        elif ec2_res.get('cpu'):
+            cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
+        elif ec2_res.get('mem'):
+            cloudwatch.ec2_cpu(aws_config=aws_config,
+                               instance_id=ec2_res.get('<instance_id>'),
+                               output_type=ec2_res.get('--output', None)
+                               )
+        elif ec2_res.get('net'):
+            cloudwatch.ec2_cpu(aws_config=aws_config,
+                               instance_id=ec2_res.get('<instance_id>'),
+                               output_type=ec2_res.get('--output', None)
+                               )
+    # if args['<command>'] == 'cw':
+    #    from acli.commands import cw as command_cw
+    #    cw_res = docopt(command_cw.__doc__, argv=argv)
+    #    print(cw_res)
+    #    if cw_res.get('cpu'):
+    #        cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=cw_res.get('<instance_id>'))
+    #    elif cw_res.get('mem'):
+    #        cloudwatch.ec2_mem(aws_config=aws_config, instance_id=cw_res.get('<instance_id>'))
+    #    elif cw_res.get('net'):
+    #        cloudwatch.ec2_net(aws_config=aws_config, instance_id=cw_res.get('<instance_id>'))
     if args['<command>'] == 'elb':
         from acli.commands import elb as command_elb
         elb_res = docopt(command_elb.__doc__, argv=argv)
@@ -64,7 +86,7 @@ def real_main():
         elif asg_res.get('info'):
             asg.asg_info(aws_config, asg_name=asg_res.get('<asg_name>'))
         elif asg_res.get('stats'):
-            cloudwatch.asg_stats(aws_config=aws_config, asg_name=asg_res.get('<asg_name>'))
+            cloudwatch.asg_cpu(aws_config=aws_config, asg_name=asg_res.get('<asg_name>'))
     if args['<command>'] == 'ami':
         from acli.commands import ami as command_ami
         ami_res = docopt(command_ami.__doc__, argv=argv)

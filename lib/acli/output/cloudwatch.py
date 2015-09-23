@@ -26,7 +26,8 @@ def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_s
     exit(0)
 
 
-def output_ec2_cpu(dates=None, values=None, instance_id=None):
+def output_ec2_cpu(dates=None, values=None, instance_id=None, output_type='table'):
+    print(output_type)
     plt.subplots_adjust(bottom=0.2)
     plt.xticks(rotation=25)
     ax = plt.gca()

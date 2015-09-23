@@ -10,7 +10,7 @@ def get_boto3_session(aws_config):
                    aws_secret_access_key=aws_config.secret_access_key)
 
 
-def ec2_stats(aws_config=None, instance_id=None, period=72000, intervals=60):
+def ec2_cpu(aws_config=None, instance_id=None, period=72000, intervals=60, output_type=None):
     session = get_boto3_session(aws_config)
     cloudwatch_client = session.client('cloudwatch')
     out = cloudwatch_client.get_metric_statistics(
@@ -43,7 +43,7 @@ def ec2_stats(aws_config=None, instance_id=None, period=72000, intervals=60):
     exit(0)
 
 
-def asg_stats(aws_config=None, asg_name=None, period=72000, intervals=60):
+def asg_cpu(aws_config=None, asg_name=None, period=72000, intervals=60):
     session = get_boto3_session(aws_config)
     cloudwatch_client = session.client('cloudwatch')
     out = cloudwatch_client.get_metric_statistics(
