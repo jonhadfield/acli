@@ -104,17 +104,10 @@ def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
         exit("Metrics unavailable.")
     sorted_net_in_datapoints = sorted(net_in_datapoints, key=lambda v: v.get('Timestamp'))
     sorted_net_out_datapoints = sorted(net_out_datapoints, key=lambda v: v.get('Timestamp'))
-    in_dates = list()
-    in_values = list()
-    for datapoint in sorted_net_in_datapoints:
-        in_dates.append(datapoint.get('Timestamp'))
-        in_values.append(datapoint.get('Average'))
-    out_dates = list()
-    out_values = list()
-    for datapoint in sorted_net_out_datapoints:
-        out_dates.append(datapoint.get('Timestamp'))
-        out_values.append(datapoint.get('Average'))
-
+    in_dates = [x1.get('Timestamp') for x1 in sorted_net_in_datapoints]
+    in_values = [x2.get('Average') for x2 in sorted_net_in_datapoints]
+    out_dates = [x3.get('Timestamp') for x3 in sorted_net_out_datapoints]
+    out_values = [x4.get('Average') for x4 in sorted_net_out_datapoints]
     output_ec2_net(in_dates=in_dates, in_values=in_values,
                    out_dates=out_dates, out_values=out_values,
                    instance_id=instance_id)
@@ -151,10 +144,11 @@ def asg_cpu(aws_config=None, asg_name=None, intervals=None, period=None,
             )
         datapoints = out.get('Datapoints')
         sorted_datapoints = sorted(datapoints, key=lambda v: v.get('Timestamp'))
-        dates = list()
-        values = list()
-        for datapoint in sorted_datapoints:
-            dates.append(datapoint.get('Timestamp'))
-            values.append(datapoint.get('Average'))
+        dates = [y1.get('Timestamp') for y1 in sorted_datapoints]
+        values = [y2.get('Average') for y2 in sorted_datapoints]
+
         output_asg_cpu(dates=dates, values=values, asg_name=asg_name)
+        exit(0)
+    elif output_type == 'table':
+        print("table")
         exit(0)

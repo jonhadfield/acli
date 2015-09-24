@@ -77,7 +77,6 @@ def real_main():
     if args['<command>'] == 'asg':
         from acli.commands import asg as command_asg
         asg_res = docopt(command_asg.__doc__, argv=argv)
-        print(asg_res)
         if asg_res.get('list'):
             asg.asg_list(aws_config)
         elif asg_res.get('info'):
