@@ -52,7 +52,7 @@ def real_main():
         elif ec2_res.get('cpu'):
             cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
         elif ec2_res.get('mem'):
-            cloudwatch.ec2_cpu(aws_config=aws_config,
+            cloudwatch.ec2_mem(aws_config=aws_config,
                                instance_id=ec2_res.get('<instance_id>'),
                                output_type=ec2_res.get('--output', None),
                                start=ec2_res.get('--start', None),
@@ -61,6 +61,14 @@ def real_main():
                                )
         elif ec2_res.get('net'):
             cloudwatch.ec2_net(aws_config=aws_config,
+                               instance_id=ec2_res.get('<instance_id>'),
+                               output_type=ec2_res.get('--output', None),
+                               start=ec2_res.get('--start', None),
+                               period=ec2_res.get('--end', None),
+                               intervals=ec2_res.get('intervals', None)
+                               )
+        elif ec2_res.get('vol'):
+            cloudwatch.ec2_vol(aws_config=aws_config,
                                instance_id=ec2_res.get('<instance_id>'),
                                output_type=ec2_res.get('--output', None),
                                start=ec2_res.get('--start', None),

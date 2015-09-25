@@ -27,7 +27,6 @@ def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_s
 
 
 def output_ec2_cpu(dates=None, values=None, instance_id=None, output_type='table'):
-    print(output_type)
     plt.subplots_adjust(bottom=0.2)
     plt.xticks(rotation=25)
     ax = plt.gca()
@@ -38,6 +37,22 @@ def output_ec2_cpu(dates=None, values=None, instance_id=None, output_type='table
     plt.title('CPU statistics for: {0}'.format(instance_id))
     plt.xlabel('Time (UTC)')
     plt.ylabel('CPU %')
+    plt.grid(True)
+    plt.show()
+    exit(0)
+
+
+def output_ec2_mem(dates=None, values=None, instance_id=None, output_type='table'):
+    plt.subplots_adjust(bottom=0.2)
+    plt.xticks(rotation=25)
+    ax = plt.gca()
+    xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+    ax.xaxis.set_major_formatter(xfmt)
+    plt.plot(dates, values)
+    plt.gcf().autofmt_xdate()
+    plt.title(' Memory usage for: {0}'.format(instance_id))
+    plt.xlabel('Time (UTC)')
+    plt.ylabel('Memory Usage %')
     plt.grid(True)
     plt.show()
     exit(0)

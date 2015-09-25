@@ -103,6 +103,24 @@ def get_interface_ids(interfaces=None):
     return ",".join(interface_ids)
 
 
+def get_state_reason(state_reason=None):
+    if state_reason:
+        return state_reason.get('Message', None)
+
+
+def get_block_devices(bdms=None):
+    ret = ""
+    for bdm in bdms:
+        ret += "{0}\n".format(bdm.get('DeviceName', '-'))
+        ebs = bdm.get('Ebs', None)
+        if ebs:
+            ret += " Status: {0}\n".format(ebs.get('Status', '-'))
+            ret += " Delete on Termination: {0}\n".format(ebs.get('DeleteOnTermination', '-'))
+            ret += " Volume Id: {0}\n".format(ebs.get('VolumeId', '-'))
+            ret += " Attach Time: {0}\n".format(str(ebs.get('AttachTime', '-')))
+    return ret.rstrip()
+
+
 def output_ec2_info(output_media=None, instance=None):
     if output_media == 'console':
         td = list()
@@ -123,12 +141,12 @@ def output_ec2_info(output_media=None, instance=None):
         td.append(['subnet id', dash_if_none(instance.subnet_id)])
         td.append(['vpc id', dash_if_none(instance.vpc_id)])
         td.append(['root device type', dash_if_none(instance.root_device_type)])
-        td.append(['state reason', dash_if_none(instance.state_reason.get('Message', None))])
+        td.append(['state reason', dash_if_none(get_state_reason(instance.state_reason))])
         td.append(['state transition reason', dash_if_none(instance.state_transition_reason)])
         td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
-        #td.append(['instance profile', str(instance.iam_instance_profile.get('Arn', None))])
         td.append(['instance profile', dash_if_none(short_instance_profile(instance.iam_instance_profile))])
         td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
+        td.append(['block devices', get_block_devices(instance.block_device_mappings)])
         td.append(['interfaces', dash_if_none(get_interfaces(instance.network_interfaces))])
         output_ascii_table(table_title="Instance Info",
                            table_data=td)
@@ -146,15 +164,15 @@ def output_ami_list(output_media=None, amis=None):
     exit(0)
 
 
-def output_block_device_mapping(bdm=None):
-    out = ""
-    for item in bdm:
-        out += "Device Name:{0}\n".format(item.get('DeviceName'))
-        if item.get('Ebs'):
-            out += " Type: Ebs\n"
-            for key, value in item.get('Ebs').iteritems():
-                out += " {0}:{1}\n".format(key, value)
-    return out
+#def output_block_device_mapping(bdm=None):
+#    out = ""
+#    for item in bdm:
+#        out += "Device Name:{0}\n".format(item.get('DeviceName'))
+#        if item.get('Ebs'):
+#            out += " Type: Ebs\n"
+#            for key, value in item.get('Ebs').iteritems():
+#                out += " {0}:{1}\n".format(key, value)
+#    return out
 
 
 def output_ami_permissions(perms=None):
@@ -193,7 +211,7 @@ def output_ami_info(output_media=None, ami=None):
         td.append(['sriov_net_support', dash_if_none(ami.sriov_net_support)])
         td.append(['state', dash_if_none(ami.state)])
         td.append(['virtualization_type', dash_if_none(ami.virtualization_type)])
-        td.append(['block_device_mapping', output_block_device_mapping(bdm=ami.block_device_mappings)])
+        td.append(['block_device_mapping', get_block_devices(bdms=ami.block_device_mappings)])
         output_ascii_table(table_title="AMI Info",
                            table_data=td)
     exit(0)
