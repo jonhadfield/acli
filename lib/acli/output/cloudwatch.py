@@ -86,7 +86,12 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
         plot1 = 2
         plot2 = 2
         plot3 = 1
-        plots_list = list()
+        # plots_list = list()
+        print("num: {}".format(len(vols_datapoints)))
+        num_plots = len(vols_datapoints)
+        #f, axarr = plt.subplots(num_plots, sharex=True)
+        fig = plt.figure()
+        fig.suptitle("Volume IOPs", fontsize=16)
         for vol_set in vols_datapoints:
             plt.subplots_adjust(bottom=0.2)
             plt.xticks(rotation=25)
@@ -102,7 +107,7 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
             write = plt.plot(write_dates, write_values)
             plt.setp(read, linewidth=2.0, label='read')
             plt.setp(write, linewidth=2.0, label='write')
-            plt.ylabel('Ops')
+            plt.ylabel('IOPs')
             plt.grid(True)
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles, labels)
