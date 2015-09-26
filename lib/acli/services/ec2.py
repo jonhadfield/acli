@@ -40,14 +40,11 @@ def ami_list(aws_config):
                     amis=conn.images.filter(Owners=['self']))
 
 
-def ec2_get_vol_ids(session=None, aws_config=None, instance_id=None):
+def ec2_get_instance_vols(session=None, instance_id=None):
     conn = session.resource('ec2')
     ec2_instance = conn.instances.filter(InstanceIds=[instance_id])
-    vol_ids = list()
+    vols = list()
     for instance in ec2_instance:
         for bdm in instance.block_device_mappings:
-            vol_ids.append(bdm['Ebs']['VolumeId'])
-    return vol_ids
-
-
-
+            vols.append(bdm)
+    return vols

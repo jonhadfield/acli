@@ -97,3 +97,35 @@ def output_asg_cpu(dates=None, values=None,
         plt.grid(True)
         plt.show()
         exit(0)
+
+
+def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
+    if not output_type or output_type == 'graph':
+        plt.subplots_adjust(bottom=0.2)
+        plt.xticks(rotation=25)
+        ax = plt.gca()
+        xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+        ax.xaxis.set_major_formatter(xfmt)
+        plot1 = 2
+        plot2 = 2
+        plot3 = 1
+        for vol_set in vols_datapoints:
+            read_dates = [x.get('Timestamp') for x in vol_set.get('read_datapoints')]
+            read_values = [x.get('Average') for x in vol_set.get('read_datapoints')]
+            write_dates = [x.get('Timestamp') for x in vol_set.get('write_datapoints')]
+            write_values = [x.get('Average') for x in vol_set.get('write_datapoints')]
+            plt.subplot(plot1, plot2, plot3)
+            read = plt.plot(read_dates, read_values)
+            write = plt.plot(write_dates, write_values)
+            plt.setp(read, linewidth=2.0, label='read {0}'.format(vol_set.get('device_name')))
+            plt.setp(write, linewidth=2.0, label='write {0}'.format(vol_set.get('device_name')))
+            plt.gcf().autofmt_xdate()
+            plt.title('{0}'.format(vol_set.get('device_name')))
+            plt.xlabel('Time (UTC)')
+            plt.ylabel('Ops')
+            plt.grid(True)
+            handles, labels = ax.get_legend_handles_labels()
+            ax.legend(handles, labels)
+            plot3 += 1
+        plt.show()
+        exit(0)
