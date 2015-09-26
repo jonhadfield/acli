@@ -86,6 +86,8 @@ setup(
                    'moto>=0.4.12',
                    'docopt>=0.6.2',
                    'boto>=2.38.0',
-                   'boto3>=1.1.3'],
+                   'boto3>=1.1.3',
+                   'terminaltables>=1.2.1',
+                   'matplotlib>=1.4.3'],
     cmdclass={'test': PyTest},
 )
