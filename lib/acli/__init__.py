@@ -3,7 +3,13 @@
 """
 usage: acli [--version] [--help]
             <command> [<args>...]
-
+       acli account
+       acli ec2 list [options]
+       acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
+       acli asg list [options]
+       acli asg (info | cpu | mem | net) <asg_name> [options]
+       acli ami (list | info <ami_id>)
+       acli elb (list | info <elb_name>)
 options:
    -h, --help  help
 
@@ -44,7 +50,7 @@ def real_main():
     if args['<command>'] == 'ec2':
         from acli.commands import ec2 as command_ec2
         ec2_res = docopt(command_ec2.__doc__, argv=argv)
-        print(ec2_res)
+        #print(ec2_res)
         if ec2_res.get('list'):
             ec2.ec2_list(aws_config)
         elif ec2_res.get('info'):
