@@ -171,7 +171,6 @@ def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
                 Unit='Bytes'
             )
         sorted_read_datapoints = sorted(read_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
-        # print(sorted_read_datapoints)
         sorted_write_datapoints = sorted(write_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
         read_dates = [x1.get('Timestamp') for x1 in sorted_read_datapoints]
         read_values = [x2.get('Average') for x2 in sorted_read_datapoints]

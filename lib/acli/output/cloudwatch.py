@@ -98,6 +98,7 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
                 write_dates = vol_set.get('write_dates')
                 write_values = vol_set.get('write_values')
                 axarr[index].set_title(vol_set.get('device_name'))
+                axarr[index].grid(True)
                 axarr[index].plot(write_dates, write_values, label='write')
                 axarr[index].plot(read_dates, read_values, label='read')
                 axarr[index].legend(loc="upper right",
@@ -105,8 +106,6 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
                                     #ncol=2, shadow=True,
                                     title=None,
                                     fancybox=False)
-
-                axarr[index].grid(True)
             plt.subplots_adjust(bottom=0.2)
             plt.xticks(rotation=25)
             plt.xlabel('Time (UTC)')
