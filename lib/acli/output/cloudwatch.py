@@ -2,6 +2,7 @@ from __future__ import (absolute_import, print_function)
 from acli.output import output_ascii_table
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import numpy as np
 
 
 def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_stats=None):
@@ -77,45 +78,56 @@ def output_ec2_net(in_dates=None, in_values=None, out_dates=None,
         plt.grid(True)
         handles, labels = ax.get_legend_handles_labels()
         ax.legend(handles, labels)
+        plt.subplots_adjust(bottom=0.2)
+        plt.xticks(rotation=25)
         plt.show()
         exit(0)
 
 
 def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
     if not output_type or output_type == 'graph':
-        plot1 = 2
-        plot2 = 2
-        plot3 = 1
-        # plots_list = list()
-        print("num: {}".format(len(vols_datapoints)))
         num_plots = len(vols_datapoints)
-        #f, axarr = plt.subplots(num_plots, sharex=True)
-        fig = plt.figure()
-        fig.suptitle("Volume IOPs", fontsize=16)
-        for vol_set in vols_datapoints:
+        f, axarr = plt.subplots(num_plots, sharex=True, sharey=True)
+        f.suptitle('Volumes for instance: {0}'.format(instance_id), fontsize=16)
+        plt.ylabel('(IOPs)')
+        if isinstance(axarr, np.ndarray):
+            for index, vol_set in enumerate(vols_datapoints):
+                read_dates = vol_set.get('read_dates')
+                read_values = vol_set.get('read_values')
+                write_dates = vol_set.get('write_dates')
+                write_values = vol_set.get('write_values')
+                axarr[index].set_title(vol_set.get('device_name'))
+                axarr[index].plot(write_dates, write_values, label='write')
+                axarr[index].plot(read_dates, read_values, label='read')
+                axarr[index].legend(loc="upper right",
+                                    #bbox_to_anchor=[0, 1],
+                                    #ncol=2, shadow=True,
+                                    title=None,
+                                    fancybox=False)
             plt.subplots_adjust(bottom=0.2)
             plt.xticks(rotation=25)
-            ax = plt.gca()
-            read_dates = [x.get('Timestamp') for x in vol_set.get('read_datapoints')]
-            read_values = [x.get('Average') for x in vol_set.get('read_datapoints')]
-            write_dates = [x.get('Timestamp') for x in vol_set.get('write_datapoints')]
-            write_values = [x.get('Average') for x in vol_set.get('write_datapoints')]
-            plt.subplot(plot1, plot2, plot3)
             plt.xlabel('Time (UTC)')
-            plt.title('{0}'.format(vol_set.get('device_name')))
-            read = plt.plot(read_dates, read_values)
-            write = plt.plot(write_dates, write_values)
-            plt.setp(read, linewidth=2.0, label='read')
-            plt.setp(write, linewidth=2.0, label='write')
-            plt.ylabel('IOPs')
-            plt.grid(True)
-            handles, labels = ax.get_legend_handles_labels()
-            ax.legend(handles, labels)
-            xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
-            ax.xaxis.set_major_formatter(xfmt)
-            plt.gcf().autofmt_xdate()
-
-            plot3 += 1
+        else:
+            read_dates = vols_datapoints[0].get('read_dates')
+            read_values = vols_datapoints[0].get('read_values')
+            write_dates = vols_datapoints[0].get('write_dates')
+            write_values = vols_datapoints[0].get('write_values')
+            axarr.set_title(vols_datapoints[0].get('device_name'))
+            axarr.plot(write_dates, write_values, label='write')
+            axarr.plot(read_dates, read_values, label='read')
+            axarr.legend(loc="upper right",
+                         #bbox_to_anchor=[0, 1],
+                         #ncol=2, shadow=True,
+                         title=None,
+                         fancybox=False)
+            plt.subplots_adjust(bottom=0.2)
+            plt.xticks(rotation=25)
+            plt.xlabel('Time (UTC)')
+        ax = plt.gca()
+        handles, labels = ax.get_legend_handles_labels()
+        ax.legend(handles, labels)
+        xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+        ax.xaxis.set_major_formatter(xfmt)
         plt.show()
         exit(0)
 

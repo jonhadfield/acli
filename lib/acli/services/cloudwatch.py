@@ -170,28 +170,13 @@ def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
                 Statistics=['Average'],
                 Unit='Count'
             )
-
+        sorted_read_datapoints = sorted(read_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
+        sorted_write_datapoints = sorted(write_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
+        read_dates = [x1.get('Timestamp') for x1 in sorted_read_datapoints]
+        read_values = [x2.get('Average') for x2 in sorted_read_datapoints]
+        write_dates = [y1.get('Timestamp') for y1 in sorted_write_datapoints]
+        write_values = [y2.get('Average') for y2 in sorted_write_datapoints]
         vol_datapoints.append({'device_name': ebs_vol['DeviceName'],
-                               'read_datapoints': sorted(read_ops['Datapoints'], key=lambda v: v.get('Timestamp')),
-                               'write_datapoints': sorted(write_ops['Datapoints'], key=lambda v: v.get('Timestamp')),
-                               })
-
-    #for vol_datapoint in vol_datapoints:
-    #    print(vol_datapoint.get('device_name'))
-    #   print(vol_datapoint.get('read_datapoints'))
-    #    print(vol_datapoint.get('write_datapoints'))
-
-
-    #net_in_datapoints, net_out_datapoints = net_in.get('Datapoints'), net_out.get('Datapoints')
-    #if not all((net_in_datapoints, net_out_datapoints)):
-    #    exit("Metrics unavailable.")
-    #sorted_net_in_datapoints = sorted(net_in_datapoints, key=lambda v: v.get('Timestamp'))
-    #sorted_net_out_datapoints = sorted(net_out_datapoints, key=lambda v: v.get('Timestamp'))
-    #in_dates = [x1.get('Timestamp') for x1 in sorted_net_in_datapoints]
-    #in_values = [x2.get('Average') for x2 in sorted_net_in_datapoints]
-    #out_dates = [x3.get('Timestamp') for x3 in sorted_net_out_datapoints]
-    #out_values = [x4.get('Average') for x4 in sorted_net_out_datapoints]
-    #output_ec2_vols(in_dates=in_dates, in_values=in_values,
-    #               out_dates=out_dates, out_values=out_values,
-    #               instance_id=instance_id)
+                               'read_dates': read_dates, 'read_values': read_values,
+                               'write_dates': write_dates, 'write_values': write_values})
     output_ec2_vols(vols_datapoints=vol_datapoints, instance_id=instance_id)
