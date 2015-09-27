@@ -50,7 +50,6 @@ def real_main():
     if args['<command>'] == 'ec2':
         from acli.commands import ec2 as command_ec2
         ec2_res = docopt(command_ec2.__doc__, argv=argv)
-        #print(ec2_res)
         if ec2_res.get('list'):
             ec2.ec2_list(aws_config)
         elif ec2_res.get('info'):
@@ -73,7 +72,7 @@ def real_main():
                                period=ec2_res.get('--end', None),
                                intervals=ec2_res.get('intervals', None)
                                )
-        elif ec2_res.get('vol'):
+        elif ec2_res.get('vols'):
             cloudwatch.ec2_vol(aws_config=aws_config,
                                instance_id=ec2_res.get('<instance_id>'),
                                output_type=ec2_res.get('--output', None),

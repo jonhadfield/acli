@@ -152,31 +152,31 @@ def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
     for ebs_vol in ebs_vols:
         read_ops = cloudwatch_client.get_metric_statistics(
                 Namespace='AWS/EBS',
-                MetricName='VolumeReadOps',
+                MetricName='VolumeReadBytes',
                 Dimensions=[{'Name': 'VolumeId', 'Value': ebs_vol['Ebs']['VolumeId']}],
                 StartTime=start,
                 EndTime=datetime.datetime.utcnow(),
                 Period=intervals,
                 Statistics=['Average'],
-                Unit='Count'
+                Unit='Bytes'
         )
         write_ops = cloudwatch_client.get_metric_statistics(
                 Namespace='AWS/EBS',
-                MetricName='VolumeWriteOps',
+                MetricName='VolumeWriteBytes',
                 Dimensions=[{'Name': 'VolumeId', 'Value': ebs_vol['Ebs']['VolumeId']}],
                 StartTime=start,
                 EndTime=datetime.datetime.utcnow(),
                 Period=intervals,
                 Statistics=['Average'],
-                Unit='Count'
+                Unit='Bytes'
             )
         sorted_read_datapoints = sorted(read_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
         # print(sorted_read_datapoints)
         sorted_write_datapoints = sorted(write_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
         read_dates = [x1.get('Timestamp') for x1 in sorted_read_datapoints]
-        read_values = [x2.get('Average')/period for x2 in sorted_read_datapoints]
+        read_values = [x2.get('Average') for x2 in sorted_read_datapoints]
         write_dates = [y1.get('Timestamp') for y1 in sorted_write_datapoints]
-        write_values = [y2.get('Average')/period for y2 in sorted_write_datapoints]
+        write_values = [y2.get('Average') for y2 in sorted_write_datapoints]
         vol_datapoints.append({'device_name': ebs_vol['DeviceName'],
                                'read_dates': read_dates, 'read_values': read_values,
                                'write_dates': write_dates, 'write_values': write_values})

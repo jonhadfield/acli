@@ -90,7 +90,7 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
         num_plots = len(vols_datapoints)
         f, axarr = plt.subplots(num_plots, sharex=True, sharey=True)
         f.suptitle('Volumes for instance: {0}'.format(instance_id), fontsize=16)
-        plt.ylabel('(IOPs)')
+        plt.ylabel('Bytes')
         if isinstance(axarr, np.ndarray):
             for index, vol_set in enumerate(vols_datapoints):
                 read_dates = vol_set.get('read_dates')
@@ -105,6 +105,7 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
                                     #ncol=2, shadow=True,
                                     title=None,
                                     fancybox=False)
+
                 axarr[index].grid(True)
             plt.subplots_adjust(bottom=0.2)
             plt.xticks(rotation=25)
@@ -127,6 +128,7 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
             plt.xticks(rotation=25)
             plt.xlabel('Time (UTC)')
         ax = plt.gca()
+        ax.set_ylim(bottom=0)
         handles, labels = ax.get_legend_handles_labels()
         ax.legend(handles, labels)
         xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
