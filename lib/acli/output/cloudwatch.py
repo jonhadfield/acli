@@ -39,6 +39,7 @@ def output_ec2_cpu(dates=None, values=None, instance_id=None, output_type='table
     plt.xlabel('Time (UTC)')
     plt.ylabel('CPU %')
     plt.grid(True)
+    plt.ylim([0, 100])
     plt.show()
     exit(0)
 
@@ -125,8 +126,6 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
             plt.subplots_adjust(bottom=0.2)
             plt.xticks(rotation=25)
             plt.xlabel('Time (UTC)')
-
-
         ax = plt.gca()
         handles, labels = ax.get_legend_handles_labels()
         ax.legend(handles, labels)
@@ -151,5 +150,6 @@ def output_asg_cpu(dates=None, values=None,
         plt.xlabel('Time (UTC)')
         plt.ylabel('CPU %')
         plt.grid()
+        plt.ylim([0, 100])
         plt.show()
         exit(0)

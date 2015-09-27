@@ -12,44 +12,6 @@ def get_boto3_session(aws_config):
                    aws_secret_access_key=aws_config.secret_access_key)
 
 
-def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
-            start=None, end=datetime.datetime.utcnow(), output_type=None):
-    if not intervals:
-        intervals = 60
-    if not period:
-        period = 7200
-    session = get_boto3_session(aws_config)
-    cloudwatch_client = session.client('cloudwatch')
-    if not start:
-        start = end - datetime.timedelta(seconds=period)
-    out = cloudwatch_client.get_metric_statistics(
-            Namespace='AWS/EC2',
-            MetricName='CPUUtilization',
-            Dimensions=[
-                {
-                 'Name': 'InstanceId',
-                 'Value': instance_id
-                }
-            ],
-            StartTime=start,
-            EndTime=datetime.datetime.utcnow(),
-            Period=intervals,
-            Statistics=[
-                'Average',
-            ],
-            Unit='Percent'
-        )
-    datapoints = out.get('Datapoints')
-    sorted_datapoints = sorted(datapoints, key=lambda v: v.get('Timestamp'))
-    dates = list()
-    values = list()
-    for datapoint in sorted_datapoints:
-        dates.append(datapoint.get('Timestamp'))
-        values.append(datapoint.get('Average'))
-    output_ec2_cpu(dates=dates, values=values, instance_id=instance_id)
-    exit(0)
-
-
 def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow(), output_type=None):
     if not intervals:
@@ -93,6 +55,44 @@ def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
     output_ec2_net(in_dates=in_dates, in_values=in_values,
                    out_dates=out_dates, out_values=out_values,
                    instance_id=instance_id)
+    exit(0)
+
+
+def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
+            start=None, end=datetime.datetime.utcnow(), output_type=None):
+    if not intervals:
+        intervals = 60
+    if not period:
+        period = 7200
+    session = get_boto3_session(aws_config)
+    cloudwatch_client = session.client('cloudwatch')
+    if not start:
+        start = end - datetime.timedelta(seconds=period)
+    out = cloudwatch_client.get_metric_statistics(
+            Namespace='AWS/EC2',
+            MetricName='CPUUtilization',
+            Dimensions=[
+                {
+                 'Name': 'InstanceId',
+                 'Value': instance_id
+                }
+            ],
+            StartTime=start,
+            EndTime=datetime.datetime.utcnow(),
+            Period=intervals,
+            Statistics=[
+                'Average',
+            ],
+            Unit='Percent'
+        )
+    datapoints = out.get('Datapoints')
+    sorted_datapoints = sorted(datapoints, key=lambda v: v.get('Timestamp'))
+    dates = list()
+    values = list()
+    for datapoint in sorted_datapoints:
+        dates.append(datapoint.get('Timestamp'))
+        values.append(datapoint.get('Average'))
+    output_ec2_cpu(dates=dates, values=values, instance_id=instance_id)
     exit(0)
 
 
@@ -171,11 +171,12 @@ def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
                 Unit='Count'
             )
         sorted_read_datapoints = sorted(read_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
+        # print(sorted_read_datapoints)
         sorted_write_datapoints = sorted(write_ops.get('Datapoints'), key=lambda v: v.get('Timestamp'))
         read_dates = [x1.get('Timestamp') for x1 in sorted_read_datapoints]
-        read_values = [x2.get('Average') for x2 in sorted_read_datapoints]
+        read_values = [x2.get('Average')/period for x2 in sorted_read_datapoints]
         write_dates = [y1.get('Timestamp') for y1 in sorted_write_datapoints]
-        write_values = [y2.get('Average') for y2 in sorted_write_datapoints]
+        write_values = [y2.get('Average')/period for y2 in sorted_write_datapoints]
         vol_datapoints.append({'device_name': ebs_vol['DeviceName'],
                                'read_dates': read_dates, 'read_values': read_values,
                                'write_dates': write_dates, 'write_values': write_values})
