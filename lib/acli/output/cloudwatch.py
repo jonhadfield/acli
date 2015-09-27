@@ -75,11 +75,11 @@ def output_ec2_net(in_dates=None, in_values=None, out_dates=None,
         plt.title('Network statistics for: {0}'.format(instance_id))
         plt.xlabel('Time (UTC)')
         plt.ylabel('Network (Bytes/s)')
-        plt.grid(True)
         handles, labels = ax.get_legend_handles_labels()
         ax.legend(handles, labels)
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
+        plt.grid()
         plt.show()
         exit(0)
 
@@ -104,6 +104,7 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
                                     #ncol=2, shadow=True,
                                     title=None,
                                     fancybox=False)
+                axarr[index].grid(True)
             plt.subplots_adjust(bottom=0.2)
             plt.xticks(rotation=25)
             plt.xlabel('Time (UTC)')
@@ -120,14 +121,18 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
                          #ncol=2, shadow=True,
                          title=None,
                          fancybox=False)
+            axarr.grid(True)
             plt.subplots_adjust(bottom=0.2)
             plt.xticks(rotation=25)
             plt.xlabel('Time (UTC)')
+
+
         ax = plt.gca()
         handles, labels = ax.get_legend_handles_labels()
         ax.legend(handles, labels)
         xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
         ax.xaxis.set_major_formatter(xfmt)
+        plt.grid(True)
         plt.show()
         exit(0)
 
@@ -145,6 +150,6 @@ def output_asg_cpu(dates=None, values=None,
         plt.title('CPU statistics for: {0}'.format(asg_name))
         plt.xlabel('Time (UTC)')
         plt.ylabel('CPU %')
-        plt.grid(True)
+        plt.grid()
         plt.show()
         exit(0)
