@@ -8,13 +8,16 @@ def get_elb_instances(instances=None):
 
 
 def output_elbs(output_media=None, elbs=None):
-    if output_media == 'console':
-        td = [['name', 'instances', 'dns_name']]
-        for elb in elbs:
-            td.append([elb.name, str(len(elb.instances)), elb.dns_name])
-        output_ascii_table(table_title="ELBs",
-                           table_data=td,
-                           inner_heading_row_border=True)
+    if elbs:
+        if output_media == 'console':
+            td = [['name', 'instances', 'dns_name']]
+            for elb in elbs:
+                td.append([elb.name, str(len(elb.instances)), elb.dns_name])
+            output_ascii_table(table_title="ELBs",
+                               table_data=td,
+                               inner_heading_row_border=True)
+    else:
+        print("No ELBs found.")
     exit(0)
 
 
