@@ -6,6 +6,7 @@ usage: acli [--version] [--help]
        acli account
        acli ec2 list [options]
        acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
+       acli lc list [options]
        acli asg list [options]
        acli asg (info | cpu | mem | net) <asg_name> [options]
        acli ami (list | info <ami_id>)
@@ -87,6 +88,13 @@ def real_main():
             elb.elb_list(aws_config)
         elif elb_res.get('info'):
             elb.elb_info(aws_config, elb_name=elb_res.get('<elb_name>'))
+    if args['<command>'] == 'lc':
+        from acli.commands import lc as command_lc
+        lc_res = docopt(command_lc.__doc__, argv=argv)
+        if lc_res.get('list'):
+            asg.lc_list(aws_config)
+        elif lc_res.get('info'):
+            asg.lc_info(aws_config, lc_name=lc_res.get('<lc_name>'))
     if args['<command>'] == 'asg':
         from acli.commands import asg as command_asg
         asg_res = docopt(command_asg.__doc__, argv=argv)

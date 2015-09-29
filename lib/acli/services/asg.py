@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, print_function)
 from boto3.session import Session
-from acli.output.asg import (output_asg_list, output_asg_info)
+from acli.output.asg import (output_asg_list, output_asg_info,
+                             output_lc_list, output_lc_info)
 
 
 def get_boto3_session(aws_config):
@@ -28,3 +29,20 @@ def asg_info(aws_config=None, asg_name=None):
         output_asg_info(output_media='console', asg=asg.get('AutoScalingGroups')[0])
     else:
         exit("Auto Scaling Group: {0} not found.".format(asg_name))
+
+
+def lc_list(aws_config=None):
+    session = get_boto3_session(aws_config)
+    conn = session.client('autoscaling')
+    output_lc_list(output_media='console',
+                   lc_list=conn.describe_launch_configurations().get('LaunchConfigurations', None))
+
+
+def lc_info(aws_config=None, lc_name=None):
+    session = get_boto3_session(aws_config)
+    conn = session.client('autoscaling')
+    lc = conn.describe_launch_configurations(LaunchConfigurationNames=[lc_name])
+    if lc:
+        output_lc_info(output_media='console', lc=lc.get('LaunchConfigurations')[0])
+    else:
+        exit("Launch Configuration: {0} not found.".format(lc_name))

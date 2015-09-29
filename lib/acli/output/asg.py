@@ -52,3 +52,46 @@ def output_asg_info(output_media=None, asg=None):
         output_ascii_table(table_title="ASG Info",
                            table_data=td)
     exit(0)
+
+
+def output_lc_list(output_media=None, lc_list=None):
+    if isinstance(lc_list, list):
+        if output_media == 'console':
+            td = [['LaunchConfigurationName', 'ImageId', 'InstanceType', 'CreatedTime']]
+            for lc in lc_list:
+                td.append([lc.get('LaunchConfigurationName', '-'),
+                           str(lc.get('ImageId', '-')),
+                           str(lc.get('InstanceType', '-')),
+                           str(lc.get('CreatedTime', '-'))
+                           ])
+            output_ascii_table(table_title="Launch Configurations",
+                               table_data=td,
+                               inner_heading_row_border=True)
+    exit(0)
+
+
+def output_lc_info(output_media=None, lc=None):
+    pass
+    if output_media == 'console':
+        td = list()
+        td.append(['name', dash_if_none(lc.get('LaunchConfigurationName'))])
+        td.append(['arn', dash_if_none(lc.get('ImageId'))])
+        td.append(['lc', dash_if_none(lc.get('InstanceType'))])
+        td.append(['created', str(dash_if_none(lc.get('CreatedTime')))])
+        td.append(['iam instance profile', str(dash_if_none(lc.get('IamInstanceProfile')))])
+        td.append(['ebs optimised', str(dash_if_none(lc.get('EbsOptimized')))])
+        # td.append(['launch configuration arn', str(dash_if_none(lc.get('LaunchConfigurationARN')))])
+        td.append(['instance monitoring', str(dash_if_none(lc.get('InstanceMonitoring')))])
+        td.append(['classiclink vpc security groups', str(dash_if_none(lc.get('ClassicLinkVPCSecurityGroups')))])
+        td.append(['block device mappings', str(dash_if_none(lc.get('BlockDeviceMappings')))])
+        td.append(['key name', str(dash_if_none(lc.get('KeyName')))])
+        td.append(['security groups', str(dash_if_none(lc.get('SecurityGroups')))])
+        td.append(['kernel ID', str(dash_if_none(lc.get('KernelId')))])
+        td.append(['ramdisk ID', str(dash_if_none(lc.get('RamdiskId')))])
+        td.append(['image ID', str(dash_if_none(lc.get('ImageId')))])
+        td.append(['Instance Type', str(dash_if_none(lc.get('InstanceType')))])
+        td.append(['associate public IP', str(dash_if_none(lc.get('AssociatePublicIpAddress')))])
+        td.append(['user data', str(dash_if_none(lc.get('UserData')))])
+        output_ascii_table(table_title="Launch Configuration Info",
+                           table_data=td)
+    exit(0)

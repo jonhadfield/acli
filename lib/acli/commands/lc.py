@@ -1,5 +1,5 @@
 """Usage:
-    acli elb (list | info <elb_name>)
+    acli lc (list | info <lc_name>) [options]
 
     -h, --help
 """

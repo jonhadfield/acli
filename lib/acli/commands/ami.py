@@ -1,4 +1,5 @@
-"""usage: acli ami (list | info <ami_id>)
+"""Usage:
+    acli ami (list | info <ami_id>)
 
     -h, --help
 """
