@@ -19,34 +19,44 @@ def ec2_list(aws_config=None):
 def ec2_info(aws_config=None, instance_id=None):
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
-    output_ec2_info(output_media='console',
-                    instance=conn.Instance(instance_id))
+    instance = conn.Instance(instance_id)
+    try:
+        if instance.instance_id:
+            output_ec2_info(output_media='console',
+                            instance=instance)
+    except AttributeError:
+        exit("Cannot find instance: {0}".format(instance_id))
 
 
 def ec2_manage(aws_config=None, instance_id=None, action=None):
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     instance = conn.Instance(instance_id)
-    if instance:
-        instance_state = instance.state.get('Name')
-        if action == 'stop':
-            if instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down'):
-                exit("Cannot stop instance as state is {0}.".format(instance_state))
-            elif instance_state in ('stopping', 'stopped', 'shutting-down'):
-                exit("Instance {0} is already {1}.".format(instance_id, instance_state))
-            else:
-                instance.stop()
-                exit("Instance {0} stopping.".format(instance_id))
+    try:
+        if instance.instance_id:
+            instance_state = instance.state.get('Name')
+            if action == 'stop':
+                if instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down'):
+                    exit("Cannot stop instance as state is {0}.".format(instance_state))
+                elif instance_state in ('stopping', 'stopped', 'shutting-down'):
+                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+                else:
+                    instance.stop()
+                    exit("Instance {0} stopping.".format(instance_id))
 
-        if action == 'start':
-            if instance_state in ('rebooting', 'stopping', 'terminated', 'shutting-down'):
-                exit("Cannot start instance {0} as state is {1}.".format(instance_id, instance_state))
-            elif instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down', 'running'):
-                exit("Instance {0} is already {1}.".format(instance_id, instance_state))
-            else:
-                instance.start()
-                exit("Instance {0} starting.".format(instance_id))
-    else:
+            if action == 'start':
+                if instance_state in ('rebooting', 'stopping',
+                                      'terminated', 'shutting-down'):
+                    exit("Cannot start instance {0} as state is {1}.".format(instance_id,
+                                                                             instance_state))
+                elif instance_state in ('pending', 'rebooting',
+                                        'stopping', 'terminated',
+                                        'shutting-down', 'running'):
+                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+                else:
+                    instance.start()
+                    exit("Instance {0} starting.".format(instance_id))
+    except AttributeError:
         exit("Cannot find instance: {0}".format(instance_id))
 
 
