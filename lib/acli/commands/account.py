@@ -1,4 +1,5 @@
-"""usage: acli account
+"""Usage:
+    acli account
 
     -h, --help
 """
