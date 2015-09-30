@@ -1,4 +1,4 @@
-from __future__ import (absolute_import, print_function)
+from __future__ import (absolute_import, print_function, unicode_literals)
 from boto3.session import Session
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info)
@@ -43,7 +43,6 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
                 else:
                     instance.stop()
                     exit("Instance {0} stopping.".format(instance_id))
-
             if action == 'start':
                 if instance_state in ('rebooting', 'stopping',
                                       'terminated', 'shutting-down'):
@@ -56,6 +55,27 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
                 else:
                     instance.start()
                     exit("Instance {0} starting.".format(instance_id))
+            if action == 'reboot':
+                if instance_state in ('pending', 'stopping', 'terminated', 'shutting-down'):
+                    exit("Cannot reboot instance {0} as state is {1}.".format(instance_id,
+                                                                              instance_state))
+                elif instance_state == 'rebooting':
+                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+                else:
+                    instance.reboot()
+                    exit("Instance {0} rebooting.".format(instance_id))
+            if action == 'terminate':
+                if instance_state in ('rebooting', 'stopping',
+                                      'terminated', 'shutting-down'):
+                    exit("Cannot terminate instance {0} as state is {1}.".format(instance_id,
+                                                                                 instance_state))
+                elif instance_state in ('rebooting',
+                                        'stopping', 'terminated',
+                                        'shutting-down'):
+                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+                else:
+                    instance.terminate()
+                    exit("Instance {0} terminating.".format(instance_id))
     except AttributeError:
         exit("Cannot find instance: {0}".format(instance_id))
 

@@ -28,7 +28,7 @@ The most common commands are:
 See 'acli help <command>'
 """
 
-from __future__ import (absolute_import, print_function)
+from __future__ import (absolute_import, print_function, unicode_literals)
 from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb, account, cloudwatch, asg)
@@ -57,8 +57,12 @@ def real_main():
             ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
         elif ec2_res.get('stop'):
             ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="stop")
+        elif ec2_res.get('reboot'):
+            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="reboot")
         elif ec2_res.get('start'):
             ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="start")
+        elif ec2_res.get('terminate'):
+            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="terminate")
         elif ec2_res.get('cpu'):
             cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
         elif ec2_res.get('net'):

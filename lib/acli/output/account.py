@@ -1,4 +1,4 @@
-from __future__ import (absolute_import, print_function)
+from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import output_ascii_table, dash_if_none
 
 

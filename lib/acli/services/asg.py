@@ -1,4 +1,4 @@
-from __future__ import (absolute_import, print_function)
+from __future__ import (absolute_import, print_function, unicode_literals)
 from boto3.session import Session
 from acli.output.asg import (output_asg_list, output_asg_info,
                              output_lc_list, output_lc_info)

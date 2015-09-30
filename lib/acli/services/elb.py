@@ -1,4 +1,4 @@
-from __future__ import (absolute_import, print_function)
+from __future__ import (absolute_import, print_function, unicode_literals)
 import boto.ec2.elb
 from acli.output.elb import output_elbs, output_elb_info
 

@@ -1,4 +1,4 @@
-from __future__ import (absolute_import, print_function)
+from __future__ import (absolute_import, print_function, unicode_literals)
 from boto3.session import Session
 import datetime
 from acli.output.cloudwatch import (output_ec2_cpu, output_ec2_net,
