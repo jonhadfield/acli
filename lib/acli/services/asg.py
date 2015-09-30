@@ -13,8 +13,12 @@ def get_boto3_session(aws_config):
 def asg_list(aws_config=None):
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
-    output_asg_list(output_media='console',
-                    asg_list=conn.describe_auto_scaling_groups().get('AutoScalingGroups', None))
+    all_asgs = conn.describe_auto_scaling_groups().get('AutoScalingGroups', None)
+    if all_asgs:
+        output_asg_list(output_media='console',
+                        asg_list=all_asgs)
+    else:
+        exit("No auto scaling groups were found.")
 
 
 def asg_info(aws_config=None, asg_name=None):
@@ -34,15 +38,20 @@ def asg_info(aws_config=None, asg_name=None):
 def lc_list(aws_config=None):
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
-    output_lc_list(output_media='console',
-                   lc_list=conn.describe_launch_configurations().get('LaunchConfigurations', None))
+    all_lcs = conn.describe_launch_configurations().get('LaunchConfigurations', None)
+    if all_lcs:
+        output_lc_list(output_media='console',
+                       lc_list=all_lcs)
+    else:
+        exit("No launch configurations were found.")
 
 
 def lc_info(aws_config=None, lc_name=None):
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
     lc = conn.describe_launch_configurations(LaunchConfigurationNames=[lc_name])
-    if lc:
-        output_lc_info(output_media='console', lc=lc.get('LaunchConfigurations')[0])
+    lc_details = lc.get('LaunchConfigurations', None)
+    if lc_details:
+        output_lc_info(output_media='console', lc=lc_details[0])
     else:
         exit("Launch Configuration: {0} not found.".format(lc_name))
