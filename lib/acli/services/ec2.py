@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from boto3.session import Session
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,

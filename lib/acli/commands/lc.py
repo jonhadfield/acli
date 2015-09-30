@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Usage:
     acli lc (list | info <lc_name>) [options]
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Usage:
     acli asg list [options]
     acli asg (info | cpu | mem | net) <asg_name> [options]

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Usage:
     acli elb (list | info <elb_name>)
 

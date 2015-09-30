@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Usage:
     acli ec2 list [options]
     acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]

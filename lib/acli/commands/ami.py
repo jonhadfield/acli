@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Usage:
     acli ami (list | info <ami_id>)
 
