@@ -55,6 +55,10 @@ def real_main():
             ec2.ec2_list(aws_config)
         elif ec2_res.get('info'):
             ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
+        elif ec2_res.get('stop'):
+            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="stop")
+        elif ec2_res.get('start'):
+            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="start")
         elif ec2_res.get('cpu'):
             cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
         elif ec2_res.get('mem'):

@@ -23,6 +23,33 @@ def ec2_info(aws_config=None, instance_id=None):
                     instance=conn.Instance(instance_id))
 
 
+def ec2_manage(aws_config=None, instance_id=None, action=None):
+    session = get_boto3_session(aws_config)
+    conn = session.resource('ec2')
+    instance = conn.Instance(instance_id)
+    if instance:
+        instance_state = instance.state.get('Name')
+        if action == 'stop':
+            if instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down'):
+                exit("Cannot stop instance as state is {0}.".format(instance_state))
+            elif instance_state in ('stopping', 'stopped', 'shutting-down'):
+                exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+            else:
+                instance.stop()
+                exit("Instance {0} stopping.".format(instance_id))
+
+        if action == 'start':
+            if instance_state in ('rebooting', 'stopping', 'terminated', 'shutting-down'):
+                exit("Cannot start instance {0} as state is {1}.".format(instance_id, instance_state))
+            elif instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down', 'running'):
+                exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+            else:
+                instance.start()
+                exit("Instance {0} starting.".format(instance_id))
+    else:
+        exit("Cannot find instance: {0}".format(instance_id))
+
+
 def ami_info(aws_config=None, ami_id=None):
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
