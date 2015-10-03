@@ -17,13 +17,13 @@ options:
 The most common commands are:
    account      Get account info
    ec2          Manage ec2 instances
-   cw           Get CloudWatch metrics
    elb          Manage elb instances
    ami          Manage amis
    asg          Manage auto-scaling groups
    lc           Manage launch configurations
    eip          Manage elastic ips
    secgroup     Manage security groups
+   route53      Manage route 53 configuration
 
 See 'acli help <command>'
 """
@@ -31,7 +31,8 @@ See 'acli help <command>'
 from __future__ import (absolute_import, print_function, unicode_literals)
 from docopt import docopt
 from colorama import init
-from acli.services import (ec2, elb, account, cloudwatch, asg)
+from acli.services import (ec2, elb, account,
+                           cloudwatch, asg, route53)
 from acli.config import Config
 from acli import utils
 init(autoreset=True)
@@ -117,6 +118,13 @@ def real_main():
             ec2.ami_list(aws_config)
         elif ami_res.get('info'):
             ec2.ami_info(aws_config, ami_id=ami_res.get('<ami_id>'))
+    if args['<command>'] == 'route53':
+        from acli.commands import route53 as command_route53
+        route53_res = docopt(command_route53.__doc__, argv=argv)
+        if route53_res.get('list'):
+            route53.route53_list(aws_config)
+        elif route53_res.get('info'):
+            route53.route53_info(aws_config, instance_id=route53_res.get('<zone>'))
 
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
