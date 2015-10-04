@@ -5,42 +5,65 @@ import matplotlib.dates as mdates
 import numpy as np
 
 
-def output_ec2_cpu(dates=None, values=None, instance_id=None, output_type='table'):
-    plt.subplots_adjust(bottom=0.2)
-    plt.xticks(rotation=25)
-    ax = plt.gca()
-    xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
-    ax.xaxis.set_major_formatter(xfmt)
-    plt.plot(dates, values)
-    plt.gcf().autofmt_xdate()
-    plt.title('CPU statistics for: {0}'.format(instance_id))
-    plt.xlabel('Time (UTC)')
-    plt.ylabel('CPU %')
-    plt.grid(True)
-    plt.ylim([0, 100])
-    plt.show()
+def output_ec2_cpu(dates=None, values=None,
+                   instance_id=None, output_type=None):
+    """
+    @type dates: list
+    @type values: list
+    @type instance_id: unicode
+    @type output_type: unicode
+    """
+    if output_type in ('graph', None):
+        plt.subplots_adjust(bottom=0.2)
+        plt.xticks(rotation=25)
+        ax = plt.gca()
+        xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+        ax.xaxis.set_major_formatter(xfmt)
+        plt.plot(dates, values)
+        plt.gcf().autofmt_xdate()
+        plt.title('CPU statistics for: {0}'.format(instance_id))
+        plt.xlabel('Time (UTC)')
+        plt.ylabel('CPU %')
+        plt.grid(True)
+        plt.ylim([0, 100])
+        plt.show()
     exit(0)
 
 
-def output_ec2_mem(dates=None, values=None, instance_id=None, output_type='table'):
-    plt.subplots_adjust(bottom=0.2)
-    plt.xticks(rotation=25)
-    ax = plt.gca()
-    xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
-    ax.xaxis.set_major_formatter(xfmt)
-    plt.plot(dates, values)
-    plt.gcf().autofmt_xdate()
-    plt.title(' Memory usage for: {0}'.format(instance_id))
-    plt.xlabel('Time (UTC)')
-    plt.ylabel('Memory Usage %')
-    plt.grid(True)
-    plt.show()
+def output_ec2_mem(dates=None, values=None, instance_id=None, output_type=None):
+    """
+    @type dates: list
+    @type values: list
+    @type instance_id: unicode
+    @type output_type: unicode
+    """
+    if output_type in ('graph', None):
+        plt.subplots_adjust(bottom=0.2)
+        plt.xticks(rotation=25)
+        ax = plt.gca()
+        xfmt = mdates.DateFormatter('%Y-%m-%d %H:%M:%S')
+        ax.xaxis.set_major_formatter(xfmt)
+        plt.plot(dates, values)
+        plt.gcf().autofmt_xdate()
+        plt.title(' Memory usage for: {0}'.format(instance_id))
+        plt.xlabel('Time (UTC)')
+        plt.ylabel('Memory Usage %')
+        plt.grid(True)
+        plt.show()
     exit(0)
 
 
 def output_ec2_net(in_dates=None, in_values=None, out_dates=None,
                    out_values=None, instance_id=None, output_type=None):
-    if not output_type or output_type == 'graph':
+    """
+    @type in_dates: list
+    @type in_values: list
+    @type out_dates: list
+    @type out_values: list
+    @type instance_id: unicode
+    @type output_type: unicode
+    """
+    if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
         ax = plt.gca()
@@ -64,7 +87,12 @@ def output_ec2_net(in_dates=None, in_values=None, out_dates=None,
 
 
 def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
-    if not output_type or output_type == 'graph':
+    """
+    @type vols_datapoints: list
+    @type instance_id: unicode
+    @type output_type: unicode
+    """
+    if output_type in ('graph', None):
         num_plots = len(vols_datapoints)
         f, axarr = plt.subplots(num_plots, sharex=True, sharey=True)
         f.suptitle('Volumes for instance: {0}'.format(instance_id), fontsize=16)
@@ -113,7 +141,13 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
 
 def output_asg_cpu(dates=None, values=None,
                    asg_name=None, output_type=None):
-    if not output_type or output_type == 'graph':
+    """
+    @type dates: list
+    @type values: list
+    @type asg_name: unicode
+    @type output_type: unicode
+    """
+    if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
         ax = plt.gca()
