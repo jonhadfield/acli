@@ -34,6 +34,10 @@ def output_route53_list(output_media=None, zones=None):
 
 
 def get_record_set_values(resource_records):
+    """
+    @type resource_records: list
+    """
+    print(resource_records.__class__.__name__)
     out = list()
     for record in resource_records:
         out.append(record.get('Value'))
@@ -61,7 +65,6 @@ def output_route53_info(output_media=None, zone=None, record_sets=None):
             td.append([' Type', record_set['Type']])
             td.append([' TTL', str(record_set['TTL'])])
             td.append([' Values', "\n".join(get_record_set_values(record_set['ResourceRecords']))])
-
         output_ascii_table(table_title="Zone Info",
                            table_data=td)
     exit(0)
