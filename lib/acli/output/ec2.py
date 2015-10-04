@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, dash_if_none)
-from boto.resultset import ResultSet
 
 
 def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
@@ -75,8 +74,6 @@ def output_ec2_list(output_media=None, instances=None):
         td.append(['id', 'name', 'state', 'type', 'image',
                    'public ip', 'private ip'])
         for instance in instances:
-            if isinstance(instance, ResultSet):
-                instance = instance[0]
             instance_id = instance.instance_id
             instance_state = dash_if_none(instance.state.get('Name', None))
             instance_type = dash_if_none(str(instance.instance_type))
