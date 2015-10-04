@@ -10,16 +10,17 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
     @type tag_key: unicode
     @type max_length: int
     """
-    ret = []
-    for tag in ec2_instance.tags:
-        if tag_key and tag.get('Key') == tag_key:
-            return tag.get('Value', "-")
-        else:
-            val = tag.get('Value', None)
-            if val and len(val) > max_length:
-                val = "{0}...".format(val[:max_length-3])
-            ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
-    return "".join(ret).rstrip()
+    if ec2_instance.tags:
+        ret = []
+        for tag in ec2_instance.tags:
+            if tag_key and tag.get('Key') == tag_key:
+                return tag.get('Value', "-")
+            else:
+                val = tag.get('Value', None)
+                if val and len(val) > max_length:
+                    val = "{0}...".format(val[:max_length-3])
+                ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
+        return "".join(ret).rstrip()
 
 
 def get_interfaces(interfaces):
