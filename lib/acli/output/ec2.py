@@ -6,6 +6,11 @@ from boto.resultset import ResultSet
 
 def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
                           max_length=40):
+    """
+    @type ec2_instance: ec2.Instance
+    @type tag_key: unicode
+    @type max_length: int
+    """
     ret = []
     for tag in ec2_instance.tags:
         if tag_key and tag.get('Key') == tag_key:
@@ -19,7 +24,10 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
 
 
 def get_interfaces(interfaces):
-    ret = []
+    """
+    @type interfaces: list
+    """
+    ret = list()
     for interface in interfaces:
         ret.append("{0}\n".format(interface.get('NetworkInterfaceId')))
         ret.append(" Attachment:\n")
@@ -47,6 +55,9 @@ def get_interfaces(interfaces):
 
 
 def get_placement_details(placement):
+    """
+    @type placement: dict
+    """
     ret = []
     for key, value in placement.iteritems():
         ret.append("{0}:{1}".format(key, value))
@@ -55,6 +66,10 @@ def get_placement_details(placement):
 
 
 def output_ec2_list(output_media=None, instances=None):
+    """
+    @type output_media: unicode
+    @type instances: list
+    """
     if output_media == 'console':
         td = list()
         td.append(['id', 'name', 'state', 'type', 'image',
@@ -83,16 +98,25 @@ def output_ec2_list(output_media=None, instances=None):
 
 
 def short_instance_profile(instance_profile=None):
+    """
+    @type instance_profile: dict
+    """
     if instance_profile and instance_profile.get('Arn', None):
         return instance_profile.get('Arn', None)
 
 
 def get_sec_group_names(groups=None):
+    """
+    @type groups: list
+    """
     sec_group_names = [x.name for x in groups]
     return ",".join(sec_group_names)
 
 
 def get_sec_groups_name_and_id(groups=None):
+    """
+    @type groups: list
+    """
     ret = []
     for group in groups:
         ret.append('GroupName:{}, GroupId:{}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
@@ -100,16 +124,25 @@ def get_sec_groups_name_and_id(groups=None):
 
 
 def get_interface_ids(interfaces=None):
+    """
+    @type interfaces: list
+    """
     interface_ids = [x.id for x in interfaces]
     return ",".join(interface_ids)
 
 
 def get_state_reason(state_reason=None):
+    """
+    @type state_reason: dict
+    """
     if state_reason:
         return state_reason.get('Message', None)
 
 
 def get_block_devices(bdms=None):
+    """
+    @type bdms: list
+    """
     ret = ""
     for bdm in bdms:
         ret += "{0}\n".format(bdm.get('DeviceName', '-'))
@@ -123,6 +156,10 @@ def get_block_devices(bdms=None):
 
 
 def output_ec2_info(output_media=None, instance=None):
+    """
+    @type output_media: unicode
+    @type instance: ec2.Instance
+    """
     if output_media == 'console':
         td = list()
         td.append(['id', instance.id])
@@ -155,6 +192,10 @@ def output_ec2_info(output_media=None, instance=None):
 
 
 def output_ami_list(output_media=None, amis=None):
+    """
+    @type output_media: unicode
+    @type amis: list
+    """
     if output_media == 'console':
         td = [['id', 'name', 'created']]
         for ami in amis:
@@ -165,18 +206,10 @@ def output_ami_list(output_media=None, amis=None):
     exit(0)
 
 
-#def output_block_device_mapping(bdm=None):
-#    out = ""
-#    for item in bdm:
-#        out += "Device Name:{0}\n".format(item.get('DeviceName'))
-#        if item.get('Ebs'):
-#            out += " Type: Ebs\n"
-#            for key, value in item.get('Ebs').iteritems():
-#                out += " {0}:{1}\n".format(key, value)
-#    return out
-
-
 def output_ami_permissions(perms=None):
+    """
+    @type perms: dict
+    """
     out = ""
     for i, (key, value) in enumerate(perms.iteritems()):
         out += "{0},{1}".format(key, str(value))
@@ -186,6 +219,9 @@ def output_ami_permissions(perms=None):
 
 
 def get_product_codes(product_codes=None):
+    """
+    @type product_codes: dict
+    """
     out = ""
     for prodcode in product_codes:
         out += "{0}/{1}".format(prodcode.get('ProductCodeId'),prodcode.get('ProductCodeType'))
@@ -193,6 +229,10 @@ def get_product_codes(product_codes=None):
 
 
 def output_ami_info(output_media=None, ami=None):
+    """
+    @type output_media: unicode
+    @type ami: ec2.Ami
+    """
     if output_media == 'console':
         td = list()
         td.append(['id', ami.id])

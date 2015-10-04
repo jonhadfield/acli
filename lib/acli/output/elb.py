@@ -4,11 +4,18 @@ from acli.output import output_ascii_table, dash_if_none
 
 
 def get_elb_instances(instances=None):
+    """
+    @type instances: list
+    """
     instance_ids = [x.id for x in instances]
     return ",".join(instance_ids)
 
 
 def output_elbs(output_media=None, elbs=None):
+    """
+    @type output_media: unicode
+    @type elbs: list
+    """
     if elbs:
         if output_media == 'console':
             td = [['name', 'instances', 'dns_name']]
@@ -23,6 +30,10 @@ def output_elbs(output_media=None, elbs=None):
 
 
 def get_elb_policies(policies=None):
+    """
+    @type policies: Policies
+    """
+    print(policies.__class__.__name__)
     output = ""
     if policies.app_cookie_stickiness_policies:
         for acsp in policies.app_cookie_stickiness_policies:
@@ -38,6 +49,9 @@ def get_elb_policies(policies=None):
 
 
 def get_elb_listeners(listeners=None):
+    """
+    @type listeners: list
+    """
     output = ""
     for listener in listeners:
         output += "LB Port: {0} Instance Port: {1} Protocol: {2}\n".format(listener[0], listener[1], listener[2])
@@ -46,6 +60,10 @@ def get_elb_listeners(listeners=None):
 
 
 def output_elb_info(output_media=None, elb=None):
+    """
+    @type output_media: unicode
+    @type elb: list
+    """
     if output_media == 'console':
         td = list()
         td.append(['name', elb[0].name])
