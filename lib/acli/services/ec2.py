@@ -20,7 +20,10 @@ def ec2_list(aws_config=None):
     """
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
-    output_ec2_list(output_media='console', instances=conn.instances.all())
+    all_instances = conn.instances.all()
+    if len(list(all_instances)):
+        output_ec2_list(output_media='console', instances=all_instances)
+    exit('No ec2 instances found.')
 
 
 def ec2_info(aws_config=None, instance_id=None):
