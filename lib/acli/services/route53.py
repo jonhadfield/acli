@@ -20,7 +20,11 @@ def route53_list(aws_config=None):
     """
     session = get_boto3_session(aws_config)
     conn = session.client('route53')
-    output_route53_list(output_media='console', zones=conn.list_hosted_zones())
+    zones = conn.list_hosted_zones()
+    if zones.get('HostedZones', None):
+        output_route53_list(output_media='console', zones=conn.list_hosted_zones())
+    else:
+        exit("No hosted zones found.")
 
 
 def route53_info(aws_config=None, zone_id=None):
