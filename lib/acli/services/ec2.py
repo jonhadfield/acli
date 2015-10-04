@@ -6,18 +6,28 @@ from acli.output.ec2 import (output_ec2_list, output_ec2_info,
 
 
 def get_boto3_session(aws_config):
+    """
+    @type aws_config: Config
+    """
     return Session(region_name=aws_config.region,
                    aws_access_key_id=aws_config.access_key_id,
                    aws_secret_access_key=aws_config.secret_access_key)
 
 
 def ec2_list(aws_config=None):
+    """
+    @type aws_config: Config
+    """
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     output_ec2_list(output_media='console', instances=conn.instances.all())
 
 
 def ec2_info(aws_config=None, instance_id=None):
+    """
+    @type aws_config: Config
+    @type instance_id: unicode
+    """
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     instance = conn.Instance(instance_id)
@@ -30,6 +40,11 @@ def ec2_info(aws_config=None, instance_id=None):
 
 
 def ec2_manage(aws_config=None, instance_id=None, action=None):
+    """
+    @type aws_config: Config
+    @type instance_id: unicode
+    @type action: unicode
+    """
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     instance = conn.Instance(instance_id)
@@ -82,6 +97,10 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
 
 
 def ami_info(aws_config=None, ami_id=None):
+    """
+    @type aws_config: Config
+    @type ami_id: unicode
+    """
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     ami = None
@@ -92,6 +111,9 @@ def ami_info(aws_config=None, ami_id=None):
 
 
 def ami_list(aws_config):
+    """
+    @type aws_config: Config
+    """
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     output_ami_list(output_media='console',
@@ -99,6 +121,10 @@ def ami_list(aws_config):
 
 
 def ec2_get_instance_vols(session=None, instance_id=None):
+    """
+    @type session: Session
+    @type instance_id: unicode
+    """
     conn = session.resource('ec2')
     ec2_instance = conn.instances.filter(InstanceIds=[instance_id])
     vols = list()
