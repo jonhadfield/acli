@@ -4,6 +4,9 @@ from acli.output import output_ascii_table, dash_if_none, get_tags
 
 
 def get_instances_output(instances):
+    """
+    @type instances: list
+    """
     ret = ""
     for instance in instances:
         ret += "{0}\n".format(instance.get('InstanceId'))
@@ -12,6 +15,10 @@ def get_instances_output(instances):
 
 
 def output_asg_list(output_media=None, asg_list=None):
+    """
+    @type output_media: unicode
+    @type asg_list: list
+    """
     if isinstance(asg_list, list):
         if output_media == 'console':
             td = [['name', 'instances', 'min', 'max', 'lc']]
@@ -29,6 +36,10 @@ def output_asg_list(output_media=None, asg_list=None):
 
 
 def output_asg_info(output_media=None, asg=None):
+    """
+    @type output_media: unicode
+    @type asg: dict
+    """
     if output_media == 'console':
         td = list()
         td.append(['name', dash_if_none(asg.get('AutoScalingGroupName'))])
@@ -57,6 +68,10 @@ def output_asg_info(output_media=None, asg=None):
 
 
 def output_lc_list(output_media=None, lc_list=None):
+    """
+    @type output_media: unicode
+    @type lc_list: list
+    """
     if isinstance(lc_list, list):
         if output_media == 'console':
             td = [['LaunchConfigurationName', 'ImageId', 'InstanceType', 'CreatedTime']]
@@ -73,6 +88,10 @@ def output_lc_list(output_media=None, lc_list=None):
 
 
 def output_lc_info(output_media=None, lc=None):
+    """
+    @type output_media: unicode
+    @type lc: dict
+    """
     pass
     if output_media == 'console':
         td = list()
@@ -82,7 +101,6 @@ def output_lc_info(output_media=None, lc=None):
         td.append(['created', str(dash_if_none(lc.get('CreatedTime')))])
         td.append(['iam instance profile', str(dash_if_none(lc.get('IamInstanceProfile')))])
         td.append(['ebs optimised', str(dash_if_none(lc.get('EbsOptimized')))])
-        # td.append(['launch configuration arn', str(dash_if_none(lc.get('LaunchConfigurationARN')))])
         td.append(['instance monitoring', str(dash_if_none(lc.get('InstanceMonitoring')))])
         td.append(['classiclink vpc security groups', str(dash_if_none(lc.get('ClassicLinkVPCSecurityGroups')))])
         td.append(['block device mappings', str(dash_if_none(lc.get('BlockDeviceMappings')))])
