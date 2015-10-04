@@ -124,8 +124,7 @@ def real_main():
         if route53_res.get('list'):
             route53.route53_list(aws_config)
         elif route53_res.get('info'):
-            route53.route53_info(aws_config, instance_id=route53_res.get('<zone>'))
-
+            route53.route53_info(aws_config, zone_id=route53_res.get('<zone_id>'))
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
             from acli.commands import ec2 as command_ec2
