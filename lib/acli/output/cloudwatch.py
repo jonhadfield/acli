@@ -1,31 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import output_ascii_table
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
-
-
-def output_ec2_stats(output_media=None, instance=None, cpu_stats=None, network_stats=None):
-    if output_media == 'console':
-        td = list()
-        td.append(['id', instance.id])
-        td.append(['name', instance.tags.get('Name', '-')])
-        td.append(['cpu 15mins / 30mins / 1hour',
-                   "{0} / {1} / {2}".format(cpu_stats.get('fifteen_mins'),
-                                            cpu_stats.get('thirty_mins'),
-                                            cpu_stats.get('one_hour'))])
-        td.append(['network in 1hr / 6hrs / 12hrs',
-                   "{0} / {1} / {2}".format(network_stats.get('one_hour_in'),
-                                            network_stats.get('six_hours_in'),
-                                            network_stats.get('twelve_hours_in'))]),
-        td.append(['network out 1hr / 6hrs / 12hrs',
-                   "{0} / {1} / {2}".format(network_stats.get('one_hour_out'),
-                                            network_stats.get('six_hours_out'),
-                                            network_stats.get('twelve_hours_out'))])
-        output_ascii_table(table_title="EC2 Stats",
-                           table_data=td)
-    exit(0)
 
 
 def output_ec2_cpu(dates=None, values=None, instance_id=None, output_type='table'):
@@ -103,8 +80,6 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
                 axarr[index].plot(write_dates, write_values, label='write')
                 axarr[index].plot(read_dates, read_values, label='read')
                 axarr[index].legend(loc="upper right",
-                                    #bbox_to_anchor=[0, 1],
-                                    #ncol=2, shadow=True,
                                     title=None,
                                     fancybox=False)
             plt.subplots_adjust(bottom=0.2)
@@ -119,8 +94,6 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
             axarr.plot(write_dates, write_values, label='write')
             axarr.plot(read_dates, read_values, label='read')
             axarr.legend(loc="upper right",
-                         #bbox_to_anchor=[0, 1],
-                         #ncol=2, shadow=True,
                          title=None,
                          fancybox=False)
             axarr.grid(True)
