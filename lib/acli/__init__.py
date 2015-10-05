@@ -11,6 +11,8 @@ usage: acli [--version] [--help]
        acli asg (info | cpu | mem | net) <asg_name> [options]
        acli ami (list | info <ami_id>)
        acli elb (list | info <elb_name>)
+       acli route53 (list | info <zone_id>)
+
 options:
    -h, --help  help
 
