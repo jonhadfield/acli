@@ -37,7 +37,6 @@ def get_record_set_values(resource_records):
     """
     @type resource_records: list
     """
-    print(resource_records.__class__.__name__)
     out = list()
     for record in resource_records:
         out.append(record.get('Value'))
