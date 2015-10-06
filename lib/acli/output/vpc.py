@@ -24,7 +24,7 @@ def output_vpc_list(output_media=None, vpcs=None):
             tenancy = vpc.get('tenancy')
             state = vpc.get('state')
             dhcpoptions = vpc.get('DhcpOptionsId')
-            default = str(vpc.get('isDefault'))
+            default = vpc.get('isDefault')
             td.append([vpcid,
                        dash_if_none(get_tag(name='Name', tags=vpc.get('Tags', None))),
                        dash_if_none(cidr_block),
