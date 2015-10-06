@@ -19,20 +19,19 @@ def output_vpc_list(output_media=None, vpcs=None):
         td = list()
         td.append(['VpcId', 'name', 'CIDR block', 'tenancy', 'state', 'DHCP options id', 'default'])
         for vpc in vpcs.get('Vpcs'):
-            print(vpc)
             vpcid = vpc.get('VpcId')
             cidr_block = vpc.get('CidrBlock')
             tenancy = vpc.get('tenancy')
             state = vpc.get('state')
             dhcpoptions = vpc.get('DhcpOptionsId')
-            default = vpc.get('isDefault')
+            default = str(vpc.get('IsDefault'))
             td.append([vpcid,
                        dash_if_none(get_tag(name='Name', tags=vpc.get('Tags', None))),
                        dash_if_none(cidr_block),
                        dash_if_none(tenancy),
                        dash_if_none(state),
                        dash_if_none(dhcpoptions),
-                       dash_if_none(default)])
+                       default])
         output_ascii_table(table_title="VPCs",
                            table_data=td,
                            inner_heading_row_border=True)
