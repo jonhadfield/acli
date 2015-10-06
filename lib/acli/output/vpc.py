@@ -46,29 +46,32 @@ def output_vpc_info(output_media=None, vpc=None, subnets=None):
     if vpc:
         if output_media == 'console':
             td = list()
-            td.append(['id', vpc.id])
+            td.append(['vpc id', vpc.id])
             td.append(['CIDR block', vpc.cidr_block])
             td.append(['default', str(vpc.is_default)])
             td.append(['tenancy', vpc.instance_tenancy])
             td.append(['state', dash_if_none(vpc.state)])
-            td.append(['tags', dash_if_none(str(vpc.tags))])
+            td.append(['tags', " "])
+            if vpc.tags:
+                for vpc_tag in vpc.tags:
+                    td.append([" {0}".format(vpc_tag.get('Key')), " {0}".format(vpc_tag.get('Value'))])
             if subnets:
-                td.append(['subnets', "{0}".format('-' * 30)])
+                td.append(["{0}".format('-' * 30), "{0}".format('-' * 30)])
+                td.append(['SUBNETS', " "])
                 for subnet in subnets:
-                    print(subnet.tags)
-                    td.append(['id', subnet.subnet_id])
-                    td.append([' az', subnet.availability_zone])
-                    td.append([' state', subnet.state])
-                    td.append([' available IPs', str(subnet.available_ip_address_count)])
-                    td.append([' CIDR block', subnet.cidr_block])
-                    td.append([' default for az', str(subnet.default_for_az)])
-                    td.append([' map public IP on launch', str(subnet.map_public_ip_on_launch)])
-                    for tag in subnet.tags:
-                        td.append([" {0}".format(tag.get('Key'), dash_if_none(tag.get('Value')))])
-
-                        #for tag_name, tag_value in tag.iteritems():
-                        #    td.append([" {0}".format(tag_name), tag_value])
-
+                    td.append(["{0}".format('-' * 30), "{0}".format('-' * 30)])
+                    td.append(['subnet id', subnet.subnet_id])
+                    td.append(['az', subnet.availability_zone])
+                    td.append(['state', subnet.state])
+                    td.append(['available IPs', str(subnet.available_ip_address_count)])
+                    td.append(['CIDR block', subnet.cidr_block])
+                    td.append(['default for az', str(subnet.default_for_az)])
+                    td.append(['map public IP on launch', str(subnet.map_public_ip_on_launch)])
+                    if subnet.tags:
+                        td.append(['tags', "-"])
+                        for tag in subnet.tags:
+                            tag_key, tag_value = tag.get('Key'), tag.get('Value')
+                            td.append([" {}".format(tag_key), "{}".format(tag_value)])
             output_ascii_table(table_title="VPC Info",
                                table_data=td)
     else:
