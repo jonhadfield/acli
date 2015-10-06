@@ -19,7 +19,6 @@ def output_vpc_list(output_media=None, vpcs=None):
         td = list()
         td.append(['VpcId', 'name', 'CIDR block', 'tenancy', 'state', 'DHCP options id', 'default'])
         for vpc in vpcs.get('Vpcs'):
-            print(vpc.get('VpcId'))
             vpcid = vpc.get('VpcId')
             cidr_block = vpc.get('CidrBlock')
             tenancy = vpc.get('tenancy')
