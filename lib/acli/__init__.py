@@ -12,6 +12,7 @@ usage: acli [--version] [--help]
        acli ami (list | info <ami_id>)
        acli elb (list | info <elb_name>)
        acli route53 (list | info <zone_id>)
+       acli vpc (list | info <vpc_id>)
 
 options:
    -h, --help  help
@@ -26,6 +27,7 @@ The most common commands are:
    eip          Manage elastic ips
    secgroup     Manage security groups
    route53      Manage route 53 configuration
+   vpc          Manage VPCs
 
 See 'acli help <command>'
 """
@@ -33,8 +35,8 @@ See 'acli help <command>'
 from __future__ import (absolute_import, print_function, unicode_literals)
 from docopt import docopt
 from colorama import init
-from acli.services import (ec2, elb, account,
-                           cloudwatch, asg, route53)
+from acli.services import (ec2, elb, account, cloudwatch,
+                           vpc, asg, route53)
 from acli.config import Config
 from acli import utils
 init(autoreset=True)
@@ -127,6 +129,13 @@ def real_main():
             route53.route53_list(aws_config)
         elif route53_res.get('info'):
             route53.route53_info(aws_config, zone_id=route53_res.get('<zone_id>'))
+    if args['<command>'] == 'vpc':
+        from acli.commands import vpc as command_vpc
+        vpc_res = docopt(command_vpc.__doc__, argv=argv)
+        if vpc_res.get('list'):
+            vpc.vpc_list(aws_config)
+        elif vpc_res.get('info'):
+            vpc.vpc_info(aws_config, vpc_id=vpc_res.get('<vpc_id>'))
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
             from acli.commands import ec2 as command_ec2
