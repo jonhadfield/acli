@@ -27,22 +27,16 @@ def vpc_list(aws_config=None):
         exit("No VPCs found.")
 
 
-def vpc_info(aws_config=None, zone_id=None):
+def vpc_info(aws_config=None, vpc_id=None):
     """
     @type aws_config: Config
-    @type zone_id: unicode
+    @type vpc_id: unicode
     """
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
-    vpcs = conn.describe_vpcs()
-    #try:
-    #    hosted_zone = conn.get_hosted_zone(Id=zone_id)
-    #    record_sets = conn.list_resource_record_sets(HostedZoneId=zone_id)
-    #    if hosted_zone['HostedZone']['Id']:
-    #        output_route53_info(output_media='console',
-    #                            zone=hosted_zone,
-    #                            record_sets=record_sets)
-    #except AttributeError:
-    #    exit("Cannot find hosted zone: {0}".format(zone_id))
-    #except botocore.exceptions.ClientError:
-    #    exit("Cannot request hosted zone: {0}".format(zone_id))
+    vpc = conn.Vpc(vpc_id)
+    if vpc:
+        subnets = vpc.subnets.all()
+        output_vpc_info(output_media='console', vpc=vpc, subnets=subnets)
+    else:
+        exit("Cannot find VPC: {0}.".format(vpc_id))

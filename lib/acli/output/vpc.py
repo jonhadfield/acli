@@ -38,27 +38,39 @@ def output_vpc_list(output_media=None, vpcs=None):
     exit(0)
 
 
-def output_vpc_info(output_media=None, zone=None, record_sets=None):
+def output_vpc_info(output_media=None, vpc=None, subnets=None):
     """
     @type output_media: unicode
-    @type zone: zone
-    @type record_sets: ResourceRecordSets
+    @type vpc: ec2.Vpc
     """
-    if output_media == 'console':
-        td = list()
-        td.append(['id', zone['HostedZone']['Id']])
-        td.append(['Name', zone['HostedZone']['Name']])
-        td.append(['Count', str(zone['HostedZone']['ResourceRecordSetCount'])])
-        td.append(['Comment', zone['HostedZone']['Config']['Comment']])
-        td.append(['Private', str(zone['HostedZone']['Config']['PrivateZone'])])
-        td.append(['Name Servers', "\n".join(zone['DelegationSet']['NameServers'])])
-        td.append(['Records', ' '])
-        td.append(['{0}'.format("-" * 12), '{0}'.format("-" * 20)])
-        for record_set in record_sets['ResourceRecordSets']:
-            td.append(['Name', record_set['Name']])
-            td.append([' Type', record_set['Type']])
-            td.append([' TTL', str(record_set['TTL'])])
-            td.append([' Values', "\n".join((record_set['ResourceRecords']))])
-        output_ascii_table(table_title="Zone Info",
-                           table_data=td)
+    if vpc:
+        if output_media == 'console':
+            td = list()
+            td.append(['id', vpc.id])
+            td.append(['CIDR block', vpc.cidr_block])
+            td.append(['default', str(vpc.is_default)])
+            td.append(['tenancy', vpc.instance_tenancy])
+            td.append(['state', dash_if_none(vpc.state)])
+            td.append(['tags', dash_if_none(str(vpc.tags))])
+            if subnets:
+                td.append(['subnets', "{0}".format('-' * 30)])
+                for subnet in subnets:
+                    print(subnet.tags)
+                    td.append(['id', subnet.subnet_id])
+                    td.append([' az', subnet.availability_zone])
+                    td.append([' state', subnet.state])
+                    td.append([' available IPs', str(subnet.available_ip_address_count)])
+                    td.append([' CIDR block', subnet.cidr_block])
+                    td.append([' default for az', str(subnet.default_for_az)])
+                    td.append([' map public IP on launch', str(subnet.map_public_ip_on_launch)])
+                    for tag in subnet.tags:
+                        td.append([" {0}".format(tag.get('Key'), dash_if_none(tag.get('Value')))])
+
+                        #for tag_name, tag_value in tag.iteritems():
+                        #    td.append([" {0}".format(tag_name), tag_value])
+
+            output_ascii_table(table_title="VPC Info",
+                               table_data=td)
+    else:
+        exit('VPC does not exist.')
     exit(0)
