@@ -196,6 +196,7 @@ def output_ami_list(output_media=None, amis=None):
     @type output_media: unicode
     @type amis: list
     """
+    amis = sorted(amis, key=lambda k: k.creation_date, reverse=True)
     if output_media == 'console':
         td = [['id', 'name', 'created']]
         for ami in amis:
