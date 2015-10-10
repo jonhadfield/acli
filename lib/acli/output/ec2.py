@@ -257,3 +257,18 @@ def output_ami_info(output_media=None, ami=None):
         output_ascii_table(table_title="AMI Info",
                            table_data=td)
     exit(0)
+
+
+def output_ec2_summary(output_media=None, summary=None):
+    """
+    @type output_media: unicode
+    @type summary: dict
+    """
+    if output_media == 'console':
+        td = list()
+        td.append(['Running instances', str(summary.get('instances', '0'))])
+        td.append(['Load Balancers', str(summary.get('elbs', '0'))])
+
+        output_ascii_table(table_title="EC2 Summary",
+                           table_data=td)
+    exit(0)

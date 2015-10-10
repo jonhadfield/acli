@@ -2,7 +2,9 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from boto3.session import Session
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,
-                             output_ami_list, output_ami_info)
+                             output_ami_list, output_ami_info,
+                             output_ec2_summary)
+from acli.connections import get_elb_conn
 
 
 def get_boto3_session(aws_config):
@@ -12,6 +14,20 @@ def get_boto3_session(aws_config):
     return Session(region_name=aws_config.region,
                    aws_access_key_id=aws_config.access_key_id,
                    aws_secret_access_key=aws_config.secret_access_key)
+
+
+def ec2_summary(aws_config=None):
+    """
+    @type aws_config: Config
+    """
+    session = get_boto3_session(aws_config)
+    ec2_conn = session.resource('ec2')
+    elb_conn = get_elb_conn(aws_config)
+    instances = len(list(ec2_conn.instances.all()))
+    elbs = len(list(elb_conn.get_all_load_balancers()))
+    summary = {'instances': instances, 'elbs': elbs}
+    output_ec2_summary(output_media='console', summary=summary)
+    exit(0)
 
 
 def ec2_list(aws_config=None):

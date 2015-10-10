@@ -4,7 +4,7 @@
 usage: acli [--version] [--help]
             <command> [<args>...]
        acli account
-       acli ec2 list [options]
+       acli ec2 (list | summary) [options]
        acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
        acli lc list [options]
        acli asg list [options]
@@ -88,6 +88,8 @@ def real_main():
                                period=ec2_res.get('--end', None),
                                intervals=ec2_res.get('intervals', None)
                                )
+        elif ec2_res.get('summary'):
+            ec2.ec2_summary(aws_config=aws_config)
     if args['<command>'] == 'elb':
         from acli.commands import elb as command_elb
         elb_res = docopt(command_elb.__doc__, argv=argv)
