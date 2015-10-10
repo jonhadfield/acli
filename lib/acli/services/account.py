@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from boto3.session import Session
 from acli.output.account import output_account_info
-
-
-def get_boto3_session(aws_config):
-    return Session(region_name=aws_config.region,
-                   aws_access_key_id=aws_config.access_key_id,
-                   aws_secret_access_key=aws_config.secret_access_key)
+from acli.connections import get_boto3_session
 
 
 def account_info(aws_config):

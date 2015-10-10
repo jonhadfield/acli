@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from boto3.session import Session
 import datetime
 from acli.output.cloudwatch import (output_ec2_cpu, output_ec2_net,
                                     output_asg_cpu, output_ec2_vols)
 from acli.services.ec2 import ec2_get_instance_vols
-
-
-def get_boto3_session(aws_config):
-    return Session(region_name=aws_config.region,
-                   aws_access_key_id=aws_config.access_key_id,
-                   aws_secret_access_key=aws_config.secret_access_key)
+from acli.connections import get_boto3_session
 
 
 def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
