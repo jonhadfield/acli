@@ -16,7 +16,8 @@ def output_route53_list(output_media=None, zones=None):
                 td.append(['id', 'name',
                            'count', 'comment',
                            'private zone'])
-                for hosted_zone in hosted_zone_dict.get('HostedZones'):
+                hosted_zones = sorted(hosted_zone_dict.get('HostedZones'), key=lambda k: k['Name'])
+                for hosted_zone in hosted_zones:
                     zone_id = dash_if_none(hosted_zone.get('Id'))
                     zone_name = hosted_zone.get('Name')
                     record_count = str(hosted_zone.get('ResourceRecordSetCount'))
