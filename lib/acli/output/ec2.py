@@ -270,7 +270,8 @@ def output_ec2_summary(output_media=None, summary=None):
                    'Load Balancers', str(summary.get('elbs', '0'))])
         td.append(['Elastic IPs', str(summary.get('eips', '0')),
                    'AMIs', str(summary.get('amis', '0'))])
-
+        td.append(['Security Groups', str(summary.get('secgroups', '0')),
+                   'Security Groups', str(summary.get('secgroups', '0'))])
         output_ascii_table(table_title="EC2 Summary",
                            table_data=td)
     exit(0)

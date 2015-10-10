@@ -22,12 +22,15 @@ def ec2_summary(aws_config=None):
     """
     session = get_boto3_session(aws_config)
     ec2_conn = session.resource('ec2')
+    ec2_client = session.client('ec2')
     elb_conn = get_elb_conn(aws_config)
     instances = len(list(ec2_conn.instances.all()))
     elbs = len(list(elb_conn.get_all_load_balancers()))
     amis = len(list(ec2_conn.images.filter(Owners=['self'])))
+    secgroups = len(ec2_client.describe_security_groups().get('SecurityGroups', 0))
     eips = 0
-    summary = {'instances': instances, 'elbs': elbs, 'eips': eips, 'amis': amis}
+    summary = {'instances': instances, 'elbs': elbs, 'eips': eips,
+               'amis': amis, 'secgroups': secgroups}
     output_ec2_summary(output_media='console', summary=summary)
     exit(0)
 
