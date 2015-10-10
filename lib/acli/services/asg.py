@@ -6,6 +6,9 @@ from acli.connections import get_boto3_session
 
 
 def asg_list(aws_config=None):
+    """
+    @type aws_config: Config
+    """
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
     all_asgs = conn.describe_auto_scaling_groups().get('AutoScalingGroups', None)
@@ -17,6 +20,10 @@ def asg_list(aws_config=None):
 
 
 def asg_info(aws_config=None, asg_name=None):
+    """
+    @type aws_config: Config
+    @type asg_name: unicode
+    """
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
     asg = conn.describe_auto_scaling_groups(AutoScalingGroupNames=[asg_name])
@@ -31,6 +38,9 @@ def asg_info(aws_config=None, asg_name=None):
 
 
 def lc_list(aws_config=None):
+    """
+    @type aws_config: Config
+    """
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
     all_lcs = conn.describe_launch_configurations().get('LaunchConfigurations', None)
@@ -42,6 +52,10 @@ def lc_list(aws_config=None):
 
 
 def lc_info(aws_config=None, lc_name=None):
+    """
+    @type aws_config: Config
+    @type lc_name: unicode
+    """
     session = get_boto3_session(aws_config)
     conn = session.client('autoscaling')
     lc = conn.describe_launch_configurations(LaunchConfigurationNames=[lc_name])

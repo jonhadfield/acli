@@ -5,6 +5,9 @@ from acli.connections import get_boto3_session
 
 
 def account_info(aws_config):
+    """
+    @type aws_config: Config
+    """
     session = get_boto3_session(aws_config)
     iam_client = session.client('iam')
     aliases = iam_client.list_account_aliases().get('AccountAliases')

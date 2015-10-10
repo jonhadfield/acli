@@ -9,6 +9,15 @@ from acli.connections import get_boto3_session
 
 def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow(), output_type=None):
+    """
+    @type aws_config: Config
+    @type instance_id: unicode
+    @type intervals: int
+    @type period: int
+    @type start: datetime
+    @type end: datetime
+    @type output_type: unicode
+    """
     if not intervals:
         intervals = 60
     if not period:
@@ -55,6 +64,15 @@ def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
 
 def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow(), output_type=None):
+    """
+    @type aws_config: Config
+    @type instance_id: unicode
+    @type intervals: int
+    @type period: int
+    @type start: datetime
+    @type end: datetime
+    @type output_type: unicode
+    """
     if not intervals:
         intervals = 60
     if not period:
@@ -93,6 +111,15 @@ def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
 
 def asg_cpu(aws_config=None, asg_name=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow(), output_type=None):
+    """
+    @type aws_config: Config
+    @type asg_name: unicode
+    @type intervals: int
+    @type period: int
+    @type start: datetime
+    @type end: datetime
+    @type output_type: unicode
+    """
     if not output_type or output_type == 'graph':
         if not intervals:
             intervals = 60
@@ -133,6 +160,15 @@ def asg_cpu(aws_config=None, asg_name=None, intervals=None, period=None,
 
 def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow(), output_type=None):
+    """
+    @type aws_config: Config
+    @type instance_id: unicode
+    @type intervals: int
+    @type period: int
+    @type start: datetime
+    @type end: datetime
+    @type output_type: unicode
+    """
     session = get_boto3_session(aws_config)
     ebs_vols = ec2_get_instance_vols(session=session, instance_id=instance_id)
     if not intervals:
