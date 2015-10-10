@@ -28,7 +28,8 @@ def ec2_summary(aws_config=None):
     elbs = len(list(elb_conn.get_all_load_balancers()))
     amis = len(list(ec2_conn.images.filter(Owners=['self'])))
     secgroups = len(ec2_client.describe_security_groups().get('SecurityGroups', 0))
-    eips = 0
+    addresses = ec2_client.describe_addresses()['Addresses']
+    eips = len([x for x, _ in enumerate(addresses)])
     summary = {'instances': instances, 'elbs': elbs, 'eips': eips,
                'amis': amis, 'secgroups': secgroups}
     output_ec2_summary(output_media='console', summary=summary)
