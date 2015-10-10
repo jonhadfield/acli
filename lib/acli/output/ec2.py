@@ -74,6 +74,8 @@ def output_ec2_list(output_media=None, instances=None):
         td = list()
         td.append(['id', 'name', 'state', 'type', 'image',
                    'public ip', 'private ip'])
+        instances = sorted(instances,
+                           key=lambda k: get_ec2_instance_tags(ec2_instance=k, tag_key='Name'))
         for instance in instances:
             instance_id = instance.instance_id
             instance_state = dash_if_none(instance.state.get('Name', None))
