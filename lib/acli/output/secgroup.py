@@ -75,7 +75,6 @@ def output_secgroup_info(output_media=None, secgroup=None):
             if secgroup.ip_permissions:
                 td.append(['ip permissions', '{0}'.format("-" * 30)])
                 for ip_perm in secgroup.ip_permissions:
-                    # td.append(['prefix list ids', dash_if_none(ip_perm.get('PrefixListIds'))])
                     td.append(['from port', str(ip_perm.get('FromPort'))])
                     td.append(['to port', str(ip_perm.get('ToPort'))])
                     td.append(['ip ranges', dash_if_none(get_ip_ranges(ip_perm.get('IpRanges')))])

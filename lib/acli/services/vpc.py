@@ -2,7 +2,6 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from boto3.session import Session
 from acli.output.vpc import (output_vpc_list, output_vpc_info)
-# import botocore.exceptions
 
 
 def get_boto3_session(aws_config):
