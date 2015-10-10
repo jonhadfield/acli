@@ -266,8 +266,10 @@ def output_ec2_summary(output_media=None, summary=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['Running instances', str(summary.get('instances', '0'))])
-        td.append(['Load Balancers', str(summary.get('elbs', '0'))])
+        td.append(['Running instances', str(summary.get('instances', '0')),
+                   'Load Balancers', str(summary.get('elbs', '0'))])
+        td.append(['Elastic IPs', str(summary.get('eips', '0')),
+                   'AMIs', str(summary.get('amis', '0'))])
 
         output_ascii_table(table_title="EC2 Summary",
                            table_data=td)

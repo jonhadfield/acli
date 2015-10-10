@@ -25,7 +25,9 @@ def ec2_summary(aws_config=None):
     elb_conn = get_elb_conn(aws_config)
     instances = len(list(ec2_conn.instances.all()))
     elbs = len(list(elb_conn.get_all_load_balancers()))
-    summary = {'instances': instances, 'elbs': elbs}
+    amis = len(list(ec2_conn.images.filter(Owners=['self'])))
+    eips = 0
+    summary = {'instances': instances, 'elbs': elbs, 'eips': eips, 'amis': amis}
     output_ec2_summary(output_media='console', summary=summary)
     exit(0)
 
