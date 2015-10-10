@@ -222,7 +222,7 @@ def get_product_codes(product_codes=None):
     """
     out = ""
     for prodcode in product_codes:
-        out += "{0}/{1}".format(prodcode.get('ProductCodeId'),prodcode.get('ProductCodeType'))
+        out += "{0}/{1}".format(prodcode.get('ProductCodeId'), prodcode.get('ProductCodeType'))
     return out
 
 
