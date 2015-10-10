@@ -13,6 +13,7 @@ usage: acli [--version] [--help]
        acli elb (list | info <elb_name>)
        acli route53 (list | info <zone_id>)
        acli vpc (list | info <vpc_id>)
+       acli secgroup (list | info)
 
 options:
    -h, --help  help
@@ -28,6 +29,7 @@ The most common commands are:
    secgroup     Manage security groups
    route53      Manage route 53 configuration
    vpc          Manage VPCs
+   secgroup     Manage Security Groups
 
 See 'acli help <command>'
 """
@@ -36,7 +38,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb, account, cloudwatch,
-                           vpc, asg, route53)
+                           vpc, asg, route53, secgroup)
 from acli.config import Config
 from acli import utils
 init(autoreset=True)
@@ -136,6 +138,13 @@ def real_main():
             vpc.vpc_list(aws_config)
         elif vpc_res.get('info'):
             vpc.vpc_info(aws_config, vpc_id=vpc_res.get('<vpc_id>'))
+    if args['<command>'] == 'secgroup':
+        from acli.commands import secgroup as command_secgroup
+        secgroup_res = docopt(command_secgroup.__doc__, argv=argv)
+        if secgroup_res.get('list'):
+            secgroup.secgroup_list(aws_config)
+        elif secgroup_res.get('info'):
+            secgroup.secgroup_info(aws_config, secgroup_id=secgroup_res.get('<secgroup_id>'))
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
             from acli.commands import ec2 as command_ec2
