@@ -17,6 +17,7 @@ def output_elbs(output_media=None, elbs=None):
     @type elbs: list
     """
     if elbs:
+        elbs.sort(key=lambda k: k.dns_name)
         if output_media == 'console':
             td = [['name', 'instances', 'dns_name']]
             for elb in elbs:
