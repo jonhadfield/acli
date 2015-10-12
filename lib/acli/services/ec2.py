@@ -4,7 +4,6 @@ from boto3.session import Session
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info,
                              output_ec2_summary)
-from acli.connections import get_elb_conn
 from acli.connections import get_boto3_session
 
 

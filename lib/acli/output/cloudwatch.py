@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import numpy as np
 
 
 def output_ec2_cpu(dates=None, values=None,
@@ -13,6 +10,11 @@ def output_ec2_cpu(dates=None, values=None,
     @type instance_id: unicode
     @type output_type: unicode
     """
+    try:
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+    except ImportError:
+        print('install matplotlib.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
@@ -92,6 +94,10 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
     @type instance_id: unicode
     @type output_type: unicode
     """
+    try:
+        import numpy as np
+    except:
+        print('install numpy.')
     if output_type in ('graph', None):
         num_plots = len(vols_datapoints)
         f, axarr = plt.subplots(num_plots, sharex=True, sharey=True)
