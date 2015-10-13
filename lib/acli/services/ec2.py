@@ -14,9 +14,9 @@ def ec2_summary(aws_config=None):
     session = get_boto3_session(aws_config)
     ec2_conn = session.resource('ec2')
     ec2_client = session.client('ec2')
-    elb_conn = get_elb_conn(aws_config)
+    elb_client = session.client('elb')
     instances = len(list(ec2_conn.instances.all()))
-    elbs = len(list(elb_conn.get_all_load_balancers()))
+    elbs = len(elb_client.describe_load_balancers().get('LoadBalancerDescriptions'))
     amis = len(list(ec2_conn.images.filter(Owners=['self'])))
     secgroups = len(ec2_client.describe_security_groups().get('SecurityGroups', 0))
     addresses = ec2_client.describe_addresses()['Addresses']
