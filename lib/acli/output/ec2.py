@@ -164,6 +164,7 @@ def output_ec2_info(output_media=None, instance=None):
         td = list()
         td.append(['id', instance.id])
         td.append(['name', dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))])
+        print(instance.id)
         td.append(['groups', dash_if_none(get_sec_groups_name_and_id(instance.security_groups))])
         td.append(['public ip', dash_if_none(instance.public_ip_address)])
         td.append(['public dns name', dash_if_none(instance.public_dns_name)])
