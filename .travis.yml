@@ -5,9 +5,11 @@ python:
   - "2.7"
   - "pypy"
 before_install:
-    - pip install pytest pytest-cov
-    - pip install coveralls
+  - pip install pytest pytest-cov
+  - pip install coveralls
+install:
+  - pip install .
 script:
-    - py.test --cov-report term-missing --cov acli
+  - py.test --cov-report term-missing --cov acli
 after_success:
-    coveralls
+  coveralls
