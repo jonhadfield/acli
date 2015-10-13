@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-import ConfigParser
+try:
+    import configparser
+except ImportError:
+    from six.moves import configparser
 import os
 import sys
 
