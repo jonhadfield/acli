@@ -38,9 +38,6 @@ def test_ec2_list_service():
 
 
 def test_ec2_info_service(ec2_instances):
-    config = Config(cli_args={'--region': 'eu-west-1',
-                              '--access_key_id': 'AKIAIOSFODNN7EXAMPLE',
-                              '--secret_access_key': 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'})
     with pytest.raises(SystemExit):
         print(list(ec2_instances))
         assert ec2_info(aws_config=config, instance_id=list(ec2_instances)[0].id)
