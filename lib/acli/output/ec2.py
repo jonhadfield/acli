@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, dash_if_none)
+import six
 
 
 def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
@@ -31,22 +32,22 @@ def get_interfaces(interfaces):
     for interface in interfaces:
         ret.append("{0}\n".format(interface.get('NetworkInterfaceId')))
         ret.append(" Attachment:\n")
-        for akey, avalue in interface.get('Attachment').iteritems():
+        for akey, avalue in six.iteritems(interface.get('Attachment')):
                 ret.append("  {}:{}\n".format(str(akey), str(avalue)))
         ret.append(" Private IP Addresses:\n")
         for private_ip_address in interface.get('PrivateIpAddresses'):
-                for pkey, pvalue in private_ip_address.iteritems():
+                for pkey, pvalue in six.iteritems(private_ip_address):
                     if pkey == "Association":
                         ret.append("  Association:\n")
-                        for qqkey, qqvalue in pvalue.iteritems():
+                        for qqkey, qqvalue in six.iteritems(pvalue):
                             ret.append("   {}:{}\n".format(qqkey, qqvalue))
                     else:
                         ret.append("  {}:{}\n".format(str(pkey), str(pvalue)))
         ret.append(" Security Groups:\n")
         for group in interface.get('Groups'):
-            for gkey, gvalue in group.iteritems():
+            for gkey, gvalue in six.iteritems(group):
                 ret.append("  {}:{}\n".format(str(gkey), str(gvalue)))
-        for key, value in interface.iteritems():
+        for key, value in six.iteritems(interface):
             if str(key) not in ("Attachment", "NetworkInterfaceId",
                                 "PrivateIpAddresses", "Groups", "Association",
                                 "PrivateIpAddress"):
@@ -59,7 +60,7 @@ def get_placement_details(placement):
     @type placement: dict
     """
     ret = []
-    for key, value in placement.iteritems():
+    for key, value in six.iteritems(placement):
         ret.append("{0}:{1}".format(key, value))
     if ret:
         return "\n".join(ret)
@@ -213,7 +214,7 @@ def output_ami_permissions(perms=None):
     @type perms: dict
     """
     out = ""
-    for i, (key, value) in enumerate(perms.iteritems()):
+    for i, (key, value) in enumerate(six.iteritems(perms)):
         out += "{0},{1}".format(key, str(value))
         if i < len(perms)-1:
             out += "\n"
