@@ -31,6 +31,7 @@ config = Config(cli_args={'--region': 'eu-west-1',
                           '--access_key_id': 'AKIAIOSFODNN7EXAMPLE',
                           '--secret_access_key': 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'})
 
+
 @mock_ec2
 def test_ec2_list_service():
     with pytest.raises(SystemExit):
