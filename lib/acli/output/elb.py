@@ -67,12 +67,12 @@ def output_elb_info(output_media=None, elb=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['name', elb[0].name])
-        td.append(['dns name', elb[0].DNSName])
-        td.append(['listeners', dash_if_none(get_elb_listeners(elb[0].listeners))])
-        td.append(['canonical hosted zone name', dash_if_none(elb[0].canonical_hosted_zone_name)])
-        td.append(['canonical hosted zone name id', dash_if_none(elb[0].canonical_hosted_zone_name_id)])
-        td.append(['connection', str(elb[0].connection)])
+        td.append(['name', elb.get('LoadBalancerName')])
+        td.append(['dns name', elb.get('DNSName')])
+        td.append(['listeners', dash_if_none(get_elb_listeners(elb.get('listeners')))])
+        td.append(['canonical hosted zone name', dash_if_none(elb.canonical_hosted_zone_name)])
+        td.append(['canonical hosted zone name id', dash_if_none(elb.canonical_hosted_zone_name_id)])
+        td.append(['connection', str(elb.connection)])
         td.append(['policies', dash_if_none(get_elb_policies(elb[0].policies))])
         td.append(['health check', str(elb[0].health_check)])
         td.append(['created time', dash_if_none(elb[0].created_time)])
