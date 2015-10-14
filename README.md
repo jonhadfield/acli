@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/jonhadfield/acli.svg?branch=master)](https://travis-ci.org/jonhadfield/acli) [![Coverage Status](https://coveralls.io/repos/jonhadfield/acli/badge.svg?branch=master&service=github)](https://coveralls.io/github/jonhadfield/acli?branch=master)
