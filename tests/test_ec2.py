@@ -32,8 +32,13 @@ config = Config(cli_args={'--region': 'eu-west-1',
                           '--secret_access_key': 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'})
 
 
+def test_ec2_list_service(ec2_instances):
+    with pytest.raises(SystemExit):
+        assert ec2_list(aws_config=config)
+
+
 @mock_ec2
-def test_ec2_list_service():
+def test_ec2_list_service_no_instances():
     with pytest.raises(SystemExit):
         assert ec2_list(aws_config=config)
 
