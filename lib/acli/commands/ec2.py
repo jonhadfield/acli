@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli ec2 (list | summary) [options]
+    acli ec2 (list | summary) [options] [--region=<region>]
     acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
 
     -s, --start=<start_date>        metrics start-date
     -e, --end=<end_date>            metrics end-date
-    -p, --period<period>            metrics period
+    -p, --period=<period>            metrics period
     -i, --intervals=<intervals>     metrics intervals
     -o, --output=<output_type>      table, json, yaml or graph [default: table].
     -h, --help

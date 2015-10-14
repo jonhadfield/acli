@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 usage: acli [--version] [--help]
-            <command> [<args>...]
+            <command> [<args>...] [--region=<region>]
        acli account
        acli ec2 (list | summary) [options]
        acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
