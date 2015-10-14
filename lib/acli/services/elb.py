@@ -4,14 +4,14 @@ from acli.output.elb import output_elbs, output_elb_info
 from acli.connections import get_boto3_session
 
 
-
 def get_elb_list(aws_config):
     """
     @type aws_config: Config
     """
     session = get_boto3_session(aws_config)
     elb_conn = session.client('elb')
-    return [elb for elb in elb_conn.describe_load_balancers()]
+    elbs = elb_conn.describe_load_balancers().get('LoadBalancerDescriptions')
+    return elbs
 
 
 def get_elb(aws_config, elb_name=None):
@@ -29,8 +29,7 @@ def elb_list(aws_config):
     """
     @type aws_config: Config
     """
-    output_elbs(
-                output_media='console',
+    output_elbs(output_media='console',
                 elbs=get_elb_list(aws_config))
 
 

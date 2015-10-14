@@ -17,11 +17,11 @@ def output_elbs(output_media=None, elbs=None):
     @type elbs: list
     """
     if elbs:
-        elbs.sort(key=lambda k: k.dns_name)
+        elbs.sort(key=lambda k: k.get('DNSName'))
         if output_media == 'console':
             td = [['name', 'instances', 'dns_name']]
             for elb in elbs:
-                td.append([elb.name, str(len(elb.instances)), elb.dns_name])
+                td.append([elb.get('LoadBalancerName'), str(len(elb.get('Instances'))), elb.get('DNSName')])
             output_ascii_table(table_title="ELBs",
                                table_data=td,
                                inner_heading_row_border=True)
@@ -68,7 +68,7 @@ def output_elb_info(output_media=None, elb=None):
     if output_media == 'console':
         td = list()
         td.append(['name', elb[0].name])
-        td.append(['dns name', elb[0].dns_name])
+        td.append(['dns name', elb[0].DNSName])
         td.append(['listeners', dash_if_none(get_elb_listeners(elb[0].listeners))])
         td.append(['canonical hosted zone name', dash_if_none(elb[0].canonical_hosted_zone_name)])
         td.append(['canonical hosted zone name id', dash_if_none(elb[0].canonical_hosted_zone_name_id)])
