@@ -4,7 +4,8 @@ python:
   - "3.4"
   - "3.3"
   - "2.7"
-  - "2.5"
+  - "2.7"
+  - "2.5_with_system_site_packages"
   - "pypy"
 before_install:
   - pip install pytest pytest-cov
