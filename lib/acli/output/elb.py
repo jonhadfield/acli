@@ -54,8 +54,14 @@ def get_elb_listeners(listeners=None):
     @type listeners: list
     """
     output = ""
+    print(listeners)
     for listener in listeners:
-        output += "LB Port: {0} Instance Port: {1} Protocol: {2}\n".format(listener[0], listener[1], listener[2])
+        print(listener.__class__.__name__)
+        print(listener)
+        output += "LB Port: {0} Instance Port: {1} Protocol: {2} Instance Protocol: {3}\n".format(listener.get('LoadBalancerPort'),
+                                                                                                  listener.get('InstancePort'),
+                                                                                                  listener.get('Protocol'),
+                                                                                                  listener.get('InstanceProtocol'))
     if output:
         return output.rstrip()
 
@@ -69,19 +75,20 @@ def output_elb_info(output_media=None, elb=None):
         td = list()
         td.append(['name', elb.get('LoadBalancerName')])
         td.append(['dns name', elb.get('DNSName')])
-        td.append(['listeners', dash_if_none(get_elb_listeners(elb.get('listeners')))])
-        td.append(['canonical hosted zone name', dash_if_none(elb.canonical_hosted_zone_name)])
-        td.append(['canonical hosted zone name id', dash_if_none(elb.canonical_hosted_zone_name_id)])
-        td.append(['connection', str(elb.connection)])
-        td.append(['policies', dash_if_none(get_elb_policies(elb[0].policies))])
-        td.append(['health check', str(elb[0].health_check)])
-        td.append(['created time', dash_if_none(elb[0].created_time)])
-        td.append(['instances', get_elb_instances(elb[0].instances)])
-        td.append(['availability zones', ",".join(elb[0].availability_zones)])
-        td.append(['source security group', dash_if_none(elb[0].source_security_group.name)])
-        td.append(['security groups', ",".join(elb[0].security_groups)])
-        td.append(['subnets', ",".join(elb[0].subnets)])
-        td.append(['vpc id', dash_if_none(elb[0].vpc_id)])
+        # print(elb.get('ListenerDescriptions'))
+        td.append(['listeners', dash_if_none(get_elb_listeners(elb.get('ListenerDescriptions')))])
+        td.append(['canonical hosted zone name', dash_if_none(elb.get('CanonicalHostedZoneName'))])
+        td.append(['canonical hosted zone name id', dash_if_none(elb.get('CanonicalHostedZoneNameID'))])
+        # td.append(['connection', str(elb.connection)])
+        # td.append(['policies', dash_if_none(get_elb_policies(elb.get('Policies)))])
+        td.append(['health check', str(elb.get('HealthCheck'))])
+        td.append(['created time', str(dash_if_none(elb.get('CreatedTime')))])
+        # td.append(['instances', get_elb_instances(elb.get('Instances'))])
+        td.append(['availability zones', ",".join(elb.get('AvailabilityZones'))])
+        td.append(['source security group', dash_if_none(elb.get('SourceSecurityGroup')['GroupName'])])
+        td.append(['security groups', ",".join(elb.get('SecurityGroups'))])
+        td.append(['subnets', ",".join(elb.get('Subnets'))])
+        td.append(['vpc id', dash_if_none(elb.get('VPCId'))])
         output_ascii_table(table_title="ELB Info",
                            table_data=td)
     exit(0)
