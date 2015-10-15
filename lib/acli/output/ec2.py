@@ -225,10 +225,12 @@ def get_product_codes(product_codes=None):
     """
     @type product_codes: dict
     """
-    out = ""
-    for prodcode in product_codes:
-        out += "{0}/{1}".format(prodcode.get('ProductCodeId'), prodcode.get('ProductCodeType'))
-    return out
+    if product_codes:
+        out = ""
+        for prodcode in product_codes:
+            print(prodcode)
+            out += "{0}/{1}".format(prodcode.get('ProductCodeId'), prodcode.get('ProductCodeType'))
+        return out
 
 
 def output_ami_info(output_media=None, ami=None):
@@ -249,7 +251,7 @@ def output_ami_info(output_media=None, ami=None):
         td.append(['owner_id', dash_if_none(ami.owner_id)])
         td.append(['owner_alias', dash_if_none(ami.image_owner_alias)])
         td.append(['platform', dash_if_none(ami.platform)])
-        td.append(['product codes', get_product_codes(ami.product_codes)])
+        td.append(['product codes', dash_if_none(get_product_codes(ami.product_codes))])
         td.append(['root_device_name', dash_if_none(ami.root_device_name)])
         td.append(['root_device_type', dash_if_none(ami.root_device_type)])
         td.append(['sriov_net_support', dash_if_none(ami.sriov_net_support)])
