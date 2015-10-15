@@ -27,9 +27,9 @@ class Config(object):
         self.load_acli_config()
 
     def from_cli(self, cli_args):
-        cli_aws_region = cli_args.get('region')
-        cli_access_key_id = cli_args.get('access_key_id')
-        cli_secret_access_key = cli_args.get('secret_access_key')
+        cli_aws_region = cli_args.get('--region')
+        cli_access_key_id = cli_args.get('--access_key_id')
+        cli_secret_access_key = cli_args.get('--secret_access_key')
         if cli_aws_region:
             self.region = cli_aws_region
         if cli_access_key_id:
@@ -39,5 +39,5 @@ class Config(object):
 
     def load_acli_config(self):
         if os.path.isfile('acli.cfg'):
-            config_parser.read('acli.cfg')
+            configparser.read('acli.cfg')
             pass
