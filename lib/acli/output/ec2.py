@@ -228,7 +228,6 @@ def get_product_codes(product_codes=None):
     if product_codes:
         out = ""
         for prodcode in product_codes:
-            print(prodcode)
             out += "{0}/{1}".format(prodcode.get('ProductCodeId'), prodcode.get('ProductCodeType'))
         return out
 
