@@ -1,6 +1,6 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output.ec2 import (output_ec2_list, output_ec2_info)
-from acli.services.ec2 import (ec2_list, ec2_info, ec2_summary, ami_list)
+from acli.services.ec2 import (ec2_list, ec2_info, ec2_summary, ami_list, ami_info)
 from acli.config import Config
 from moto import mock_ec2
 import pytest
@@ -75,6 +75,13 @@ def test_ec2_output(ec2_instances):
 def test_ami_list_service(amis):
     with pytest.raises(SystemExit):
         assert ami_list(aws_config=config)
+
+
+def test_ami_info_service(amis):
+    with pytest.raises(SystemExit):
+        first_ami_id = amis.get('Images')[0].get('ImageId')
+        assert ami_info(aws_config=config, ami_id=first_ami_id)
+
 
 # def test_ec2_summary(ec2_instances):
 #    with pytest.raises(SystemExit):
