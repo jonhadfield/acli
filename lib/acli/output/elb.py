@@ -58,10 +58,14 @@ def get_elb_listeners(listeners=None):
     for listener in listeners:
         print(listener.__class__.__name__)
         print(listener)
-        output += "LB Port: {0} Instance Port: {1} Protocol: {2} Instance Protocol: {3}\n".format(listener.get('LoadBalancerPort'),
-                                                                                                  listener.get('InstancePort'),
-                                                                                                  listener.get('Protocol'),
-                                                                                                  listener.get('InstanceProtocol'))
+        output += "LB Port: {0} " \
+                  "Instance Port: {1} " \
+                  "Protocol: {2} " \
+                  "Instance Protocol: " \
+                  "{3}\n".format(listener.get('LoadBalancerPort'),
+                                 listener.get('InstancePort'),
+                                 listener.get('Protocol'),
+                                 listener.get('InstanceProtocol'))
     if output:
         return output.rstrip()
 
@@ -69,13 +73,12 @@ def get_elb_listeners(listeners=None):
 def get_source_secgroup_name(source_secgroup=None):
     if source_secgroup:
         return source_secgroup.get('GroupName')
-    # elb.get('SourceSecurityGroup')['GroupName'])
 
 
 def output_elb_info(output_media=None, elb=None):
     """
     @type output_media: unicode
-    @type elb: list
+    @type elb: dict
     """
     if output_media == 'console':
         td = list()
@@ -91,7 +94,8 @@ def output_elb_info(output_media=None, elb=None):
         td.append(['created time', str(dash_if_none(elb.get('CreatedTime')))])
         # td.append(['instances', get_elb_instances(elb.get('Instances'))])
         td.append(['availability zones', ",".join(elb.get('AvailabilityZones'))])
-        td.append(['source security group', dash_if_none(get_source_secgroup_name(elb.get('SourceSecurityGroup', None)))])
+        td.append(['source security group',
+                   dash_if_none(get_source_secgroup_name(elb.get('SourceSecurityGroup', None)))])
         td.append(['security groups', ",".join(elb.get('SecurityGroups'))])
         td.append(['subnets', ",".join(elb.get('Subnets'))])
         td.append(['vpc id', dash_if_none(elb.get('VPCId'))])
