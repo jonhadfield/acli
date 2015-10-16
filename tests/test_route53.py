@@ -28,3 +28,8 @@ config = Config(cli_args={'--region': 'eu-west-1',
 def test_elb_list_service(route53_zone):
     with pytest.raises(SystemExit):
         assert route53_list(aws_config=config)
+
+
+def test_elb_info_service(route53_zone):
+    with pytest.raises(SystemExit):
+        assert route53_info(aws_config=config, zone_id=route53_zone.get('Id'))
