@@ -1,6 +1,6 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output.ec2 import (output_ec2_list, output_ec2_info)
-from acli.services.ec2 import (ec2_list, ec2_info, ec2_summary)
+from acli.services.ec2 import (ec2_list, ec2_info, ec2_summary, ami_list)
 from acli.config import Config
 from moto import mock_ec2
 import pytest
@@ -25,6 +25,20 @@ def ec2_instances():
     yield all_instances
     mock.stop()
 
+
+@pytest.yield_fixture(scope='function')
+def amis():
+    """AMI mock service"""
+    mock = mock_ec2()
+    mock.start()
+    client = session.client('ec2')
+    reservation = client.run_instances(ImageId='ami-1234abcd', MinCount=1, MaxCount=1)
+    instance = reservation.get('Instances')[0]
+    image_id = client.create_image(InstanceId=instance.get('InstanceId'),
+                                   Name="test-ami",
+                                   Description="this is a test ami")
+    yield client.describe_images()
+    mock.stop()
 
 config = Config(cli_args={'--region': 'eu-west-1',
                           '--access_key_id': 'AKIAIOSFODNN7EXAMPLE',
@@ -57,6 +71,10 @@ def test_ec2_output(ec2_instances):
         instance = list(ec2_instances)[0]
         assert output_ec2_info(output_media='console', instance=instance)
 
+
+def test_ami_list_service(amis):
+    with pytest.raises(SystemExit):
+        assert ami_list(aws_config=config)
 
 # def test_ec2_summary(ec2_instances):
 #    with pytest.raises(SystemExit):
