@@ -66,6 +66,12 @@ def get_elb_listeners(listeners=None):
         return output.rstrip()
 
 
+def get_source_secgroup_name(source_secgroup=None):
+    if source_secgroup:
+        return source_secgroup.get('GroupName')
+    # elb.get('SourceSecurityGroup')['GroupName'])
+
+
 def output_elb_info(output_media=None, elb=None):
     """
     @type output_media: unicode
@@ -85,7 +91,7 @@ def output_elb_info(output_media=None, elb=None):
         td.append(['created time', str(dash_if_none(elb.get('CreatedTime')))])
         # td.append(['instances', get_elb_instances(elb.get('Instances'))])
         td.append(['availability zones', ",".join(elb.get('AvailabilityZones'))])
-        td.append(['source security group', dash_if_none(elb.get('SourceSecurityGroup')['GroupName'])])
+        td.append(['source security group', dash_if_none(get_source_secgroup_name(elb.get('SourceSecurityGroup', None)))])
         td.append(['security groups', ",".join(elb.get('SecurityGroups'))])
         td.append(['subnets', ",".join(elb.get('Subnets'))])
         td.append(['vpc id', dash_if_none(elb.get('VPCId'))])
