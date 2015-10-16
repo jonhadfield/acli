@@ -39,8 +39,3 @@ def test_elb_list_service(elb_instances):
 def test_elb_info_service(elb_instances):
     with pytest.raises(SystemExit):
         assert elb_info(aws_config=config, elb_name='my-lb')
-
-# def test_elb_info_service(ec2_instances):
-#    with pytest.raises(SystemExit):
-#        assert elb_info(aws_config=config, elb_name=list(ec2_instances)[0].id)
-
