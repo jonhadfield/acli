@@ -202,7 +202,7 @@ def output_ami_list(output_media=None, amis=None):
     if output_media == 'console':
         td = [['id', 'name', 'created']]
         for ami in amis:
-            td.append([ami.id, ami.name, ami.creation_date])
+            td.append([ami.id, dash_if_none(ami.name), dash_if_none(ami.creation_date)])
         output_ascii_table(table_title="AMIs",
                            inner_heading_row_border=True,
                            table_data=td)
