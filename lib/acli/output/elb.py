@@ -34,7 +34,6 @@ def get_elb_policies(policies=None):
     """
     @type policies: Policies
     """
-    print(policies.__class__.__name__)
     output = ""
     if policies.app_cookie_stickiness_policies:
         for acsp in policies.app_cookie_stickiness_policies:
@@ -54,10 +53,7 @@ def get_elb_listeners(listeners=None):
     @type listeners: list
     """
     output = ""
-    print(listeners)
     for listener in listeners:
-        print(listener.__class__.__name__)
-        print(listener)
         output += "LB Port: {0} " \
                   "Instance Port: {1} " \
                   "Protocol: {2} " \

@@ -24,7 +24,6 @@ def get_elb(aws_config, elb_name=None):
         elb_conn = session.client('elb')
         elbs = elb_conn.describe_load_balancers(LoadBalancerNames=[elb_name])
         if elbs and elbs.get('LoadBalancerDescriptions', None):
-            print(elbs.get('LoadBalancerDescriptions')[0])
             return elbs.get('LoadBalancerDescriptions')[0]
 
 
