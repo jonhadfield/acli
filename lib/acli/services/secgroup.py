@@ -11,10 +11,7 @@ def secgroup_list(aws_config=None):
     session = get_boto3_session(aws_config)
     conn = session.client('ec2')
     secgroups = conn.describe_security_groups()
-    if secgroups:
-        output_secgroup_list(output_media='console', secgroups=secgroups)
-    else:
-        exit("No security groups found.")
+    output_secgroup_list(output_media='console', secgroups=secgroups)
 
 
 def secgroup_info(aws_config=None, secgroup_id=None):
@@ -25,7 +22,7 @@ def secgroup_info(aws_config=None, secgroup_id=None):
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     secgroup = conn.SecurityGroup(secgroup_id)
-    if secgroup:
+    if hasattr(secgroup, 'group_id'):
         output_secgroup_info(output_media='console', secgroup=secgroup)
     else:
         exit("Cannot find security group: {0}.".format(secgroup_id))
