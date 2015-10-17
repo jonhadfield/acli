@@ -1,5 +1,4 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.vpc import (output_vpc_list, output_vpc_info)
 from acli.services.vpc import (vpc_list, vpc_info)
 from acli.config import Config
 from moto import mock_ec2
@@ -28,3 +27,9 @@ def fake_vpcs():
 def test_vpc_list_service(fake_vpcs):
     with pytest.raises(SystemExit):
         assert vpc_list(aws_config=config)
+
+
+def test_vpc_info_service(fake_vpcs):
+    with pytest.raises(SystemExit):
+        print(fake_vpcs.get('Vpcs'))
+        assert vpc_info(aws_config=config, vpc_id=fake_vpcs.get('Vpcs')[0].get('VpcId'))
