@@ -68,7 +68,7 @@ def output_secgroup_info(output_media=None, secgroup=None):
             td.append(['group id', secgroup.id])
             td.append(['group name', secgroup.group_name])
             td.append(['description', secgroup.description])
-            td.append(['vpc id', secgroup.vpc_id])
+            td.append(['vpc id', dash_if_none(secgroup.vpc_id)])
             td.append(['meta', str(secgroup.meta)])
             td.append(['tags', str(secgroup.tags)])
 
