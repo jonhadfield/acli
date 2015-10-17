@@ -11,7 +11,7 @@ def vpc_list(aws_config=None):
     session = get_boto3_session(aws_config)
     conn = session.client('ec2')
     vpcs = conn.describe_vpcs()
-    if vpcs:
+    if vpcs.get('Vpcs', None):
         output_vpc_list(output_media='console', vpcs=vpcs)
     else:
         exit("No VPCs found.")
@@ -25,7 +25,7 @@ def vpc_info(aws_config=None, vpc_id=None):
     session = get_boto3_session(aws_config)
     conn = session.resource('ec2')
     vpc = conn.Vpc(vpc_id)
-    if vpc:
+    if hasattr(vpc, 'cidr_block'):
         subnets = vpc.subnets.all()
         output_vpc_info(output_media='console', vpc=vpc, subnets=subnets)
     else:
