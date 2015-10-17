@@ -54,5 +54,3 @@ def test_vpc_info_service_empty(fake_empty_vpcs, capsys):
         invalid_vpc_id = 'invalid'
         out, err = capsys.readouterr(vpc_info(aws_config=config, vpc_id=invalid_vpc_id))
         assert err == "Cannot find VPC: {0}".format(invalid_vpc_id)
-
-
