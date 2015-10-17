@@ -54,7 +54,6 @@ def test_vpc_info_service_empty(fake_empty_vpcs, capsys):
     with pytest.raises(SystemExit):
         invalid_vpc_id = 'invalid'
         out, err = capsys.readouterr(vpc_info(aws_config=config, vpc_id=invalid_vpc_id))
-        print("out: {} err: {}".format(out, err))
         assert err == "Cannot find VPC: {0}".format(invalid_vpc_id)
 
 
