@@ -29,7 +29,6 @@ def fake_empty_vpcs():
     """VPC mock service"""
     mock = mock_ec2()
     mock.start()
-    client = session.client('ec2')
     yield None
     mock.stop()
 
