@@ -53,6 +53,15 @@ def sec_groups():
     mock.stop()
 
 
+@pytest.yield_fixture(scope='function')
+def fake_empty_sec_groups():
+    """ Mock security groups """
+    mock = mock_ec2()
+    mock.start()
+    yield None
+    mock.stop()
+
+
 config = Config(cli_args={'--region': 'eu-west-1',
                           '--access_key_id': 'AKIAIOSFODNN7EXAMPLE',
                           '--secret_access_key': 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'})
@@ -105,6 +114,15 @@ def test_sec_group_info_service(sec_groups):
     with pytest.raises(SystemExit):
         secgroup_id = sec_groups.get('SecurityGroups')[0].get('GroupId')
         secgroup_info(aws_config=config, secgroup_id=secgroup_id)
+
+
+def test_sec_group_info_service_with_invalid_id(fake_empty_sec_groups, capsys):
+    with pytest.raises(SystemExit):
+        invalid_id = 'invalid'
+        out, err = capsys.readouterr(secgroup_info(aws_config=config, secgroup_id=invalid_id))
+        print(out, err)
+        assert err == "Cannot find security group: {0}".format(invalid_id)
+
 
 # def test_ec2_summary(ec2_instances):
 #    with pytest.raises(SystemExit):
