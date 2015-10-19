@@ -11,9 +11,9 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
     @type tag_key: unicode
     @type max_length: int
     """
-    if ec2_instance.tags:
+    if ec2_instance.get('Tags', None):
         ret = []
-        for tag in ec2_instance.tags:
+        for tag in ec2_instance.get('Tags'):
             if tag_key and tag.get('Key') == tag_key:
                 return tag.get('Value', "-")
             else:
@@ -76,22 +76,23 @@ def output_ec2_list(output_media=None, instances=None):
         td.append(['id', 'name', 'state', 'type', 'image',
                    'public ip', 'private ip'])
         instances = sorted(instances,
-                           key=lambda k: get_ec2_instance_tags(ec2_instance=k, tag_key='Name'))
+                           key=lambda k: get_ec2_instance_tags(ec2_instance=k[0], tag_key='Name'))
         for instance in instances:
-            instance_id = instance.instance_id
-            instance_state = dash_if_none(instance.state.get('Name', None))
-            instance_type = dash_if_none(str(instance.instance_type))
-            image_id = dash_if_none(instance.image_id)
-            public_ip = dash_if_none(instance.public_ip_address)
-            private_ip = dash_if_none(instance.private_ip_address)
-            instance_name = dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))
-            td.append([instance_id,
-                       instance_name,
-                       instance_state,
-                       instance_type,
-                       image_id,
-                       public_ip,
-                       private_ip])
+            if instance[0]:
+                instance_id = instance[0].get('InstanceId')
+                instance_state = dash_if_none(instance[0].get('State').get('Name', None))
+                instance_type = dash_if_none(str(instance[0].get('InstanceType', None)))
+                image_id = dash_if_none(instance[0].get('ImageId'))
+                public_ip = dash_if_none(instance[0].get('PublicIpAddress', None))
+                private_ip = dash_if_none(instance[0].get('PrivateIpAddress', None))
+                instance_name = dash_if_none(get_ec2_instance_tags(ec2_instance=instance[0], tag_key='Name'))
+                td.append([instance_id,
+                           instance_name,
+                           instance_state,
+                           instance_type,
+                           image_id,
+                           public_ip,
+                           private_ip])
         output_ascii_table(table_title="EC2 Instances",
                            table_data=td,
                            inner_heading_row_border=True)

@@ -5,6 +5,28 @@ from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info,
                              output_ec2_summary)
 from acli.connections import get_boto3_session
+from botocore.exceptions import NoCredentialsError
+from contextlib import contextmanager
+
+
+#@contextmanager
+#def cred_checked(ec2_client):
+#    try:
+#        yield ec2_client.describe_security_groups()
+#    except NoCredentialsError:
+#        exit('No credentials found.')
+#    except Exception as e:
+#        exit('Unhanded exception: {0}'.format(e))
+
+@contextmanager
+def cred_checked(ec2_client):
+    try:
+        assert ec2_client.describe_account_attributes()
+        yield ec2_client
+    except NoCredentialsError:
+        exit('No credentials found.')
+    except Exception as e:
+        exit('Unhanded exception: {0}'.format(e))
 
 
 def ec2_summary(aws_config=None):
@@ -12,12 +34,11 @@ def ec2_summary(aws_config=None):
     @type aws_config: Config
     """
     session = get_boto3_session(aws_config)
-    ec2_conn = session.resource('ec2')
     ec2_client = session.client('ec2')
     elb_client = session.client('elb')
-    instances = len(list(ec2_conn.instances.all()))
+    instances = len(list(ec2_client.describe_instances()))
     elbs = len(elb_client.describe_load_balancers().get('LoadBalancerDescriptions'))
-    amis = len(list(ec2_conn.images.filter(Owners=['self'])))
+    amis = len(list(ec2_client.describe_images(Owners=['self'])))
     secgroups = len(ec2_client.describe_security_groups().get('SecurityGroups', 0))
     addresses = ec2_client.describe_addresses()['Addresses']
     eips = len([x for x, _ in enumerate(addresses)])
@@ -32,8 +53,12 @@ def ec2_list(aws_config=None):
     @type aws_config: Config
     """
     session = get_boto3_session(aws_config)
-    conn = session.resource('ec2')
-    all_instances = conn.instances.all()
+    ec2_client = session.client('ec2')
+    instances_req = ec2_client.describe_instances()
+    all_instances = list()
+    reservations = instances_req.get('Reservations')
+    for reservation in reservations:
+        all_instances.append(reservation.get('Instances'))
     if len(list(all_instances)):
         output_ec2_list(output_media='console', instances=all_instances)
     exit('No ec2 instances found.')
