@@ -5,7 +5,6 @@ try:
 except ImportError:
     from six.moves import configparser
 import os
-import sys
 
 
 class Config(object):
