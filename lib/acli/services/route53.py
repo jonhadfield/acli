@@ -2,18 +2,17 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output.route53 import (output_route53_list, output_route53_info)
 import botocore.exceptions
-from acli.connections import get_boto3_session
+from acli.connections import get_client
 
 
 def route53_list(aws_config=None):
     """
     @type aws_config: Config
     """
-    session = get_boto3_session(aws_config)
-    conn = session.client('route53')
-    zones = conn.list_hosted_zones()
+    route53_client = get_client(client_type='route53', config=aws_config)
+    zones = route53_client.list_hosted_zones()
     if zones.get('HostedZones', None):
-        output_route53_list(output_media='console', zones=conn.list_hosted_zones())
+        output_route53_list(output_media='console', zones=route53_client.list_hosted_zones())
     else:
         exit("No hosted zones found.")
 
@@ -23,11 +22,10 @@ def route53_info(aws_config=None, zone_id=None):
     @type aws_config: Config
     @type zone_id: unicode
     """
-    session = get_boto3_session(aws_config)
-    conn = session.client('route53')
+    route53_client = get_client(client_type='route53', config=aws_config)
     try:
-        hosted_zone = conn.get_hosted_zone(Id=zone_id)
-        record_sets = conn.list_resource_record_sets(HostedZoneId=zone_id)
+        hosted_zone = route53_client.get_hosted_zone(Id=zone_id)
+        record_sets = route53_client.list_resource_record_sets(HostedZoneId=zone_id)
         if hosted_zone['HostedZone']['Id']:
             output_route53_info(output_media='console',
                                 zone=hosted_zone,

@@ -60,6 +60,17 @@ def checked_cloudwatch_client(cloudwatch_client):
         exit('Unhanded exception: {0}'.format(e))
 
 
+@contextmanager
+def checked_route53_client(route53_client):
+    try:
+        assert route53_client.list_hosted_zones(MaxItems='1')
+        yield route53_client
+    except NoCredentialsError:
+        exit('No credentials found.')
+    except Exception as e:
+        exit('Unhanded exception: {0}'.format(e))
+
+
 def get_boto3_session(aws_config):
     """
     @type aws_config: Config
@@ -93,3 +104,6 @@ def get_client(client_type=None, config=None):
     elif client_type == 'cloudwatch':
         with checked_cloudwatch_client(session.client('cloudwatch')) as cloudwatch_client:
             return cloudwatch_client
+    elif client_type == 'route53':
+        with checked_route53_client(session.client('route53')) as route53_client:
+            return route53_client
