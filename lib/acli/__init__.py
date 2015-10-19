@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-usage: acli [--version] [--help]
-            <command> [<args>...] [--region=<region>]
-       acli account
+usage: acli [--version] [--help] [--region=<region>]
+            <command> [<args>...]
+       acli account [options]
        acli ec2 (list | summary) [options]
        acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
        acli lc list [options]
@@ -16,7 +16,7 @@ usage: acli [--version] [--help]
        acli secgroup (list | info)
 
 options:
-   -h, --help  help
+   -h, --help      help
 
 The most common commands are:
    account      Get account info
