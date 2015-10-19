@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-usage: acli [--version] [--help] [--region=<region>]
+usage: acli [--version] [--help]
+            [--region=<region>] [--access_key_id=<access_key_id>] [--secret_access_key=<secret_access_key>]
             <command> [<args>...]
        acli account [options]
        acli ec2 (list | summary) [options]
