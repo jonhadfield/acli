@@ -55,10 +55,13 @@ def ec2_list(aws_config=None):
     session = get_boto3_session(aws_config)
     ec2_client = session.client('ec2')
     instances_req = ec2_client.describe_instances()
-    all_instances = list()
+
     reservations = instances_req.get('Reservations')
+    all_instances = list()
     for reservation in reservations:
-        all_instances.append(reservation.get('Instances'))
+        for instance in reservation.get('Instances'):
+            all_instances.append(instance)
+
     if len(list(all_instances)):
         output_ec2_list(output_media='console', instances=all_instances)
     exit('No ec2 instances found.')
@@ -70,10 +73,12 @@ def ec2_info(aws_config=None, instance_id=None):
     @type instance_id: unicode
     """
     session = get_boto3_session(aws_config)
-    conn = session.resource('ec2')
-    instance = conn.Instance(instance_id)
+    ec2_client = session.client('ec2')
+    ec2_query = ec2_client.describe_instances(Filters=[{'Name': 'instance-id', 'Values': [instance_id]}])
+    reservations = ec2_query.get('Reservations')
     try:
-        if instance.instance_id:
+        instance = reservations[0].get('Instances')[0]
+        if instance.get('InstanceId', None):
             output_ec2_info(output_media='console',
                             instance=instance)
     except AttributeError:

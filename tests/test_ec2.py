@@ -16,14 +16,12 @@ def ec2_instances():
     mock.start()
     client = session.client('ec2')
     client.create_security_group(GroupName='group1', Description='my first sec group')
-    reservations = client.run_instances(ImageId='ami-12345', MinCount=2, MaxCount=2, SecurityGroups=['group1'])
-    for i, s in enumerate(reservations.get('Instances')):
+    instances = client.run_instances(ImageId='ami-12345', MinCount=2, MaxCount=2, SecurityGroups=['group1']).get('Instances')
+    for i, s in enumerate(instances):
         client.create_tags(
             Resources=[s.get('InstanceId')],
             Tags=[{'Key': 'Name', 'Value': 'Bob'}])
-    ec2_resource = session.resource('ec2')
-    all_instances = ec2_resource.instances.all()
-    yield all_instances
+    yield instances
     mock.stop()
 
 
@@ -80,11 +78,13 @@ def test_ec2_list_service_no_instances():
 
 def test_ec2_info_service(ec2_instances):
     with pytest.raises(SystemExit):
-        assert ec2_info(aws_config=config, instance_id=list(ec2_instances)[0].id)
+        print(ec2_instances[0])
+        assert ec2_info(aws_config=config, instance_id=ec2_instances[0].get('InstanceId'))
 
 
 def test_ec2_list_output(ec2_instances):
     with pytest.raises(SystemExit):
+        print(ec2_instances)
         assert output_ec2_list(output_media='console', instances=ec2_instances)
 
 

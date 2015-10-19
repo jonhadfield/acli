@@ -22,6 +22,8 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
                     val = "{0}...".format(val[:max_length-3])
                 ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
         return "".join(ret).rstrip()
+    else:
+        return ""
 
 
 def get_interfaces(interfaces):
@@ -76,16 +78,16 @@ def output_ec2_list(output_media=None, instances=None):
         td.append(['id', 'name', 'state', 'type', 'image',
                    'public ip', 'private ip'])
         instances = sorted(instances,
-                           key=lambda k: get_ec2_instance_tags(ec2_instance=k[0], tag_key='Name'))
+                           key=lambda k: get_ec2_instance_tags(ec2_instance=k, tag_key='Name'))
         for instance in instances:
-            if instance[0]:
-                instance_id = instance[0].get('InstanceId')
-                instance_state = dash_if_none(instance[0].get('State').get('Name', None))
-                instance_type = dash_if_none(str(instance[0].get('InstanceType', None)))
-                image_id = dash_if_none(instance[0].get('ImageId'))
-                public_ip = dash_if_none(instance[0].get('PublicIpAddress', None))
-                private_ip = dash_if_none(instance[0].get('PrivateIpAddress', None))
-                instance_name = dash_if_none(get_ec2_instance_tags(ec2_instance=instance[0], tag_key='Name'))
+            if instance:
+                instance_id = instance.get('InstanceId')
+                instance_state = dash_if_none(instance.get('State').get('Name', None))
+                instance_type = dash_if_none(str(instance.get('InstanceType', None)))
+                image_id = dash_if_none(instance.get('ImageId'))
+                public_ip = dash_if_none(instance.get('PublicIpAddress', None))
+                private_ip = dash_if_none(instance.get('PrivateIpAddress', None))
+                instance_name = dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))
                 td.append([instance_id,
                            instance_name,
                            instance_state,
@@ -164,31 +166,30 @@ def output_ec2_info(output_media=None, instance=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['id', instance.id])
+        td.append(['id', instance.get('InstanceId')])
         td.append(['name', dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))])
-        print(instance.id)
-        td.append(['groups', dash_if_none(get_sec_groups_name_and_id(instance.security_groups))])
-        td.append(['public ip', dash_if_none(instance.public_ip_address)])
-        td.append(['public dns name', dash_if_none(instance.public_dns_name)])
-        td.append(['private ip', dash_if_none(instance.private_ip_address)])
-        td.append(['private dns name', dash_if_none(instance.private_dns_name)])
-        td.append(['state', dash_if_none(instance.state.get('Name', None))])
-        td.append(['key name', dash_if_none(instance.key_name)])
-        td.append(['instance type', dash_if_none(instance.instance_type)])
-        td.append(['launch time', str(instance.launch_time)])
-        td.append(['image id', dash_if_none(instance.image_id)])
-        td.append(['placement', get_placement_details(instance.placement)])
-        td.append(['monitored', dash_if_none(instance.monitoring.get('State'))])
-        td.append(['subnet id', dash_if_none(instance.subnet_id)])
-        td.append(['vpc id', dash_if_none(instance.vpc_id)])
-        td.append(['root device type', dash_if_none(instance.root_device_type)])
-        td.append(['state reason', dash_if_none(get_state_reason(instance.state_reason))])
-        td.append(['state transition reason', dash_if_none(instance.state_transition_reason)])
-        td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
-        td.append(['instance profile', dash_if_none(short_instance_profile(instance.iam_instance_profile))])
-        td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
-        td.append(['block devices', get_block_devices(instance.block_device_mappings)])
-        td.append(['interfaces', dash_if_none(get_interfaces(instance.network_interfaces))])
+        td.append(['groups', dash_if_none(get_sec_groups_name_and_id(instance.get('SecurityGroups')))])
+        td.append(['public ip', dash_if_none(instance.get('PublicIpAddress', None))])
+        td.append(['public dns name', dash_if_none(instance.get('PublicDnsName', None))])
+        td.append(['private ip', dash_if_none(instance.get('PrivateIpAddress', None))])
+        td.append(['private dns name', dash_if_none(instance.get('PrivateDnsName', None))])
+        td.append(['state', str(dash_if_none(instance.get('State', None)))])
+        td.append(['key name', dash_if_none(instance.get('KeyName', None))])
+        td.append(['instance type', dash_if_none(instance.get('InstanceType', None))])
+        td.append(['launch time', str(instance.get('LaunchTime'))])
+        td.append(['image id', dash_if_none(instance.get('ImageId'))])
+        td.append(['placement', get_placement_details(instance.get('Placement'))])
+        td.append(['monitored', str(dash_if_none(instance.get('Monitoring')))])
+        td.append(['subnet id', dash_if_none(instance.get('SubnetId'))])
+        td.append(['vpc id', dash_if_none(instance.get('VpcId'))])
+        #td.append(['root device type', dash_if_none(instance.root_device_type)])
+        #td.append(['state reason', dash_if_none(get_state_reason(instance.state_reason))])
+        #td.append(['state transition reason', dash_if_none(instance.state_transition_reason)])
+        #td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
+        #td.append(['instance profile', dash_if_none(short_instance_profile(instance.iam_instance_profile))])
+        #td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
+        #td.append(['block devices', get_block_devices(instance.block_device_mappings)])
+        #td.append(['interfaces', dash_if_none(get_interfaces(instance.network_interfaces))])
         output_ascii_table(table_title="Instance Info",
                            table_data=td)
     exit(0)
