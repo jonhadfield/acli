@@ -7,6 +7,9 @@ def get_boto3_session(aws_config):
     """
     @type aws_config: Config
     """
-    return Session(region_name=aws_config.region,
-                   aws_access_key_id=aws_config.access_key_id,
-                   aws_secret_access_key=aws_config.secret_access_key)
+    if all((aws_config.region, aws_config.access_key_id, aws_config.secret_access_key)):
+        return Session(region_name=aws_config.region,
+                       aws_access_key_id=aws_config.access_key_id,
+                       aws_secret_access_key=aws_config.secret_access_key)
+    # Fall back to Boto searching for the session
+    return Session()
