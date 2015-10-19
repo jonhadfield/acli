@@ -148,15 +148,18 @@ def get_block_devices(bdms=None):
     @type bdms: list
     """
     ret = ""
-    for bdm in bdms:
-        ret += "{0}\n".format(bdm.get('DeviceName', '-'))
-        ebs = bdm.get('Ebs', None)
-        if ebs:
-            ret += " Status: {0}\n".format(ebs.get('Status', '-'))
-            ret += " Delete on Termination: {0}\n".format(ebs.get('DeleteOnTermination', '-'))
-            ret += " Volume Id: {0}\n".format(ebs.get('VolumeId', '-'))
-            ret += " Attach Time: {0}\n".format(str(ebs.get('AttachTime', '-')))
-    return ret.rstrip()
+    if bdms:
+        for bdm in bdms:
+            ret += "{0}\n".format(bdm.get('DeviceName', '-'))
+            ebs = bdm.get('Ebs', None)
+            if ebs:
+                ret += " Status: {0}\n".format(ebs.get('Status', '-'))
+                ret += " Delete on Termination: {0}\n".format(ebs.get('DeleteOnTermination', '-'))
+                ret += " Volume Id: {0}\n".format(ebs.get('VolumeId', '-'))
+                ret += " Attach Time: {0}\n".format(str(ebs.get('AttachTime', '-')))
+        return ret.rstrip()
+    else:
+        return ret
 
 
 def output_ec2_info(output_media=None, instance=None):
@@ -182,14 +185,13 @@ def output_ec2_info(output_media=None, instance=None):
         td.append(['monitored', str(dash_if_none(instance.get('Monitoring')))])
         td.append(['subnet id', dash_if_none(instance.get('SubnetId'))])
         td.append(['vpc id', dash_if_none(instance.get('VpcId'))])
-        #td.append(['root device type', dash_if_none(instance.root_device_type)])
-        #td.append(['state reason', dash_if_none(get_state_reason(instance.state_reason))])
-        #td.append(['state transition reason', dash_if_none(instance.state_transition_reason)])
-        #td.append(['ebs optimized', dash_if_none(instance.ebs_optimized)])
-        #td.append(['instance profile', dash_if_none(short_instance_profile(instance.iam_instance_profile))])
-        #td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
-        #td.append(['block devices', get_block_devices(instance.block_device_mappings)])
-        #td.append(['interfaces', dash_if_none(get_interfaces(instance.network_interfaces))])
+        td.append(['root device type', dash_if_none(instance.get('RootDeviceType', None))])
+        td.append(['state transition reason', dash_if_none(instance.get('StateTransitionReason', None))])
+        td.append(['ebs optimized', dash_if_none(instance.get('EbsOptimized', None))])
+        td.append(['instance profile', dash_if_none(short_instance_profile(instance.get('IamInstanceProfile', None)))])
+        td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
+        td.append(['block devices', get_block_devices(instance.get('BlockDeviceMappings'))])
+        td.append(['interfaces', dash_if_none(get_interfaces(instance.get('NetworkInterfaces', None)))])
         output_ascii_table(table_title="Instance Info",
                            table_data=td)
     exit(0)
