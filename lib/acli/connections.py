@@ -6,7 +6,18 @@ from botocore.exceptions import NoCredentialsError
 
 
 @contextmanager
-def cred_checked_iam_client(iam_client):
+def checked_autoscaling_client(autoscaling_client):
+    try:
+        assert autoscaling_client.describe_account_limits()
+        yield autoscaling_client
+    except NoCredentialsError:
+        exit('No credentials found.')
+    except Exception as e:
+        exit('Unhanded exception: {0}'.format(e))
+
+
+@contextmanager
+def checked_iam_client(iam_client):
     try:
         assert iam_client.list_users()
         yield iam_client
@@ -17,7 +28,7 @@ def cred_checked_iam_client(iam_client):
 
 
 @contextmanager
-def cred_checked_ec2_client(ec2_client):
+def checked_ec2_client(ec2_client):
     try:
         assert ec2_client.describe_account_attributes()
         yield ec2_client
@@ -28,10 +39,21 @@ def cred_checked_ec2_client(ec2_client):
 
 
 @contextmanager
-def cred_checked_elb_client(elb_client):
+def checked_elb_client(elb_client):
     try:
         assert elb_client.describe_load_balancers()
         yield elb_client
+    except NoCredentialsError:
+        exit('No credentials found.')
+    except Exception as e:
+        exit('Unhanded exception: {0}'.format(e))
+
+
+@contextmanager
+def checked_cloudwatch_client(cloudwatch_client):
+    try:
+        assert cloudwatch_client.describe_alarms(MaxRecords=1)
+        yield cloudwatch_client
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
@@ -57,11 +79,17 @@ def get_client(client_type=None, config=None):
     """
     session = get_boto3_session(aws_config=config)
     if client_type == 'ec2':
-        with cred_checked_ec2_client(session.client('ec2')) as ec2_client:
+        with checked_ec2_client(session.client('ec2')) as ec2_client:
             return ec2_client
     elif client_type == 'elb':
-        with cred_checked_elb_client(session.client('elb')) as elb_client:
+        with checked_elb_client(session.client('elb')) as elb_client:
             return elb_client
     elif client_type == 'iam':
-        with cred_checked_iam_client(session.client('iam')) as iam_client:
+        with checked_iam_client(session.client('iam')) as iam_client:
             return iam_client
+    elif client_type == 'autoscaling':
+        with checked_iam_client(session.client('autoscaling')) as autoscaling_client:
+            return autoscaling_client
+    elif client_type == 'cloudwatch':
+        with checked_cloudwatch_client(session.client('cloudwatch')) as cloudwatch_client:
+            return cloudwatch_client

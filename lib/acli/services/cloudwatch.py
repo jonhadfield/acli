@@ -4,7 +4,7 @@ import datetime
 from acli.output.cloudwatch import (output_ec2_cpu, output_ec2_net,
                                     output_asg_cpu, output_ec2_vols)
 from acli.services.ec2 import ec2_get_instance_vols
-from acli.connections import get_boto3_session
+from acli.connections import get_client, get_boto3_session
 
 
 def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
@@ -22,8 +22,7 @@ def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
         intervals = 60
     if not period:
         period = 7200
-    session = get_boto3_session(aws_config)
-    cloudwatch_client = session.client('cloudwatch')
+    cloudwatch_client = get_client(client_type='cloudwatch', config=aws_config)
     if not start:
         start = end - datetime.timedelta(seconds=period)
     net_in = cloudwatch_client.get_metric_statistics(
@@ -77,8 +76,7 @@ def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
         intervals = 60
     if not period:
         period = 7200
-    session = get_boto3_session(aws_config)
-    cloudwatch_client = session.client('cloudwatch')
+    cloudwatch_client = get_client(client_type='cloudwatch', config=aws_config)
     if not start:
         start = end - datetime.timedelta(seconds=period)
     out = cloudwatch_client.get_metric_statistics(
@@ -125,8 +123,7 @@ def asg_cpu(aws_config=None, asg_name=None, intervals=None, period=None,
             intervals = 60
         if not period:
             period = 7200
-        session = get_boto3_session(aws_config)
-        cloudwatch_client = session.client('cloudwatch')
+        cloudwatch_client = get_client(client_type='cloudwatch', config=aws_config)
         if not start:
             start = end - datetime.timedelta(seconds=period)
         out = cloudwatch_client.get_metric_statistics(
@@ -176,7 +173,7 @@ def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
     if not period:
         period = 7200
 
-    cloudwatch_client = session.client('cloudwatch')
+    cloudwatch_client = get_client(client_type='cloudwatch', config=aws_config)
     if not start:
         start = end - datetime.timedelta(seconds=period)
     vol_datapoints = list()

@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output.elb import output_elbs, output_elb_info
-from acli.connections import get_boto3_session
+from acli.connections import get_client
 
 
 def get_elb_list(aws_config):
     """
     @type aws_config: Config
     """
-    session = get_boto3_session(aws_config)
-    elb_conn = session.client('elb')
-    elbs = elb_conn.describe_load_balancers().get('LoadBalancerDescriptions')
+    elb_client = get_client(client_type='elb', config=aws_config)
+    elbs = elb_client.describe_load_balancers().get('LoadBalancerDescriptions')
     return elbs
 
 
@@ -20,9 +19,8 @@ def get_elb(aws_config, elb_name=None):
     @type elb_name: unicode
     """
     if elb_name:
-        session = get_boto3_session(aws_config)
-        elb_conn = session.client('elb')
-        elbs = elb_conn.describe_load_balancers(LoadBalancerNames=[elb_name])
+        elb_client = get_client(client_type='elb', config=aws_config)
+        elbs = elb_client.describe_load_balancers(LoadBalancerNames=[elb_name])
         if elbs and elbs.get('LoadBalancerDescriptions', None):
             return elbs.get('LoadBalancerDescriptions')[0]
 
