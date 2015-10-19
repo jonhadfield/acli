@@ -4,26 +4,21 @@ from boto3.session import Session
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info,
                              output_ec2_summary)
-from acli.connections import get_boto3_session
-from acli.utils import (cred_checked_ec2_client,
-                        cred_checked_elb_client)
+from acli.connections import get_boto3_session, get_client
 
 
 def ec2_summary(aws_config=None):
     """
     @type aws_config: Config
     """
-    session = get_boto3_session(aws_config)
-    ec2_client = session.client('ec2')
-    elb_client = session.client('elb')
-    with cred_checked_elb_client(elb_client) as checked_elb_client:
-        elbs = len(checked_elb_client.describe_load_balancers().get('LoadBalancerDescriptions'))
-    with cred_checked_ec2_client(ec2_client) as checked_ec2_client:
-        instances = len(list(checked_ec2_client.describe_instances().get('Reservations', [])))
-        amis = len(list(checked_ec2_client.describe_images(Owners=['self'])))
-        secgroups = len(checked_ec2_client.describe_security_groups().get('SecurityGroups', 0))
-        addresses = checked_ec2_client.describe_addresses()['Addresses']
-        eips = len([x for x, _ in enumerate(addresses)])
+    elb_client = get_client(client_type='elb', config=aws_config)
+    ec2_client = get_client(client_type='ec2', config=aws_config)
+    elbs = len(elb_client.describe_load_balancers().get('LoadBalancerDescriptions'))
+    instances = len(list(ec2_client.describe_instances().get('Reservations', [])))
+    amis = len(list(ec2_client.describe_images(Owners=['self'])))
+    secgroups = len(ec2_client.describe_security_groups().get('SecurityGroups', 0))
+    addresses = ec2_client.describe_addresses()['Addresses']
+    eips = len([x for x, _ in enumerate(addresses)])
     summary = {'instances': instances, 'elbs': elbs, 'eips': eips,
                'amis': amis, 'secgroups': secgroups}
     output_ec2_summary(output_media='console', summary=summary)
@@ -34,19 +29,16 @@ def ec2_list(aws_config=None):
     """
     @type aws_config: Config
     """
-    session = get_boto3_session(aws_config)
-    ec2_client = session.client('ec2')
-    with cred_checked_ec2_client(ec2_client) as checked_ec2_client:
-        instances_req = checked_ec2_client.describe_instances()
+    ec2_client = get_client(client_type='ec2', config=aws_config)
+    instances_req = ec2_client.describe_instances()
+    reservations = instances_req.get('Reservations')
+    all_instances = list()
+    for reservation in reservations:
+        for instance in reservation.get('Instances'):
+            all_instances.append(instance)
 
-        reservations = instances_req.get('Reservations')
-        all_instances = list()
-        for reservation in reservations:
-            for instance in reservation.get('Instances'):
-                all_instances.append(instance)
-
-        if len(list(all_instances)):
-            output_ec2_list(output_media='console', instances=all_instances)
+    if len(list(all_instances)):
+        output_ec2_list(output_media='console', instances=all_instances)
     exit('No ec2 instances found.')
 
 
@@ -55,8 +47,7 @@ def ec2_info(aws_config=None, instance_id=None):
     @type aws_config: Config
     @type instance_id: unicode
     """
-    session = get_boto3_session(aws_config)
-    ec2_client = session.client('ec2')
+    ec2_client = get_client(client_type='ec2', config=aws_config)
     ec2_query = ec2_client.describe_instances(Filters=[{'Name': 'instance-id', 'Values': [instance_id]}])
     reservations = ec2_query.get('Reservations')
     try:
