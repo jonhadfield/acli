@@ -9,7 +9,7 @@ from contextlib import contextmanager
 @contextmanager
 def cred_checked(iam_client):
     try:
-        assert iam_client.get_user()
+        assert iam_client.list_users()
         yield iam_client
     except NoCredentialsError:
         exit('No credentials found.')
@@ -24,8 +24,10 @@ def account_info(aws_config):
     session = get_boto3_session(aws_config)
     iam_client = session.client('iam')
     with cred_checked(iam_client) as checked_iam_client:
-        account_id = checked_iam_client.get_user().get('User').get('Arn').split(':')[4]
-        aliases = checked_iam_client.list_account_aliases().get('AccountAliases')
-        output_account_info(output_media='console',
-                            account_id=account_id,
-                            account_aliases=aliases)
+        users = checked_iam_client.list_users(MaxItems=1)
+        if users.get('Users', None):
+            account_id = users.get('Users')[0]['Arn'].split(':')[4]
+            aliases = checked_iam_client.list_account_aliases().get('AccountAliases')
+            output_account_info(output_media='console',
+                                account_id=account_id,
+                                account_aliases=aliases)
