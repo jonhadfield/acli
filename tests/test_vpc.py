@@ -2,6 +2,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.services.vpc import (vpc_list, vpc_info)
 from acli.config import Config
 from moto import mock_ec2
+from acli.connections import get_client
 
 import pytest
 from boto3.session import Session
@@ -18,9 +19,11 @@ def fake_vpcs():
     """VPC mock service"""
     mock = mock_ec2()
     mock.start()
-    client = session.client('ec2')
-    client.create_vpc(CidrBlock='10.0.0.0/16')
-    yield client.describe_vpcs()
+    ec2_client = get_client(client_type='ec2', config=config)
+    vpc = ec2_client.create_vpc(CidrBlock='10.0.0.0/16')
+    print(vpc)
+    ec2_client.create_subnet(VpcId=vpc['Vpc']['VpcId'], CidrBlock="10.0.0.0/18")
+    yield ec2_client.describe_vpcs()
     mock.stop()
 
 

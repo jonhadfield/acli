@@ -30,7 +30,7 @@ def checked_iam_client(iam_client):
 @contextmanager
 def checked_ec2_client(ec2_client):
     try:
-        assert ec2_client.describe_account_attributes()
+        assert ec2_client.describe_instances(MaxResults=5)
         yield ec2_client
     except NoCredentialsError:
         exit('No credentials found.')
