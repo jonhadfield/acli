@@ -79,8 +79,10 @@ def get_boto3_session(aws_config):
         return Session(region_name=aws_config.region,
                        aws_access_key_id=aws_config.access_key_id,
                        aws_secret_access_key=aws_config.secret_access_key)
-    # Fall back to Boto searching for the session
-    return Session()
+    elif aws_config.region:
+        return Session(region_name=aws_config.region)
+    else:
+        return Session()
 
 
 def get_client(client_type=None, config=None):
@@ -110,3 +112,5 @@ def get_client(client_type=None, config=None):
                 return route53_client
     except NoRegionError:
         exit('Cannot connect to AWS as region has not been specified.')
+    except Exception as e:
+        exit('Unhandled exception: {0}'.format(e))
