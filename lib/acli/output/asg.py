@@ -74,7 +74,7 @@ def output_lc_list(output_media=None, lc_list=None):
     """
     if isinstance(lc_list, list):
         if output_media == 'console':
-            td = [['LaunchConfigurationName', 'ImageId', 'InstanceType', 'CreatedTime']]
+            td = [['Name', 'ImageId', 'InstanceType', 'CreatedTime']]
             for lc in lc_list:
                 td.append([lc.get('LaunchConfigurationName', '-'),
                            str(lc.get('ImageId', '-')),
