@@ -134,9 +134,10 @@ def ami_list(aws_config):
     """
     @type aws_config: Config
     """
-    ec2_client = get_client(client_type='ec2', config=aws_config)
+    session = get_boto3_session(aws_config)
+    conn = session.resource('ec2')
     output_ami_list(output_media='console',
-                    amis=ec2_client.describe_images(Owners=['self']))
+                    amis=conn.images.filter(Owners=['self']))
 
 
 def ec2_get_instance_vols(session=None, instance_id=None):
