@@ -65,16 +65,13 @@ def output_secgroup_info(output_media=None, secgroup=None):
     if secgroup:
         if output_media == 'console':
             td = list()
-            td.append(['group id', secgroup.id])
-            td.append(['group name', secgroup.group_name])
-            td.append(['description', secgroup.description])
-            td.append(['vpc id', dash_if_none(secgroup.vpc_id)])
-            td.append(['meta', str(secgroup.meta)])
-            td.append(['tags', str(secgroup.tags)])
-
-            if secgroup.ip_permissions:
+            td.append(['group id', secgroup.get('GroupId')])
+            td.append(['group name', secgroup.get('GroupName')])
+            td.append(['description', secgroup.get('Description')])
+            td.append(['vpc id', dash_if_none(secgroup.get('VpcId'))])
+            if secgroup.get('IpPermissions'):
                 td.append(['ip permissions', '{0}'.format("-" * 30)])
-                for ip_perm in secgroup.ip_permissions:
+                for ip_perm in secgroup.get('IpPermissions'):
                     td.append(['from port', str(ip_perm.get('FromPort'))])
                     td.append(['to port', str(ip_perm.get('ToPort'))])
                     td.append(['ip ranges', dash_if_none(get_ip_ranges(ip_perm.get('IpRanges')))])
@@ -83,9 +80,9 @@ def output_secgroup_info(output_media=None, secgroup=None):
                         td.append(['user id group pairs', '{0}'.format("-" * 30)])
                         td.append(['', get_uid_group_pairs(uid_gps=ip_perm.get('UserIdGroupPairs'))])
 
-            if secgroup.ip_permissions_egress:
+            if secgroup.get('IpPermissionsEgress'):
                 td.append(['ip permissions egress', '{0}'.format("-" * 30)])
-                for ip_perm_egress in secgroup.ip_permissions_egress:
+                for ip_perm_egress in secgroup.get('IpPermissions'):
                     td.append(['prefix list ids', dash_if_none(ip_perm_egress.get('PrefixListIds'))])
                     td.append(['from port', str(ip_perm_egress.get('FromPort'))])
                     td.append(['to port', str(ip_perm_egress.get('ToPort'))])

@@ -18,10 +18,10 @@ def secgroup_info(aws_config=None, secgroup_id=None):
     @type aws_config: Config
     @type secgroup_id: unicode
     """
-    session = get_boto3_session(aws_config)
-    conn = session.resource('ec2')
-    secgroup = conn.SecurityGroup(secgroup_id)
-    if hasattr(secgroup, 'group_id'):
+    ec2_client = get_client(client_type='ec2', config=aws_config)
+    secgroups = ec2_client.describe_security_groups(GroupIds=[secgroup_id])
+    secgroup = secgroups.get('SecurityGroups')[0]
+    if secgroup.get('GroupId'):
         output_secgroup_info(output_media='console', secgroup=secgroup)
     else:
         exit("Cannot find security group: {0}.".format(secgroup_id))
