@@ -166,8 +166,7 @@ def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
     @type end: datetime
     @type output_type: unicode
     """
-    session = get_boto3_session(aws_config)
-    ebs_vols = ec2_get_instance_vols(session=session, instance_id=instance_id)
+    ebs_vols = ec2_get_instance_vols(aws_config=aws_config, instance_id=instance_id)
     if not intervals:
         intervals = 60
     if not period:

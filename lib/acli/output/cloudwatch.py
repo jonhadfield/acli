@@ -39,6 +39,11 @@ def output_ec2_mem(dates=None, values=None, instance_id=None, output_type=None):
     @type instance_id: unicode
     @type output_type: unicode
     """
+    try:
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+    except ImportError:
+        print('install matplotlib.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
@@ -65,6 +70,11 @@ def output_ec2_net(in_dates=None, in_values=None, out_dates=None,
     @type instance_id: unicode
     @type output_type: unicode
     """
+    try:
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+    except ImportError:
+        exit('install matplotlib.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
@@ -95,9 +105,14 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
     @type output_type: unicode
     """
     try:
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+    except ImportError:
+        exit('install matplotlib.')
+    try:
         import numpy as np
-    except:
-        print('install numpy.')
+    except ImportError:
+        exit('install numpy.')
     if output_type in ('graph', None):
         num_plots = len(vols_datapoints)
         f, axarr = plt.subplots(num_plots, sharex=True, sharey=True)
@@ -153,6 +168,11 @@ def output_asg_cpu(dates=None, values=None,
     @type asg_name: unicode
     @type output_type: unicode
     """
+    try:
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+    except ImportError:
+        exit('install matplotlib.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)

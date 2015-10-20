@@ -136,15 +136,16 @@ def ami_list(aws_config):
                     amis=ec2_client.describe_images(Owners=['self']).get('Images'))
 
 
-def ec2_get_instance_vols(session=None, instance_id=None):
+def ec2_get_instance_vols(aws_config=None, instance_id=None):
     """
-    @type session: Session
+    @type aws_config: Config
     @type instance_id: unicode
     """
-    conn = session.resource('ec2')
-    ec2_instance = conn.instances.filter(InstanceIds=[instance_id])
+    ec2_client = get_client(client_type='ec2', config=aws_config)
+    reservations = ec2_client.describe_instances(InstanceIds=[instance_id])
+    reservation = reservations.get('Reservations')[0]
+    instance = reservation.get('Instances')[0]
     vols = list()
-    for instance in ec2_instance:
-        for bdm in instance.block_device_mappings:
-            vols.append(bdm)
+    for bdm in instance.get('BlockDeviceMappings'):
+        vols.append(bdm)
     return vols
