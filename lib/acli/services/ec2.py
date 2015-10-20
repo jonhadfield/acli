@@ -121,23 +121,18 @@ def ami_info(aws_config=None, ami_id=None):
     @type aws_config: Config
     @type ami_id: unicode
     """
-    session = get_boto3_session(aws_config)
-    conn = session.resource('ec2')
-    ami = None
-    for image in conn.images.filter(ImageIds=[ami_id]):
-        ami = image
+    ec2_client = get_client(client_type='ec2', config=aws_config)
     output_ami_info(output_media='console',
-                    ami=ami)
+                    ami=ec2_client.describe_images(ImageIds=[ami_id]).get('Images')[0])
 
 
 def ami_list(aws_config):
     """
     @type aws_config: Config
     """
-    session = get_boto3_session(aws_config)
-    conn = session.resource('ec2')
+    ec2_client = get_client(client_type='ec2', config=aws_config)
     output_ami_list(output_media='console',
-                    amis=conn.images.filter(Owners=['self']))
+                    amis=ec2_client.describe_images(Owners=['self']).get('Images'))
 
 
 def ec2_get_instance_vols(session=None, instance_id=None):

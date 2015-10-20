@@ -154,8 +154,11 @@ def get_block_devices(bdms=None):
             ebs = bdm.get('Ebs', None)
             if ebs:
                 ret += " Status: {0}\n".format(ebs.get('Status', '-'))
+                ret += " Snapshot Id: {0}\n".format(ebs.get('SnapshotId', '-'))
+                ret += " Volume Size: {0}\n".format(ebs.get('VolumeSize', '-'))
+                ret += " Volume Type: {0}\n".format(ebs.get('VolumeType', '-'))
+                ret += " Encrypted: {0}\n".format(str(ebs.get('Encrypted', '-')))
                 ret += " Delete on Termination: {0}\n".format(ebs.get('DeleteOnTermination', '-'))
-                ret += " Volume Id: {0}\n".format(ebs.get('VolumeId', '-'))
                 ret += " Attach Time: {0}\n".format(str(ebs.get('AttachTime', '-')))
         return ret.rstrip()
     else:
@@ -202,11 +205,11 @@ def output_ami_list(output_media=None, amis=None):
     @type output_media: unicode
     @type amis: list
     """
-    amis = sorted(amis, key=lambda k: k.creation_date, reverse=True)
+    amis = sorted(amis, key=lambda k: k.get('CreationDate'), reverse=True)
     if output_media == 'console':
         td = [['id', 'name', 'created']]
         for ami in amis:
-            td.append([ami.id, dash_if_none(ami.name), dash_if_none(ami.creation_date)])
+            td.append([ami.get('ImageId'), dash_if_none(ami.get('Name')), dash_if_none(ami.get('CreationDate'))])
         output_ascii_table(table_title="AMIs",
                            inner_heading_row_border=True,
                            table_data=td)
@@ -243,24 +246,24 @@ def output_ami_info(output_media=None, ami=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['id', ami.id])
-        td.append(['name', ami.name])
-        td.append(['creationDate', dash_if_none(ami.creation_date)])
-        td.append(['description', dash_if_none(ami.description)])
-        td.append(['hypervisor', dash_if_none(ami.hypervisor)])
-        td.append(['is_public', dash_if_none(str(ami.public))])
-        td.append(['kernel_id', dash_if_none(ami.kernel_id)])
-        td.append(['location', dash_if_none(ami.image_location)])
-        td.append(['owner_id', dash_if_none(ami.owner_id)])
-        td.append(['owner_alias', dash_if_none(ami.image_owner_alias)])
-        td.append(['platform', dash_if_none(ami.platform)])
-        td.append(['product codes', dash_if_none(get_product_codes(ami.product_codes))])
-        td.append(['root_device_name', dash_if_none(ami.root_device_name)])
-        td.append(['root_device_type', dash_if_none(ami.root_device_type)])
-        td.append(['sriov_net_support', dash_if_none(ami.sriov_net_support)])
-        td.append(['state', dash_if_none(ami.state)])
-        td.append(['virtualization_type', dash_if_none(ami.virtualization_type)])
-        td.append(['block_device_mapping', get_block_devices(bdms=ami.block_device_mappings)])
+        td.append(['id', ami.get('ImageId')])
+        td.append(['name', ami.get('Name')])
+        td.append(['creationDate', dash_if_none(ami.get('CreationDate'))])
+        td.append(['description', dash_if_none(ami.get('Description'))])
+        td.append(['hypervisor', dash_if_none(ami.get('Hypervisor'))])
+        td.append(['is_public', dash_if_none(str(ami.get('Public')))])
+        td.append(['kernel_id', dash_if_none(ami.get('KernelId'))])
+        td.append(['location', dash_if_none(ami.get('ImageLocation'))])
+        td.append(['owner_id', dash_if_none(ami.get('OwnerId'))])
+        td.append(['owner_alias', dash_if_none(ami.get('ImageOwnerAlias'))])
+        td.append(['platform', dash_if_none(ami.get('Platform'))])
+        td.append(['product codes', dash_if_none(get_product_codes(ami.get('ProductCodes')))])
+        td.append(['root_device_name', dash_if_none(ami.get('RootDeviceName'))])
+        td.append(['root_device_type', dash_if_none(ami.get('RootDeviceType'))])
+        td.append(['sriov_net_support', dash_if_none(ami.get('SriovNetSupport'))])
+        td.append(['state', dash_if_none(ami.get('State'))])
+        td.append(['virtualization_type', dash_if_none(ami.get('VirtualizationType'))])
+        td.append(['block_device_mapping', get_block_devices(bdms=ami.get('BlockDeviceMappings'))])
         output_ascii_table(table_title="AMI Info",
                            table_data=td)
     exit(0)
