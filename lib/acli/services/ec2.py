@@ -4,7 +4,7 @@ from boto3.session import Session
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info,
                              output_ec2_summary)
-from acli.connections import get_boto3_session, get_client
+from acli.connections import get_client
 
 
 def ec2_summary(aws_config=None):
@@ -65,12 +65,13 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
     @type instance_id: unicode
     @type action: unicode
     """
-    session = get_boto3_session(aws_config)
-    conn = session.resource('ec2')
-    instance = conn.Instance(instance_id)
+    ec2_client = get_client(client_type='ec2', config=aws_config)
+    reservations = ec2_client.describe_instances(InstanceIds=[instance_id])
+    instance = reservations.get('Reservations')[0].get('Instances')[0]
     try:
-        if instance.instance_id:
-            instance_state = instance.state.get('Name')
+        instance_id = instance.get('InstanceId')
+        instance_state = instance['State']['Name']
+        if instance_id:
             if action == 'stop':
                 if instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down'):
                     exit("Cannot stop instance as state is {0}.".format(instance_state))
