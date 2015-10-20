@@ -136,7 +136,7 @@ def ami_list(aws_config):
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
     output_ami_list(output_media='console',
-                    amis=ec2_client.describe_images(Owners=['self']))
+                    amis=ec2_client.describe_images(Owners=['self']).get('Images'))
 
 
 def ec2_get_instance_vols(session=None, instance_id=None):

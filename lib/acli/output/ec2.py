@@ -202,11 +202,11 @@ def output_ami_list(output_media=None, amis=None):
     @type output_media: unicode
     @type amis: list
     """
-    amis = sorted(amis, key=lambda k: k.creation_date, reverse=True)
+    amis = sorted(amis, key=lambda k: k.get('CreationDate'), reverse=True)
     if output_media == 'console':
         td = [['id', 'name', 'created']]
         for ami in amis:
-            td.append([ami.id, dash_if_none(ami.name), dash_if_none(ami.creation_date)])
+            td.append([ami.get('ImageId'), dash_if_none(ami.get('Name')), dash_if_none(ami.get('CreationDate'))])
         output_ascii_table(table_title="AMIs",
                            inner_heading_row_border=True,
                            table_data=td)
