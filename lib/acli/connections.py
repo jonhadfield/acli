@@ -102,7 +102,7 @@ def get_client(client_type=None, config=None):
             with checked_iam_client(session.client('iam')) as iam_client:
                 return iam_client
         elif client_type == 'autoscaling':
-            with checked_iam_client(session.client('autoscaling')) as autoscaling_client:
+            with checked_autoscaling_client(session.client('autoscaling')) as autoscaling_client:
                 return autoscaling_client
         elif client_type == 'cloudwatch':
             with checked_cloudwatch_client(session.client('cloudwatch')) as cloudwatch_client:
