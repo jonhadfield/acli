@@ -111,6 +111,6 @@ def get_client(client_type=None, config=None):
             with checked_route53_client(session.client('route53')) as route53_client:
                 return route53_client
     except NoRegionError:
-        exit('Cannot connect to AWS as region has not been specified.')
+        exit('Cannot perform this task without specifying an AWS region.\nPlease check your boto/aws settings or specify using \'acli --region=<region>\'.')
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
