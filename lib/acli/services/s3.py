@@ -26,10 +26,22 @@ def s3_list(aws_config=None, item=None):
         prefix = "/".join(path_elements[1:])
         print('prefix = {}'.format(prefix))
         try:
-            objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix)
+            objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
+            for first_bit in objects.get('CommonPrefixes'):
+                print(first_bit)
             if objects.get('Contents'):
                 for content in objects.get('Contents'):
                     print(content)
+            print("--END--")
+            print(objects)
+            #objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix)
+            # paginator = s3_client.get_paginator('list_objects')
+            #for result in paginator.paginate(Bucket=bucket_name, Delimiter='/', Prefix=prefix):
+            #    print("Requested top name: {0}".format(result.get('Name')))
+            #    for prefix1 in result.get('CommonPrefixes'):
+            #        print(prefix1)
+                    # for sub in paginator.paginate(Bucket=bucket_name, Delimiter='/', Prefix='/'+prefix1.get('Prefix')):
+                    #    print("child of requested: {0}".format(sub.get('Name')))
         except botocore.exceptions.ClientError as error:
             if 'NoSuchBucket' in error.response['Error']['Code']:
                 exit('Bucket not found.')
