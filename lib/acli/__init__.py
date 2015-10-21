@@ -39,7 +39,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from docopt import docopt
 from colorama import init
 from acli.services import (ec2, elb, account, cloudwatch,
-                           vpc, asg, route53, secgroup)
+                           vpc, asg, route53, secgroup, s3)
 from acli.config import Config
 from acli import utils
 init(autoreset=True)
@@ -148,6 +148,13 @@ def real_main():
             secgroup.secgroup_list(aws_config)
         elif secgroup_res.get('info'):
             secgroup.secgroup_info(aws_config, secgroup_id=secgroup_res.get('<secgroup_id>'))
+    if args['<command>'] == 's3':
+        from acli.commands import s3 as command_s3
+        s3_res = docopt(command_s3.__doc__, argv=argv)
+        if s3_res.get('list'):
+            s3.s3_list(aws_config)
+        elif s3_res.get('info'):
+            s3.s3_info(aws_config, s3_item=secgroup_res.get('<item>'))
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
             from acli.commands import ec2 as command_ec2

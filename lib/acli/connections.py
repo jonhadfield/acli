@@ -71,6 +71,17 @@ def checked_route53_client(route53_client):
         exit('Unhanded exception: {0}'.format(e))
 
 
+@contextmanager
+def checked_s3_client(s3_client):
+    try:
+        assert s3_client.list_buckets()
+        yield s3_client
+    except NoCredentialsError:
+        exit('No credentials found.')
+    except Exception as e:
+        exit('Unhanded exception: {0}'.format(e))
+
+
 def get_boto3_session(aws_config):
     """
     @type aws_config: Config
@@ -110,7 +121,11 @@ def get_client(client_type=None, config=None):
         elif client_type == 'route53':
             with checked_route53_client(session.client('route53')) as route53_client:
                 return route53_client
+        elif client_type == 's3':
+            with checked_s3_client(session.client('s3')) as s3_client:
+                return s3_client
     except NoRegionError:
-        exit('Cannot perform this task without specifying an AWS region.\nPlease check your boto/aws settings or specify using \'acli --region=<region>\'.')
+        exit('Cannot perform this task without specifying an AWS region.\n'
+             'Please check your boto/aws settings or specify using \'acli --region=<region>\'.')
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
