@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli s3 list [options]
-    acli s3 info <item> [options]
-
+    acli s3 list [<item>]
+    acli s3 info <item>
     -o, --output=<output_type>      table, json, yaml or graph [default: table].
     -h, --help
 """

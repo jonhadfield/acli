@@ -15,6 +15,8 @@ usage: acli [--version] [--help]
        acli route53 (list | info <zone_id>)
        acli vpc (list | info <vpc_id>)
        acli secgroup (list | info)
+       acli s3 list [<item>]
+       acli s3 info <item>
 
 options:
    -h, --help      help
@@ -152,9 +154,9 @@ def real_main():
         from acli.commands import s3 as command_s3
         s3_res = docopt(command_s3.__doc__, argv=argv)
         if s3_res.get('list'):
-            s3.s3_list(aws_config)
+            s3.s3_list(aws_config, item=s3_res.get('<item>'))
         elif s3_res.get('info'):
-            s3.s3_info(aws_config, s3_item=secgroup_res.get('<item>'))
+            s3.s3_info(aws_config, item=s3_res.get('<item>'))
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
             from acli.commands import ec2 as command_ec2
