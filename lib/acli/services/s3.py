@@ -27,7 +27,8 @@ def s3_list(aws_config=None, item=None):
         print('prefix = {}'.format(prefix))
         try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
-            for first_bit in objects.get('CommonPrefixes'):
+            common_prefixes = objects.get('CommonPrefixes', list())
+            for first_bit in common_prefixes:
                 print(first_bit)
             if objects.get('Contents'):
                 for content in objects.get('Contents'):
