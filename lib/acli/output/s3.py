@@ -3,13 +3,14 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, dash_if_none)
 
 
-def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=None):
+def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=None, folders=None, item=None):
     """
     @type output_media: unicode
     @type buckets: list
     @type objects: list
     @type bucket_name: list
     """
+
     if buckets:
         sorted_buckets = sorted(buckets, key=lambda k: ['Name'])
         td = list()
@@ -20,9 +21,30 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
         output_ascii_table(table_title="S3 Buckets",
                            table_data=td,
                            inner_heading_row_border=True)
-    if objects:
-        print(bucket_name)
-        print(objects)
+    if any((objects, folders)):
+        td = list()
+        td.append(['key', 'last modified'])
+        if folders:
+            for folder in folders:
+                td.append([folder.get('Prefix'), '-'])
+        table_title = str()
+        if item:
+            table_title=item
+        print("OBJECTS: {}".format(objects))
+        if objects.get('Contents', None):
+            for index, an_object in enumerate(objects.get('Contents')):
+            #if index == 0:
+            #    table_title = an_object.get('Key')
+            #else:
+            #    print(an_object)
+                td.append([an_object.get('Key'), str(an_object.get('LastModified'))])
+        else:
+            print("NO OBJECTS TO OUTPUT :(")
+        output_ascii_table(table_title=table_title,
+                           table_data=td,
+                           inner_heading_row_border=True)
+        #print(bucket_name)
+        #print(objects)
         print('done with objects')
         # if item and '\\' not in item:
         #    print('got bucke')

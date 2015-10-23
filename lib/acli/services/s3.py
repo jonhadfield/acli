@@ -17,27 +17,43 @@ def s3_list(aws_config=None, item=None):
         else:
             exit("No buckets found.")
     else:
+        print("GOT AN ITEM")
         bucket_name = None
-        prefix = None
-        # if item and '/' in item:
-        print('Got fully qualified path')
-        path_elements = item.split('/')
-        bucket_name = path_elements[0]
-        prefix = "/".join(path_elements[1:])
+        prefix = ''
+        if item and '/' in item:
+            print('Got fully qualified path')
+            path_elements = item.split('/')
+            print('path elements: {}'.format(path_elements))
+            bucket_name = path_elements[0]
+            print('GOT AN ITEM AND BUCKET NAME = {}'.format(bucket_name))
+            prefix = "/".join(path_elements[1:])
+            print('PREFIX: {}'.format(prefix))
+        else:
+            bucket_name = item
+        print(bucket_name)
+
         print('prefix = {}'.format(prefix))
         try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
+            print("OBJECT = ".format(str(objects)))
             common_prefixes = objects.get('CommonPrefixes', list())
+            folders = list()
             for first_bit in common_prefixes:
-                print(first_bit)
+                folders.append(first_bit)
+            print(folders)
             if objects.get('Contents'):
                 for content in objects.get('Contents'):
-                    print(content)
+                    print("content = " + str(content.get('Key')))
             print("--END--")
-            print(objects)
-            #objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix)
+            #print(objects.get('Contents', None))
+            if objects:
+                print(objects)
+                output_s3_list(objects=objects, folders=folders, item=item)
+            else:
+                print("NO OBJECTS")
+            # objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix)
             # paginator = s3_client.get_paginator('list_objects')
-            #for result in paginator.paginate(Bucket=bucket_name, Delimiter='/', Prefix=prefix):
+            # for result in paginator.paginate(Bucket=bucket_name, Delimiter='/', Prefix=prefix):
             #    print("Requested top name: {0}".format(result.get('Name')))
             #    for prefix1 in result.get('CommonPrefixes'):
             #        print(prefix1)
