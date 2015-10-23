@@ -154,7 +154,10 @@ def real_main():
         from acli.commands import s3 as command_s3
         s3_res = docopt(command_s3.__doc__, argv=argv)
         if s3_res.get('list'):
-            s3.s3_list(aws_config, item=s3_res.get('<item>'))
+            path = s3_res.get('<item>')
+            if path and not '/' == path[-1:]:
+                path += '/'
+            s3.s3_list(aws_config, item=path)
         elif s3_res.get('info'):
             s3.s3_info(aws_config, item=s3_res.get('<item>'))
     elif args['<command>'] in ['help', None] and args['<args>']:
