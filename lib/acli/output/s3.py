@@ -22,18 +22,23 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
         td.append([Color('{autoblue}name{/autoblue}'), Color('{autoblue}created{/autoblue}')])
         for bucket in sorted_buckets:
             if output_media == 'console':
-                td.append([Color('{autogreen}'+bucket.get('Name')+'{/autogreen}'), str(bucket.get('CreationDate'))])
-        output_ascii_table(table_title="S3 Buckets",
+                td.append([bucket.get('Name'),
+                           str(bucket.get('CreationDate'))])
+        output_ascii_table(table_title=Color('{autowhite}s3 buckets{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
     if any((objects, folders)):
         td = list()
         td.append([Color('{autoblue}item{/autoblue}'), Color('{autoblue}size (bytes){/autoblue}'),
-                  Color('{autoblue}last modified (UTC)(bytes){/autoblue}'),
-                  Color('{autoblue}class(bytes){/autoblue}'), Color('{autoblue}etag{/autoblue}')])
+                  Color('{autoblue}last modified (UTC){/autoblue}'),
+                  Color('{autoblue}class{/autoblue}'), Color('{autoblue}etag{/autoblue}')])
         if folders:
             for folder in folders:
-                td.append([Color('{autogreen}'+folder.get('Prefix')[to_remove_len:]+'{/autogreen}'), '-', '-'])
+                td.append([Color('{autogreen}'+folder.get('Prefix')[to_remove_len:]+'{/autogreen}'),
+                           Color('{autoblack}-{/autoblack}'),
+                           Color('{autoblack}-{/autoblack}'),
+                           Color('{autoblack}-{/autoblack}'),
+                           Color('{autoblack}-{/autoblack}')])
         object_list = objects.get('Contents', None)
         if objects.get('Contents', None):
             sorted_object_list = sorted(object_list, key=lambda k: ['Key'])
