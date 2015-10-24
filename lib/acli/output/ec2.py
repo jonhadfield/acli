@@ -2,6 +2,8 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, dash_if_none)
 import six
+from colorclass import Color, Windows
+Windows.enable(auto_colors=True, reset_atexit=True)
 
 
 def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
@@ -75,8 +77,10 @@ def output_ec2_list(output_media=None, instances=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['id', 'name', 'state', 'type', 'image',
-                   'public ip', 'private ip'])
+        td.append([Color('{autoblue}id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
+                   Color('{autoblue}state{/autoblue}'), Color('{autoblue}type{/autoblue}'),
+                   Color('{autoblue}image{/autoblue}'), Color('{autoblue}public ip{/autoblue}'),
+                   Color('{autoblue}private ip{/autoblue}')])
         instances = sorted(instances,
                            key=lambda k: get_ec2_instance_tags(ec2_instance=k, tag_key='Name'))
         for instance in instances:
@@ -95,7 +99,7 @@ def output_ec2_list(output_media=None, instances=None):
                            image_id,
                            public_ip,
                            private_ip])
-        output_ascii_table(table_title="EC2 Instances",
+        output_ascii_table(table_title=Color('{autowhite}ec2 instances{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
     exit(0)
@@ -195,7 +199,7 @@ def output_ec2_info(output_media=None, instance=None):
         td.append(['tags', get_ec2_instance_tags(ec2_instance=instance)])
         td.append(['block devices', get_block_devices(instance.get('BlockDeviceMappings'))])
         td.append(['interfaces', dash_if_none(get_interfaces(instance.get('NetworkInterfaces', None)))])
-        output_ascii_table(table_title="Instance Info",
+        output_ascii_table(table_title=Color('{autowhite}instance info{/autowhite}'),
                            table_data=td)
     exit(0)
 
@@ -210,7 +214,7 @@ def output_ami_list(output_media=None, amis=None):
         td = [['id', 'name', 'created']]
         for ami in amis:
             td.append([ami.get('ImageId'), dash_if_none(ami.get('Name')), dash_if_none(ami.get('CreationDate'))])
-        output_ascii_table(table_title="AMIs",
+        output_ascii_table(table_title=Color('{autowhite}AMIs{/autowhite}'),
                            inner_heading_row_border=True,
                            table_data=td)
     exit(0)
@@ -264,7 +268,7 @@ def output_ami_info(output_media=None, ami=None):
         td.append(['state', dash_if_none(ami.get('State'))])
         td.append(['virtualization_type', dash_if_none(ami.get('VirtualizationType'))])
         td.append(['block_device_mapping', get_block_devices(bdms=ami.get('BlockDeviceMappings'))])
-        output_ascii_table(table_title="AMI Info",
+        output_ascii_table(table_title=Color('{autowhite}AMI info{/autowhite}'),
                            table_data=td)
     exit(0)
 
@@ -282,6 +286,6 @@ def output_ec2_summary(output_media=None, summary=None):
                    'AMIs', str(summary.get('amis', '0'))])
         td.append(['Security Groups', str(summary.get('secgroups', '0')),
                    'Security Groups', str(summary.get('secgroups', '0'))])
-        output_ascii_table(table_title="EC2 Summary",
+        output_ascii_table(table_title=Color('{autowhite}ec2 summary{/autowhite}'),
                            table_data=td)
     exit(0)
