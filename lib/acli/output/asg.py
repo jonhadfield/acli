@@ -60,7 +60,7 @@ def output_asg_info(output_media=None, asg=None):
         td.append(['VPCZoneIdentifier', str(dash_if_none(asg.get('VPCZoneIdentifier')))])
         td.append(['EnabledMetrics', str(dash_if_none(asg.get('EnabledMetrics')))])
         td.append(['Status', str(dash_if_none(asg.get('Status')))])
-        td.append(['Tags', get_tags(asg.get('Tags'))])
+        td.append(['Tags', dash_if_none(get_tags(asg.get('Tags')))])
         td.append(['TerminationPolicies', str(dash_if_none(asg.get('TerminationPolicies')))])
         output_ascii_table(table_title="ASG Info",
                            table_data=td)
