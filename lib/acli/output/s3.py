@@ -19,16 +19,18 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
     if buckets:
         sorted_buckets = sorted(buckets, key=lambda k: ['Name'])
         td = list()
-        td.append(['name', 'created'])
+        td.append([Color('{autoblue}name{/autoblue}'), Color('{autoblue}created{/autoblue}')])
         for bucket in sorted_buckets:
             if output_media == 'console':
-                td.append([Color('{autocyan}'+bucket.get('Name')+'{/autocyan}'), str(bucket.get('CreationDate'))])
+                td.append([Color('{autogreen}'+bucket.get('Name')+'{/autogreen}'), str(bucket.get('CreationDate'))])
         output_ascii_table(table_title="S3 Buckets",
                            table_data=td,
                            inner_heading_row_border=True)
     if any((objects, folders)):
         td = list()
-        td.append(['item', 'size (bytes)', 'last modified (UTC)', 'class', 'etag'])
+        td.append([Color('{autoblue}item{/autoblue}'), Color('{autoblue}size (bytes){/autoblue}'),
+                  Color('{autoblue}last modified (UTC)(bytes){/autoblue}'),
+                  Color('{autoblue}class(bytes){/autoblue}'), Color('{autoblue}etag{/autoblue}')])
         if folders:
             for folder in folders:
                 td.append([Color('{autogreen}'+folder.get('Prefix')[to_remove_len:]+'{/autogreen}'), '-', '-'])
@@ -47,7 +49,7 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
 
         else:
             print("NO OBJECTS TO OUTPUT :(")
-        output_ascii_table(table_title=item,
+        output_ascii_table(table_title=Color('{autowhite}'+item+'{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
     exit(0)
