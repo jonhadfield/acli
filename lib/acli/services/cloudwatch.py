@@ -4,7 +4,7 @@ import datetime
 from acli.output.cloudwatch import (output_ec2_cpu, output_ec2_net,
                                     output_asg_cpu, output_ec2_vols)
 from acli.services.ec2 import ec2_get_instance_vols
-from acli.connections import get_client, get_boto3_session
+from acli.connections import get_client
 
 
 def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
