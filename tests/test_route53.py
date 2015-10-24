@@ -15,7 +15,8 @@ def route53_zone():
     mock = mock_route53()
     mock.start()
     client = session.client('route53')
-    client.create_hosted_zone(Name="testdns.aws.com", CallerReference='auniqueref', HostedZoneConfig={'Comment': 'string', 'PrivateZone': False})
+    client.create_hosted_zone(Name="testdns.aws.com", CallerReference='auniqueref',
+                              HostedZoneConfig={'Comment': 'string', 'PrivateZone': False})
     yield client.list_hosted_zones()
     mock.stop()
 
