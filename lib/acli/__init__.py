@@ -39,12 +39,10 @@ See 'acli help <command>'
 
 from __future__ import (absolute_import, print_function, unicode_literals)
 from docopt import docopt
-from colorama import init
 from acli.services import (ec2, elb, account, cloudwatch,
                            vpc, asg, route53, secgroup, s3)
 from acli.config import Config
 from acli import utils
-init(autoreset=True)
 
 
 def real_main():

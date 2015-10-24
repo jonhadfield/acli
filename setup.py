@@ -52,7 +52,7 @@ setup(
     author_email='jon.hadfield@lessknown.co.uk',
     url='http://github.com/jonhadfield/acli',
     install_requires=['docopt==0.6.2',
-                      'colorama==0.3.3',
+                      'colorclass==1.2.0',
                       'botocore>=1.2.10',
                       'boto3>=1.1.4',
                       'requests>=2.7.0',
@@ -86,6 +86,7 @@ setup(
                    'docopt>=0.6.2',
                    'boto3>=1.1.4',
                    'terminaltables>=1.2.1',
+                   'colorclass==1.2.0',
                    'matplotlib>=1.4.3'],
     cmdclass={'test': PyTest},
 )
