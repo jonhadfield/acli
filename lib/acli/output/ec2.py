@@ -80,6 +80,7 @@ def colour_state(state=None):
     elif state in ('rebooting', 'pending'):
         return Color('{autoyellow}'+state+'{/autoyellow}')
 
+
 def output_ec2_list(output_media=None, instances=None):
     """
     @type output_media: unicode
@@ -96,7 +97,6 @@ def output_ec2_list(output_media=None, instances=None):
         for instance in instances:
             if instance:
                 instance_id = instance.get('InstanceId')
-                #instance_state = dash_if_none(instance.get('State').get('Name', None))
                 instance_state = colour_state(instance.get('State').get('Name', None))
                 instance_type = dash_if_none(str(instance.get('InstanceType', None)))
                 image_id = dash_if_none(instance.get('ImageId'))
@@ -187,29 +187,52 @@ def output_ec2_info(output_media=None, instance=None):
     """
     if output_media == 'console':
         td = list()
-        td.append([Color('{autoblue}id{/autoblue}'), instance.get('InstanceId')])
-        td.append([Color('{autoblue}name{/autoblue}'), dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))])
-        td.append([Color('{autoblue}groups{/autoblue}'), dash_if_none(get_sec_groups_name_and_id(instance.get('SecurityGroups')))])
-        td.append([Color('{autoblue}public ip{/autoblue}'), dash_if_none(instance.get('PublicIpAddress', None))])
-        td.append([Color('{autoblue}public dns name{/autoblue}'), dash_if_none(instance.get('PublicDnsName', None))])
-        td.append([Color('{autoblue}private ip{/autoblue}'), dash_if_none(instance.get('PrivateIpAddress', None))])
-        td.append([Color('{autoblue}private dns name{/autoblue}'), dash_if_none(instance.get('PrivateDnsName', None))])
-        td.append([Color('{autoblue}state{/autoblue}'), str(dash_if_none(instance.get('State', None)))])
-        td.append([Color('{autoblue}key name{/autoblue}'), dash_if_none(instance.get('KeyName', None))])
-        td.append([Color('{autoblue}instance type{/autoblue}'), dash_if_none(instance.get('InstanceType', None))])
-        td.append([Color('{autoblue}launch time{/autoblue}'), str(instance.get('LaunchTime'))])
-        td.append([Color('{autoblue}image id{/autoblue}'), dash_if_none(instance.get('ImageId'))])
-        td.append([Color('{autoblue}placement{/autoblue}'), get_placement_details(instance.get('Placement'))])
-        td.append([Color('{autoblue}monitored{/autoblue}'), str(dash_if_none(instance.get('Monitoring')))])
-        td.append([Color('{autoblue}subnet id{/autoblue}'), dash_if_none(instance.get('SubnetId'))])
-        td.append([Color('{autoblue}vpc id{/autoblue}'), dash_if_none(instance.get('VpcId'))])
-        td.append([Color('{autoblue}root device type{/autoblue}'), dash_if_none(instance.get('RootDeviceType', None))])
-        td.append([Color('{autoblue}state transition reason{/autoblue}'), dash_if_none(instance.get('StateTransitionReason', None))])
-        td.append([Color('{autoblue}ebs optimized{/autoblue}'), dash_if_none(instance.get('EbsOptimized', None))])
-        td.append([Color('{autoblue}instance profile{/autoblue}'), dash_if_none(short_instance_profile(instance.get('IamInstanceProfile', None)))])
-        td.append([Color('{autoblue}tags{/autoblue}'), get_ec2_instance_tags(ec2_instance=instance)])
-        td.append([Color('{autoblue}block devices{/autoblue}'), get_block_devices(instance.get('BlockDeviceMappings'))])
-        td.append([Color('{autoblue}interfaces{/autoblue}'), dash_if_none(get_interfaces(instance.get('NetworkInterfaces', None)))])
+        td.append([Color('{autoblue}id{/autoblue}'),
+                   instance.get('InstanceId')])
+        td.append([Color('{autoblue}name{/autoblue}'),
+                   dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))])
+        td.append([Color('{autoblue}groups{/autoblue}'),
+                   dash_if_none(get_sec_groups_name_and_id(instance.get('SecurityGroups')))])
+        td.append([Color('{autoblue}public ip{/autoblue}'),
+                   dash_if_none(instance.get('PublicIpAddress', None))])
+        td.append([Color('{autoblue}public dns name{/autoblue}'),
+                   dash_if_none(instance.get('PublicDnsName', None))])
+        td.append([Color('{autoblue}private ip{/autoblue}'),
+                   dash_if_none(instance.get('PrivateIpAddress', None))])
+        td.append([Color('{autoblue}private dns name{/autoblue}'),
+                   dash_if_none(instance.get('PrivateDnsName', None))])
+        td.append([Color('{autoblue}state{/autoblue}'),
+                   str(dash_if_none(instance.get('State', None)))])
+        td.append([Color('{autoblue}key name{/autoblue}'),
+                   dash_if_none(instance.get('KeyName', None))])
+        td.append([Color('{autoblue}instance type{/autoblue}'),
+                   dash_if_none(instance.get('InstanceType', None))])
+        td.append([Color('{autoblue}launch time{/autoblue}'),
+                   str(instance.get('LaunchTime'))])
+        td.append([Color('{autoblue}image id{/autoblue}'),
+                   dash_if_none(instance.get('ImageId'))])
+        td.append([Color('{autoblue}placement{/autoblue}'),
+                   get_placement_details(instance.get('Placement'))])
+        td.append([Color('{autoblue}monitored{/autoblue}'),
+                   str(dash_if_none(instance.get('Monitoring')))])
+        td.append([Color('{autoblue}subnet id{/autoblue}'),
+                   dash_if_none(instance.get('SubnetId'))])
+        td.append([Color('{autoblue}vpc id{/autoblue}'),
+                   dash_if_none(instance.get('VpcId'))])
+        td.append([Color('{autoblue}root device type{/autoblue}'),
+                   dash_if_none(instance.get('RootDeviceType', None))])
+        td.append([Color('{autoblue}state transition reason{/autoblue}'),
+                   dash_if_none(instance.get('StateTransitionReason', None))])
+        td.append([Color('{autoblue}ebs optimized{/autoblue}'),
+                   dash_if_none(instance.get('EbsOptimized', None))])
+        td.append([Color('{autoblue}instance profile{/autoblue}'),
+                   dash_if_none(short_instance_profile(instance.get('IamInstanceProfile', None)))])
+        td.append([Color('{autoblue}tags{/autoblue}'),
+                   get_ec2_instance_tags(ec2_instance=instance)])
+        td.append([Color('{autoblue}block devices{/autoblue}'),
+                   get_block_devices(instance.get('BlockDeviceMappings'))])
+        td.append([Color('{autoblue}interfaces{/autoblue}'),
+                   dash_if_none(get_interfaces(instance.get('NetworkInterfaces', None)))])
         output_ascii_table(table_title=Color('{autowhite}instance info{/autowhite}'),
                            table_data=td)
     exit(0)
