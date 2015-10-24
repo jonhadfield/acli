@@ -91,7 +91,7 @@ def output_ec2_list(output_media=None, instances=None):
         td.append([Color('{autoblue}id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
                    Color('{autoblue}state{/autoblue}'), Color('{autoblue}type{/autoblue}'),
                    Color('{autoblue}image{/autoblue}'),
-                   Color('{autoblue}public ip{/autoblue}'), Color('{autoblue}id{/autoblue}')])
+                   Color('{autoblue}public ip{/autoblue}'), Color('{autoblue}private ip{/autoblue}')])
         instances = sorted(instances,
                            key=lambda k: get_ec2_instance_tags(ec2_instance=k, tag_key='Name'))
         for instance in instances:
