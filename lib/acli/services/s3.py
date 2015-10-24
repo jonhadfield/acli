@@ -27,12 +27,14 @@ def s3_list(aws_config=None, item=None):
             path_elements = item.split('/')
             print('path elements: {}'.format(path_elements))
             bucket_name = path_elements[0]
+            request_key = path_elements[1:]
+            print('request_key:' + str(request_key))
             print('GOT AN ITEM AND BUCKET NAME = {}'.format(bucket_name))
             prefix = "/".join(path_elements[1:])
             print('PREFIX: {}'.format(prefix))
         else:
             bucket_name = item
-        print(bucket_name)
+        print("BNAME" + bucket_name)
 
         print('prefix = {}'.format(prefix))
         try:
@@ -55,11 +57,10 @@ def s3_list(aws_config=None, item=None):
             if objects.get('Contents'):
                 for content in objects.get('Contents'):
                     print("content = " + str(content.get('Key')))
-            print("--END--")
             #print(objects.get('Contents', None))
             if objects:
                 print(objects)
-                output_s3_list(objects=objects, folders=folders, item=item)
+                output_s3_list(objects=objects, folders=folders, item=item, bucket_name=bucket_name)
             else:
                 print("NO OBJECTS")
             # objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, dash_if_none)
+import re
 
 
 def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=None, folders=None, item=None):
@@ -10,7 +11,7 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
     @type objects: list
     @type bucket_name: list
     """
-
+    to_remove_len = len(re.sub(bucket_name, '', item))-1
     if buckets:
         sorted_buckets = sorted(buckets, key=lambda k: ['Name'])
         td = list()
@@ -23,24 +24,38 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
                            inner_heading_row_border=True)
     if any((objects, folders)):
         td = list()
-        td.append(['key', 'last modified'])
+        td.append(['item', 'last modified'])
         if folders:
             for folder in folders:
-                td.append([folder.get('Prefix'), '-'])
+                td.append([folder.get('Prefix')[to_remove_len:], '-'])
         table_title = str()
         if item:
-            table_title=item
+            table_title = item
         print("OBJECTS: {}".format(objects))
+        print("BUCKET NAME: {0}".format(bucket_name))
+        object_list = objects.get('Contents', None)
         if objects.get('Contents', None):
-            for index, an_object in enumerate(objects.get('Contents')):
+            sorted_object_list = sorted(object_list, key=lambda k: ['Key'])
+            print('------')
+            for index, an_object in enumerate(sorted_object_list):
+                print(an_object)
+                #url = 'abcdc.com'
+                #url = re.sub('\.com$', '', url)
+                print('item minus bucket = {}'.format(re.sub(bucket_name, '', item)[1:]))
+
+                an_object_key = an_object.get('Key')[to_remove_len:]
+                #an_object_key = an_object_key.replace(an_object_key, '/'+bucket_name, '')
             #if index == 0:
             #    table_title = an_object.get('Key')
             #else:
             #    print(an_object)
-                td.append([an_object.get('Key'), str(an_object.get('LastModified'))])
+                #if not an_object.get('Key') in :
+                #if an_object_key != '/':
+                if an_object_key:
+                    td.append([an_object_key, str(an_object.get('LastModified'))])
         else:
             print("NO OBJECTS TO OUTPUT :(")
-        output_ascii_table(table_title=table_title,
+        output_ascii_table(table_title=item,
                            table_data=td,
                            inner_heading_row_border=True)
         #print(bucket_name)
