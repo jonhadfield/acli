@@ -23,6 +23,16 @@ def fake_lc():
     mock.stop()
 
 
+@mock_autoscaling
+@pytest.yield_fixture(scope='function')
+def test_create_autoscaling_group():
+    conn = session.client('autoscaling')
+
+    conn.create_launch_configuration(LaunchConfigurationName='test_lc',
+                                     ImageId='ami-abcd1234',
+                                     InstanceType='t2.medium')
+
+
 @pytest.yield_fixture(scope='function')
 def fake_asg():
     """ASG mock service"""
