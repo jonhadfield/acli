@@ -78,7 +78,6 @@ def test_ec2_list_service_no_instances():
 
 def test_ec2_info_service(ec2_instances):
     with pytest.raises(SystemExit):
-        print(ec2_instances[0])
         assert ec2_info(aws_config=config, instance_id=ec2_instances[0].get('InstanceId'))
 
 
