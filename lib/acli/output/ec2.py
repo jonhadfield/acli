@@ -70,6 +70,16 @@ def get_placement_details(placement):
         return "\n".join(ret)
 
 
+def colour_state(state=None):
+    if not state:
+        return Color('{autoblack}-{/autoblack}')
+    elif state == 'running':
+        return Color('{autogreen}'+state+'{/autogreen}')
+    elif state in ('stopped', 'stopping', 'shutting-down', 'terminated'):
+        return Color('{autored}'+state+'{/autored}')
+    elif state in ('rebooting', 'pending'):
+        return Color('{autoyellow}'+state+'{/autoyellow}')
+
 def output_ec2_list(output_media=None, instances=None):
     """
     @type output_media: unicode
@@ -86,7 +96,8 @@ def output_ec2_list(output_media=None, instances=None):
         for instance in instances:
             if instance:
                 instance_id = instance.get('InstanceId')
-                instance_state = dash_if_none(instance.get('State').get('Name', None))
+                #instance_state = dash_if_none(instance.get('State').get('Name', None))
+                instance_state = colour_state(instance.get('State').get('Name', None))
                 instance_type = dash_if_none(str(instance.get('InstanceType', None)))
                 image_id = dash_if_none(instance.get('ImageId'))
                 public_ip = dash_if_none(instance.get('PublicIpAddress', None))
