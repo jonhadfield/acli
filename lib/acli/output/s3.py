@@ -11,7 +11,9 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
     @type objects: dict
     @type bucket_name: unicode
     """
-    to_remove_len = len(re.sub(bucket_name, '', item))-1
+    to_remove_len = 0
+    if bucket_name:
+        to_remove_len = len(re.sub(bucket_name, '', item))-1
     if buckets:
         sorted_buckets = sorted(buckets, key=lambda k: ['Name'])
         td = list()
