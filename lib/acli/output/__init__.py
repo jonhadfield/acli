@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from terminaltables import AsciiTable
+from colorclass import Color, Windows
+Windows.enable(auto_colors=True, reset_atexit=True)
 
 
 def output_ascii_table(table_title=None,
@@ -24,7 +26,7 @@ def dash_if_none(item=None):
     """
     @type item: object
     """
-    return item if item else '-'
+    return item if item else Color('{autoblack}-{/autoblack}')
 
 
 def get_tags(tags, separator=', '):
