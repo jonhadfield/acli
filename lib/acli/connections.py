@@ -8,7 +8,7 @@ from botocore.exceptions import NoCredentialsError, NoRegionError
 @contextmanager
 def checked_autoscaling_client(autoscaling_client):
     try:
-        assert autoscaling_client.describe_account_limits()
+        assert autoscaling_client.describe_launch_configurations()
         yield autoscaling_client
     except NoCredentialsError:
         exit('No credentials found.')
