@@ -9,7 +9,22 @@ session = Session(region_name="eu-west-1")
 
 
 @pytest.yield_fixture(scope='function')
-def fake_setup():
+def fake_lc():
+    """ASG mock service"""
+    mock = mock_autoscaling()
+    mock.start()
+    client = session.client('autoscaling')
+    client.create_launch_configuration(
+        LaunchConfigurationName='test_lc',
+        ImageId='ami-abcd1234',
+        InstanceType='t2.medium'
+    )
+    yield client.describe_launch_configurations()
+    mock.stop()
+
+
+@pytest.yield_fixture(scope='function')
+def fake_asg():
     """ASG mock service"""
     mock = mock_autoscaling()
     mock.start()
@@ -20,37 +35,37 @@ def fake_setup():
         InstanceType='t2.medium'
     )
 
-#    client.create_auto_scaling_group(
-#        AutoScalingGroupName='test_asg',
-#        LaunchConfigurationName='test_lc',
-#        InstanceId='string',
-#        MinSize=123,
-#        MaxSize=123,
-#        DesiredCapacity=123,
-#        DefaultCooldown=123,
-#        AvailabilityZones=[
-#            'string',
-#        ],
-#        LoadBalancerNames=[
-#            'string',
-#        ],
-#        HealthCheckType='string',
-#        HealthCheckGracePeriod=123,
-#        PlacementGroup='string',
-#        VPCZoneIdentifier='string',
-#        TerminationPolicies=[
-#            'string',
-#        ],
-#        Tags=[
-#            {
-#                'ResourceId': 'string',
-#                'ResourceType': 'string',
-#                'Key': 'string',
-#                'Value': 'string',
-#                'PropagateAtLaunch': True
-#            },
-#        ]
-#    )
+    client.create_auto_scaling_group(
+        AutoScalingGroupName='test_asg',
+        LaunchConfigurationName='test_lc',
+        InstanceId='string',
+        MinSize=123,
+        MaxSize=123,
+        DesiredCapacity=123,
+        DefaultCooldown=123,
+        AvailabilityZones=[
+            'string',
+        ],
+        LoadBalancerNames=[
+            'string',
+        ],
+        HealthCheckType='string',
+        HealthCheckGracePeriod=123,
+        PlacementGroup='string',
+        VPCZoneIdentifier='string',
+        TerminationPolicies=[
+            'string',
+        ],
+        Tags=[
+            {
+                'ResourceId': 'string',
+                'ResourceType': 'string',
+                'Key': 'string',
+                'Value': 'string',
+                'PropagateAtLaunch': True
+            },
+        ]
+    )
     yield client.describe_auto_scaling_groups()
     mock.stop()
 
@@ -60,11 +75,13 @@ config = Config(cli_args={'--region': 'eu-west-1',
                           '--secret_access_key': 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'})
 
 
-def test_lc_list_service(fake_setup):
+def test_lc_list_service(fake_lc):
     with pytest.raises(SystemExit):
+        lc_list(aws_config=config)
+        assert 0
         assert lc_list(aws_config=config)
 
 
-# def test_elb_info_service(route53_zone):
-#    with pytest.raises(SystemExit):
-#        assert route53_info(aws_config=config, zone_id=route53_zone.get('Id'))
+def test_lc_list_asgs(fake_asg):
+    with pytest.raises(SystemExit):
+        assert asg_list(aws_config=config)
