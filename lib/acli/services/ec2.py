@@ -54,8 +54,8 @@ def ec2_info(aws_config=None, instance_id=None):
         if instance.get('InstanceId', None):
             output_ec2_info(output_media='console',
                             instance=instance)
-    except AttributeError:
-        exit("Cannot find instance: {0}".format(instance_id))
+    except IndexError:
+        raise SystemExit("Cannot find instance: {0}".format(instance_id))
 
 
 def ec2_manage(aws_config=None, instance_id=None, action=None):
