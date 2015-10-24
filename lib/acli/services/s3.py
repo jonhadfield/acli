@@ -11,12 +11,14 @@ def s3_list(aws_config=None, item=None):
     """
     s3_client = get_client(client_type='s3', config=aws_config)
     buckets = s3_client.list_buckets()
+    # NO ITEM, SO TRY TO LIST BUCKETS
     if not item:
         if buckets.get('Buckets', None):
             output_s3_list(output_media='console', buckets=buckets.get('Buckets'))
         else:
             exit("No buckets found.")
     else:
+        # ITEM PROVIDED SO EXTRACT BUCKET NAME, KEY AND THEN OUTPUT
         print("GOT AN ITEM")
         bucket_name = None
         prefix = ''
@@ -34,7 +36,16 @@ def s3_list(aws_config=None, item=None):
 
         print('prefix = {}'.format(prefix))
         try:
+            s3_client.head_bucket(Bucket=bucket_name)
+        except botocore.exceptions.ClientError:
+            exit("Unable to access bucket.")
+        except Exception as unhandled:
+            exit('Unhandled exception: {0}'.format(unhandled))
+        # BUCKET DOES EXIST, SO GET CONTENTS
+        try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
+            if not objects:
+                exit('nothing there')
             print("OBJECT = ".format(str(objects)))
             common_prefixes = objects.get('CommonPrefixes', list())
             folders = list()
