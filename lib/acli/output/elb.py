@@ -68,7 +68,6 @@ def get_elb_listeners(listeners=None):
                                  listener_config.get('InstancePort', '-'),
                                  listener_config.get('InstanceProtocol', '-'))
     if output:
-        print(listeners)
         return output.rstrip()
 
 
@@ -106,7 +105,7 @@ def output_elb_info(output_media=None, elb=None):
         # td.append(['connection', str(elb.connection)])
         # td.append(['policies', dash_if_none(get_elb_policies(elb.get('Policies)))])
         td.append([Color('{autoblue}health check{/autoblue}'),
-                   get_healthcheck(elb.get('HealthCheck'))])
+                   dash_if_none(get_healthcheck(elb.get('HealthCheck')))])
         td.append([Color('{autoblue}created{/autoblue}'),
                    str(dash_if_none(elb.get('CreatedTime').replace(tzinfo=None, microsecond=0)))])
         # td.append(['instances', get_elb_instances(elb.get('Instances'))])
