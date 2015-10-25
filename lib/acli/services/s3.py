@@ -32,16 +32,15 @@ def s3_list(aws_config=None, item=None):
             exit('Unhandled exception: {0}'.format(unhandled))
         try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
-            if not objects:
-                exit('nothing there')
+            print(objects)
+            if not any((objects.get('CommonPrefixes', None),
+                        (objects.get('Contents', None) and len(objects.get('Contents')) > 1))):
+                exit('Nothing found in: {0}'.format(item[:-1]))
             common_prefixes = objects.get('CommonPrefixes', list())
             folders = list()
             for first_bit in common_prefixes:
                 folders.append(first_bit)
-            if objects:
-                output_s3_list(objects=objects, folders=folders, item=item, bucket_name=bucket_name)
-            else:
-                print("NO OBJECTS")
+            output_s3_list(objects=objects, folders=folders, item=item, bucket_name=bucket_name)
         except botocore.exceptions.ClientError as error:
             if 'NoSuchBucket' in error.response['Error']['Code']:
                 exit('Bucket not found.')
