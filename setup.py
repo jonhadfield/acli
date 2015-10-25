@@ -51,6 +51,7 @@ setup(
     author='Jon Hadfield',
     author_email='jon@lessknown.co.uk',
     url='http://github.com/jonhadfield/acli',
+    download_url='https://github.com/jonhadfield/acli/tarball/{0}'.format(version),
     install_requires=['docopt==0.6.2',
                       'colorclass==1.2.0',
                       'botocore>=1.2.10',
@@ -76,7 +77,7 @@ setup(
         'Topic :: System :: Networking',
     ],
     keywords=(
-        'aws, Python, cli'
+        'aws, Python, cli, amazon, ec2'
     ),
     tests_require=['requests>=2.7.0',
                    'pytest-cov>=2.2.0',
