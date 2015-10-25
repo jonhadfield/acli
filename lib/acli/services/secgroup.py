@@ -25,5 +25,5 @@ def secgroup_info(aws_config=None, secgroup_id=None):
         secgroups = result.get('SecurityGroups', None)
         secgroup = secgroups[0]
         output_secgroup_info(output_media='console', secgroup=secgroup)
-    except ClientError:
+    except (ClientError, IndexError):
         exit("Cannot find security group: {0}.".format(secgroup_id))
