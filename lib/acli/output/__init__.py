@@ -26,7 +26,7 @@ def dash_if_none(item=None):
     """
     @type item: object
     """
-    return item if item else Color('{autoblack}-{/autoblack}')
+    return str(item) if item else Color('{autoblack}-{/autoblack}')
 
 
 def get_tags(tags, separator=', '):

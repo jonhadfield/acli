@@ -54,12 +54,18 @@ def output_route53_info(output_media=None, zone=None, record_sets=None):
     """
     if output_media == 'console':
         td = list()
-        td.append([Color('{autoblue}id{/autoblue}'), zone['HostedZone']['Id']])
-        td.append([Color('{autoblue}name{/autoblue}'), zone['HostedZone']['Name']])
-        td.append([Color('{autoblue}records{/autoblue}'), str(zone['HostedZone']['ResourceRecordSetCount'])])
-        td.append([Color('{autoblue}comment{/autoblue}'), zone['HostedZone']['Config']['Comment']])
-        td.append([Color('{autoblue}private{/autoblue}'), str(zone['HostedZone']['Config']['PrivateZone'])])
-        td.append([Color('{autoblue}name servers{/autoblue}'), "\n".join(zone['DelegationSet']['NameServers'])])
+        td.append([Color('{autoblue}id{/autoblue}'),
+                   dash_if_none(zone.get('HostedZone').get('Id', None))])
+        td.append([Color('{autoblue}name{/autoblue}'),
+                   dash_if_none(zone.get('HostedZone').get('Name', None))])
+        td.append([Color('{autoblue}records{/autoblue}'),
+                   dash_if_none(zone.get('HostedZone').get('ResourceRecordSetCount', None))])
+        td.append([Color('{autoblue}comment{/autoblue}'),
+                   dash_if_none(zone.get('HostedZone').get('Config').get('Comment', None))])
+        td.append([Color('{autoblue}private{/autoblue}'),
+                   dash_if_none(zone.get('HostedZone').get('Config').get('PrivateZone', None))])
+        td.append([Color('{autoblue}name servers{/autoblue}'),
+                   "\n".join(zone['DelegationSet']['NameServers'])])
         td.append([Color('{autoblue}records{/autoblue}'), ' '])
         td.append(['{0}'.format("-" * 12), '{0}'.format("-" * 20)])
         for record_set in record_sets['ResourceRecordSets']:
