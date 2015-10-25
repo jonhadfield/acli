@@ -314,12 +314,12 @@ def output_ec2_summary(output_media=None, summary=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['Running instances', str(summary.get('instances', '0')),
-                   'Load Balancers', str(summary.get('elbs', '0'))])
-        td.append(['Elastic IPs', str(summary.get('eips', '0')),
-                   'AMIs', str(summary.get('amis', '0'))])
-        td.append(['Security Groups', str(summary.get('secgroups', '0')),
-                   '', '' ])
+        td.append([Color('{autoblue}running instances{/autoblue}'), str(summary.get('instances', '0')),
+                   Color('{autoblue}load balancers{/autoblue}'), str(summary.get('elbs', '0'))])
+        td.append([Color('{autoblue}elastic IPs{/autoblue}'), str(summary.get('eips', '0')),
+                   Color('{autoblue}AMIs{/autoblue}'), str(summary.get('amis', '0'))])
+        td.append([Color('{autoblue}security groups{/autoblue}'), str(summary.get('secgroups', '0')),
+                   '', ''])
         output_ascii_table(table_title=Color('{autowhite}ec2 summary{/autowhite}'),
                            table_data=td)
     exit(0)
