@@ -202,7 +202,7 @@ def output_ec2_info(output_media=None, instance=None):
         td.append([Color('{autoblue}private dns name{/autoblue}'),
                    dash_if_none(instance.get('PrivateDnsName', None))])
         td.append([Color('{autoblue}state{/autoblue}'),
-                   str(dash_if_none(instance.get('State', None)))])
+                   colour_state(instance.get('State')['Name'])])
         td.append([Color('{autoblue}key name{/autoblue}'),
                    dash_if_none(instance.get('KeyName', None))])
         td.append([Color('{autoblue}instance type{/autoblue}'),
