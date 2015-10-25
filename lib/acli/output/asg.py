@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import output_ascii_table, dash_if_none, get_tags
+from colorclass import Color, Windows
+Windows.enable(auto_colors=True, reset_atexit=True)
 
 
 def get_instances_output(instances):
@@ -21,7 +23,7 @@ def output_asg_list(output_media=None, asg_list=None):
     """
     if isinstance(asg_list, list):
         if output_media == 'console':
-            td = [['name', 'instances', 'min', 'max', 'lc']]
+            td = [[Color('{autoblue}name{/autoblue}'), Color('{autoblue}instances{/autoblue}'), Color('{autoblue}min{/autoblue}'), Color('{autoblue}max{/autoblue}'), Color('{autoblue}lc{/autoblue}')]]
             for asg in asg_list:
                 td.append([asg.get('AutoScalingGroupName', '-'),
                            str(len(asg.get('Instances', '-'))),
@@ -29,7 +31,7 @@ def output_asg_list(output_media=None, asg_list=None):
                            str(asg.get('MaxSize', '-')),
                            asg.get('LaunchConfigurationName', '-')
                            ])
-            output_ascii_table(table_title="ASGs",
+            output_ascii_table(table_title=Color('{autowhite}ASGs{/autowhite}'),
                                table_data=td,
                                inner_heading_row_border=True)
     exit(0)
@@ -62,7 +64,7 @@ def output_asg_info(output_media=None, asg=None):
         td.append(['Status', str(dash_if_none(asg.get('Status')))])
         td.append(['Tags', dash_if_none(get_tags(asg.get('Tags')))])
         td.append(['TerminationPolicies', str(dash_if_none(asg.get('TerminationPolicies')))])
-        output_ascii_table(table_title="ASG Info",
+        output_ascii_table(table_title=Color('{autowhite}asg info{/autowhite}'),
                            table_data=td)
     exit(0)
 
@@ -74,14 +76,15 @@ def output_lc_list(output_media=None, lc_list=None):
     """
     if isinstance(lc_list, list):
         if output_media == 'console':
-            td = [['Name', 'ImageId', 'InstanceType', 'CreatedTime']]
+            td = [[Color('{autoblue}name{/autoblue}'), Color('{autoblue}image id{/autoblue}'),
+                   Color('{autoblue}instance type{/autoblue}'), Color('{autoblue}created{/autoblue}')]]
             for lc in lc_list:
                 td.append([lc.get('LaunchConfigurationName', '-'),
                            str(lc.get('ImageId', '-')),
                            str(lc.get('InstanceType', '-')),
                            str(lc.get('CreatedTime', '-'))
                            ])
-            output_ascii_table(table_title="Launch Configurations",
+            output_ascii_table(table_title=Color('{autowhite}launch configurations{/autowhite}'),
                                table_data=td,
                                inner_heading_row_border=True)
     exit(0)
@@ -112,6 +115,6 @@ def output_lc_info(output_media=None, lc=None):
         td.append(['Instance Type', str(dash_if_none(lc.get('InstanceType')))])
         td.append(['associate public IP', str(dash_if_none(lc.get('AssociatePublicIpAddress')))])
         td.append(['user data', str(dash_if_none(lc.get('UserData')))])
-        output_ascii_table(table_title="Launch Configuration Info",
+        output_ascii_table(table_title=Color('{autowhite}launch configuration info{/autowhite}'),
                            table_data=td)
     exit(0)

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, dash_if_none)
+from colorclass import Color, Windows
+Windows.enable(auto_colors=True, reset_atexit=True)
 
 
 def get_tag(name=None, tags=None):
@@ -37,7 +39,7 @@ def output_secgroup_list(output_media=None, secgroups=None):
             td.append([secgroup.get('GroupId'),
                       split_string(secgroup.get('GroupName'), chunk_size=30),
                       split_string(secgroup.get('Description'), chunk_size=40)])
-        output_ascii_table(table_title="Security Groups",
+        output_ascii_table(table_title=Color('{autowhite}security groups{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
     exit(0)
@@ -91,7 +93,7 @@ def output_secgroup_info(output_media=None, secgroup=None):
                     if ip_perm_egress.get('UserIdGroupPairs'):
                         td.append(['user id group pairs', '{0}'.format("-" * 30)])
                         td.append(['', get_uid_group_pairs(uid_gps=ip_perm_egress.get('UserIdGroupPairs'))])
-        output_ascii_table(table_title="Security Group Info",
+        output_ascii_table(table_title=Color('{autowhite}security group info{/autowhite}'),
                            table_data=td)
     else:
         exit('Security group does not exist.')

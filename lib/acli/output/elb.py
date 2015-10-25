@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import output_ascii_table, dash_if_none
+from colorclass import Color, Windows
+Windows.enable(auto_colors=True, reset_atexit=True)
 
 
 def get_elb_instances(instances=None):
@@ -22,7 +24,7 @@ def output_elbs(output_media=None, elbs=None):
             td = [['name', 'instances', 'dns_name']]
             for elb in elbs:
                 td.append([elb.get('LoadBalancerName'), str(len(elb.get('Instances'))), elb.get('DNSName')])
-            output_ascii_table(table_title="ELBs",
+            output_ascii_table(table_title=Color('{autowhite}ELBs{/autowhite}'),
                                table_data=td,
                                inner_heading_row_border=True)
     else:
@@ -95,6 +97,6 @@ def output_elb_info(output_media=None, elb=None):
         td.append(['security groups', ",".join(elb.get('SecurityGroups'))])
         td.append(['subnets', ",".join(elb.get('Subnets'))])
         td.append(['vpc id', dash_if_none(elb.get('VPCId'))])
-        output_ascii_table(table_title="ELB Info",
+        output_ascii_table(table_title=Color('{autowhite}elb info{/autowhite}'),
                            table_data=td)
     exit(0)

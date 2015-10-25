@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, dash_if_none)
+from colorclass import Color, Windows
+Windows.enable(auto_colors=True, reset_atexit=True)
 
 
 def get_tag(name=None, tags=None):
@@ -32,7 +34,7 @@ def output_vpc_list(output_media=None, vpcs=None):
                        dash_if_none(state),
                        dash_if_none(dhcpoptions),
                        default])
-        output_ascii_table(table_title="VPCs",
+        output_ascii_table(table_title=Color('{autowhite}VPCs{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
     exit(0)
@@ -72,7 +74,7 @@ def output_vpc_info(output_media=None, vpc=None, subnets=None):
                         for tag in subnet.get('Tags'):
                             tag_key, tag_value = dash_if_none(tag.get('Key', None)), dash_if_none(tag.get('Value', None))
                             td.append([" {}".format(tag_key), "{}".format(tag_value)])
-            output_ascii_table(table_title="VPC Info",
+            output_ascii_table(table_title=Color('{autowhite}vpc info{/autowhite}'),
                                table_data=td)
     else:
         exit('VPC does not exist.')
