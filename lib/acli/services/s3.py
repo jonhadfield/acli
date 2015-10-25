@@ -5,6 +5,16 @@ import botocore.exceptions
 from acli.connections import get_client
 
 
+def check_bucket_accessible(s3_client=None, bucket_name=None):
+    try:
+        s3_client.head_bucket(Bucket=bucket_name)
+        return True
+    except botocore.exceptions.ClientError:
+        exit("Unable to access bucket.")
+    except Exception as unhandled:
+        exit('Unhandled exception: {0}'.format(unhandled))
+
+
 def s3_list(aws_config=None, item=None):
     """
     @type aws_config: Config
@@ -24,12 +34,7 @@ def s3_list(aws_config=None, item=None):
             prefix = "/".join(path_elements[1:])
         else:
             bucket_name = item
-        try:
-            s3_client.head_bucket(Bucket=bucket_name)
-        except botocore.exceptions.ClientError:
-            exit("Unable to access bucket.")
-        except Exception as unhandled:
-            exit('Unhandled exception: {0}'.format(unhandled))
+        check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
         try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
             if not any((objects.get('CommonPrefixes', None),
