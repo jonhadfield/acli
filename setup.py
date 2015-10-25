@@ -49,7 +49,7 @@ setup(
     name='acli',
     version=version,
     author='Jon Hadfield',
-    author_email='jon.hadfield@lessknown.co.uk',
+    author_email='jon@lessknown.co.uk',
     url='http://github.com/jonhadfield/acli',
     install_requires=['docopt==0.6.2',
                       'colorclass==1.2.0',
