@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 sys.path.insert(0, os.path.abspath('lib'))
 
-version = "0.0.1"
+version = "0.1.0"
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
@@ -67,13 +67,12 @@ setup(
     include_package_data=True,
     classifiers=[
         'Programming Language :: Python',
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Natural Language :: English',
         'Environment :: Console',
-        'Intended Audience :: System Administrators',
+        'Intended Audience :: System Administrators :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Topic :: System :: Operating System',
         'Topic :: System :: Networking',
     ],
     keywords=(
