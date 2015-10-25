@@ -14,7 +14,7 @@ def output_ec2_cpu(dates=None, values=None,
         import matplotlib.pyplot as plt
         import matplotlib.dates as mdates
     except ImportError:
-        print('install matplotlib.')
+        exit('matplotlib required to output graphs.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
@@ -43,7 +43,7 @@ def output_ec2_mem(dates=None, values=None, instance_id=None, output_type=None):
         import matplotlib.pyplot as plt
         import matplotlib.dates as mdates
     except ImportError:
-        print('install matplotlib.')
+        exit('matplotlib required to output graphs.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
@@ -74,7 +74,7 @@ def output_ec2_net(in_dates=None, in_values=None, out_dates=None,
         import matplotlib.pyplot as plt
         import matplotlib.dates as mdates
     except ImportError:
-        exit('install matplotlib.')
+        exit('matplotlib required to output graphs.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
@@ -108,7 +108,7 @@ def output_ec2_vols(vols_datapoints=None, instance_id=None, output_type=None):
         import matplotlib.pyplot as plt
         import matplotlib.dates as mdates
     except ImportError:
-        exit('install matplotlib.')
+        exit('matplotlib required to output graphs.')
     try:
         import numpy as np
     except ImportError:
@@ -172,7 +172,7 @@ def output_asg_cpu(dates=None, values=None,
         import matplotlib.pyplot as plt
         import matplotlib.dates as mdates
     except ImportError:
-        exit('install matplotlib.')
+        exit('matplotlib required to output graphs.')
     if output_type in ('graph', None):
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
