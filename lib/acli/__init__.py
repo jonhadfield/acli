@@ -11,6 +11,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli asg list [options]
        acli asg (info | cpu | mem | net) <asg_name> [options]
        acli ami (list | info <ami_id>)
+       acli eip (list | info <eip>)
        acli elb (list | info <elb_name>)
        acli route53 (list | info <zone_id>)
        acli vpc (list | info <vpc_id>)
@@ -24,6 +25,7 @@ options:
 The most common commands are:
    account      Get account info
    ec2          Manage ec2 instances
+   eip          Manage elastic IPs
    elb          Manage elb instances
    ami          Manage amis
    asg          Manage auto-scaling groups
@@ -39,8 +41,8 @@ See 'acli help <command>'
 
 from __future__ import (absolute_import, print_function, unicode_literals)
 from docopt import docopt
-from acli.services import (ec2, elb, account, cloudwatch,
-                           vpc, asg, route53, secgroup, s3)
+from acli.services import (ec2, elb, account, cloudwatch, vpc,
+                           eip, asg, route53, secgroup, s3)
 from acli.config import Config
 from acli import utils
 
@@ -149,6 +151,13 @@ def real_main():
             secgroup.secgroup_list(aws_config)
         elif secgroup_res.get('info'):
             secgroup.secgroup_info(aws_config, secgroup_id=secgroup_res.get('<secgroup_id>'))
+    if args['<command>'] == 'eip':
+        from acli.commands import eip as command_eip
+        eip_res = docopt(command_eip.__doc__, argv=argv)
+        if eip_res.get('list'):
+            eip.eip_list(aws_config)
+        elif eip_res.get('info'):
+            eip.eip_info(aws_config, eip=eip_res.get('<eip>'))
     if args['<command>'] == 's3':
         from acli.commands import s3 as command_s3
         s3_res = docopt(command_s3.__doc__, argv=argv)
