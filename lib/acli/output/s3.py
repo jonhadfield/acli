@@ -47,7 +47,7 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
                 if an_object_key:
                     td.append([an_object_key,
                                str(an_object.get('Size')),
-                               str(an_object.get('LastModified').replace(tzinfo=None)),
+                               str(an_object.get('LastModified').replace(tzinfo=None, hour=0)),
                                str(an_object.get('StorageClass')),
                                # str(an_object.get('Owner')),
                                str(an_object.get('ETag')[1:-1])])

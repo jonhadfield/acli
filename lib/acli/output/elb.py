@@ -82,23 +82,34 @@ def output_elb_info(output_media=None, elb=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['name', elb.get('LoadBalancerName')])
-        td.append(['dns name', elb.get('DNSName')])
+        td.append([Color('{autoblue}name{/autoblue}'),
+                   elb.get('LoadBalancerName')])
+        td.append([Color('{autoblue}dns name{/autoblue}'),
+                   elb.get('DNSName')])
         # print(elb.get('ListenerDescriptions'))
-        td.append(['listeners', dash_if_none(get_elb_listeners(elb.get('ListenerDescriptions')))])
-        td.append(['canonical hosted zone name', dash_if_none(elb.get('CanonicalHostedZoneName'))])
-        td.append(['canonical hosted zone name id', dash_if_none(elb.get('CanonicalHostedZoneNameID'))])
+        td.append([Color('{autoblue}listeners{/autoblue}'),
+                   dash_if_none(get_elb_listeners(elb.get('ListenerDescriptions')))])
+        td.append([Color('{autoblue}canonical hosted zone name{/autoblue}'),
+                   dash_if_none(elb.get('CanonicalHostedZoneName'))])
+        td.append([Color('{autoblue}canonical hosted zone name id{/autoblue}'),
+                   dash_if_none(elb.get('CanonicalHostedZoneNameID'))])
         # td.append(['connection', str(elb.connection)])
         # td.append(['policies', dash_if_none(get_elb_policies(elb.get('Policies)))])
-        td.append(['health check', str(elb.get('HealthCheck'))])
-        td.append(['created time', str(dash_if_none(elb.get('CreatedTime')))])
+        td.append([Color('{autoblue}health check{/autoblue}'),
+                   str(elb.get('HealthCheck'))])
+        td.append([Color('{autoblue}created{/autoblue}'),
+                   str(dash_if_none(elb.get('CreatedTime').replace(tzinfo=None, microsecond=0)))])
         # td.append(['instances', get_elb_instances(elb.get('Instances'))])
-        td.append(['availability zones', ",".join(elb.get('AvailabilityZones'))])
-        td.append(['source security group',
+        td.append([Color('{autoblue}availability zones{/autoblue}'),
+                   ",".join(elb.get('AvailabilityZones'))])
+        td.append([Color('{autoblue}source security group{/autoblue}'),
                    dash_if_none(get_source_secgroup_name(elb.get('SourceSecurityGroup', None)))])
-        td.append(['security groups', ",".join(elb.get('SecurityGroups'))])
-        td.append(['subnets', ",".join(elb.get('Subnets'))])
-        td.append(['vpc id', dash_if_none(elb.get('VPCId'))])
+        td.append([Color('{autoblue}security groups{/autoblue}'),
+                   ",".join(elb.get('SecurityGroups'))])
+        td.append([Color('{autoblue}subnets{/autoblue}'),
+                   ",".join(elb.get('Subnets'))])
+        td.append([Color('{autoblue}vpc id{/autoblue}'),
+                   dash_if_none(elb.get('VPCId'))])
         output_ascii_table(table_title=Color('{autowhite}elb info{/autowhite}'),
                            table_data=td)
     exit(0)
