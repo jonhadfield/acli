@@ -138,7 +138,7 @@ def get_sec_groups_name_and_id(groups=None):
     """
     ret = []
     for group in groups:
-        ret.append('GroupName:{}, GroupId:{}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
+        ret.append('GroupName:{}\nGroupId:{}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
     return "\n".join(ret).rstrip()
 
 
