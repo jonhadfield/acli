@@ -34,7 +34,9 @@ def output_secgroup_list(output_media=None, secgroups=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['Group ID', 'Group Name', 'Description'])
+        td.append([Color('{autoblue}group id{/autoblue}'),
+                   Color('{autoblue}group name{/autoblue}'),
+                   Color('{autoblue}description{/autoblue}')])
         for secgroup in secgroups.get('SecurityGroups'):
             td.append([secgroup.get('GroupId'),
                       split_string(secgroup.get('GroupName'), chunk_size=30),
