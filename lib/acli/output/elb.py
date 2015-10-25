@@ -58,21 +58,31 @@ def get_elb_listeners(listeners=None):
     """
     output = ""
     for listener in listeners:
-        output += "LB Port: {0} " \
-                  "Instance Port: {1} " \
-                  "Protocol: {2} " \
+        listener_config = listener.get('Listener')
+        output += "LB Port: {0} \n" \
+                  "LB Protocol: {1} \n" \
+                  "Instance Port: {2} \n" \
                   "Instance Protocol: " \
-                  "{3}\n".format(listener.get('LoadBalancerPort'),
-                                 listener.get('InstancePort'),
-                                 listener.get('Protocol'),
-                                 listener.get('InstanceProtocol'))
+                  "{3}\n".format(listener_config.get('LoadBalancerPort', '-'),
+                                 listener_config.get('Protocol', '-'),
+                                 listener_config.get('InstancePort', '-'),
+                                 listener_config.get('InstanceProtocol', '-'))
     if output:
+        print(listeners)
         return output.rstrip()
 
 
 def get_source_secgroup_name(source_secgroup=None):
     if source_secgroup:
         return source_secgroup.get('GroupName')
+
+
+def get_healthcheck(hc=None):
+    if hc:
+        out = str()
+        for key, value in hc.iteritems():
+            out += "{0}: {1}\n".format(key, value)
+        return out.rstrip()
 
 
 def output_elb_info(output_media=None, elb=None):
@@ -96,7 +106,7 @@ def output_elb_info(output_media=None, elb=None):
         # td.append(['connection', str(elb.connection)])
         # td.append(['policies', dash_if_none(get_elb_policies(elb.get('Policies)))])
         td.append([Color('{autoblue}health check{/autoblue}'),
-                   str(elb.get('HealthCheck'))])
+                   get_healthcheck(elb.get('HealthCheck'))])
         td.append([Color('{autoblue}created{/autoblue}'),
                    str(dash_if_none(elb.get('CreatedTime').replace(tzinfo=None, microsecond=0)))])
         # td.append(['instances', get_elb_instances(elb.get('Instances'))])
