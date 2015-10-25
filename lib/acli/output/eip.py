@@ -49,6 +49,8 @@ def output_eip_info(output_media=None, address=None):
                    dash_if_none(address.get('PublicIp', None))])
         td.append([Color('{autoblue}allocation id{/autoblue}'),
                    dash_if_none(address.get('AllocationId', None))])
+        td.append([Color('{autoblue}instance id{/autoblue}'),
+                   dash_if_none(address.get('InstanceId', None))])
         td.append([Color('{autoblue}association id{/autoblue}'),
                    dash_if_none(address.get('AssociationId', None))])
         td.append([Color('{autoblue}domain{/autoblue}'),
