@@ -214,7 +214,7 @@ def output_ec2_info(output_media=None, instance=None):
         td.append([Color('{autoblue}placement{/autoblue}'),
                    get_placement_details(instance.get('Placement'))])
         td.append([Color('{autoblue}monitored{/autoblue}'),
-                   str(dash_if_none(instance.get('Monitoring')))])
+                   'enabled' if instance.get('Monitoring')['State'] == 'enabled' else 'disabled'])
         td.append([Color('{autoblue}subnet id{/autoblue}'),
                    dash_if_none(instance.get('SubnetId'))])
         td.append([Color('{autoblue}vpc id{/autoblue}'),
