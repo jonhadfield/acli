@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-usage: acli [--version] [--help]
-            [--region=<region>] [--access_key_id=<access_key_id>] [--secret_access_key=<secret_access_key>]
+usage: acli [--version] [--help] [--install-completion]
+       acli [--region=<region>] [--access_key_id=<access_key_id>] [--secret_access_key=<secret_access_key>]
             <command> [<args>...]
        acli account [options]
        acli ec2 (list | summary) [options]
@@ -51,7 +51,8 @@ def real_main():
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
-
+    if args['--install-completion']:
+        utils.install_completion()
     if args['<command>'] == 'account':
         from acli.commands import account as command_account
         # acc_res = docopt(command_account.__doc__, argv=argv)
