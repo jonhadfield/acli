@@ -32,7 +32,6 @@ def s3_list(aws_config=None, item=None):
             exit('Unhandled exception: {0}'.format(unhandled))
         try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
-            print(objects)
             if not any((objects.get('CommonPrefixes', None),
                         (objects.get('Contents', None) and len(objects.get('Contents')) > 1))):
                 exit('Nothing found in: {0}'.format(item[:-1]))
