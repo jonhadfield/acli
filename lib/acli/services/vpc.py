@@ -23,13 +23,9 @@ def vpc_info(aws_config=None, vpc_id=None):
     @type vpc_id: unicode
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
-
     try:
         vpcs = ec2_client.describe_vpcs(VpcIds=[vpc_id])
-    except (ClientError, IndexError):
-        exit("Cannot find VPC: {0}".format(vpc_id))
-
-    if vpcs.get('Vpcs', None):
         all_subnets = ec2_client.describe_subnets(Filters=[{'Name': 'vpc-id', 'Values': [vpc_id]}])
         output_vpc_info(output_media='console', vpc=vpcs['Vpcs'][0], subnets=all_subnets)
-
+    except (ClientError, IndexError):
+        exit("Cannot find VPC: {0}".format(vpc_id))

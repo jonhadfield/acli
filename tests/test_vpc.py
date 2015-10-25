@@ -49,6 +49,10 @@ def test_vpc_list_service_empty(fake_empty_vpcs, capsys):
 
 def test_vpc_info_service(fake_vpcs):
     with pytest.raises(SystemExit):
+        print('---')
+        print(fake_vpcs.get('Vpcs')[0].get('VpcId'))
+        print('---')
+        vpc_info(aws_config=config, vpc_id=fake_vpcs.get('Vpcs')[0].get('VpcId'))
         assert vpc_info(aws_config=config, vpc_id=fake_vpcs.get('Vpcs')[0].get('VpcId'))
 
 
