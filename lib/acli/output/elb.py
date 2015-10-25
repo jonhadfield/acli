@@ -21,7 +21,9 @@ def output_elbs(output_media=None, elbs=None):
     if elbs:
         elbs.sort(key=lambda k: k.get('DNSName'))
         if output_media == 'console':
-            td = [['name', 'instances', 'dns_name']]
+            td = [[Color('{autoblue}name{/autoblue}'),
+                   Color('{autoblue}instances{/autoblue}'),
+                   Color('{autoblue}dns name{/autoblue}')]]
             for elb in elbs:
                 td.append([elb.get('LoadBalancerName'), str(len(elb.get('Instances'))), elb.get('DNSName')])
             output_ascii_table(table_title=Color('{autowhite}ELBs{/autowhite}'),
