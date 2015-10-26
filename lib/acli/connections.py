@@ -13,7 +13,7 @@ def checked_autoscaling_client(autoscaling_client):
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
-        exit('Unhanded exception: {0}'.format(e))
+        exit('Unhandled exception: {0}'.format(e))
 
 
 @contextmanager
@@ -24,7 +24,7 @@ def checked_iam_client(iam_client):
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
-        exit('Unhanded exception: {0}'.format(e))
+        exit('Unhandled exception: {0}'.format(e))
 
 
 @contextmanager
@@ -35,7 +35,7 @@ def checked_ec2_client(ec2_client):
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
-        exit('Unhanded exception: {0}'.format(e))
+        exit('Unhandled exception: {0}'.format(e))
 
 
 @contextmanager
@@ -46,7 +46,7 @@ def checked_elb_client(elb_client):
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
-        exit('Unhanded exception: {0}'.format(e))
+        exit('Unhandled exception: {0}'.format(e))
 
 
 @contextmanager
@@ -57,7 +57,7 @@ def checked_cloudwatch_client(cloudwatch_client):
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
-        exit('Unhanded exception: {0}'.format(e))
+        exit('Unhandled exception: {0}'.format(e))
 
 
 @contextmanager
@@ -68,7 +68,7 @@ def checked_route53_client(route53_client):
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
-        exit('Unhanded exception: {0}'.format(e))
+        exit('Unhandled exception: {0}'.format(e))
 
 
 @contextmanager
@@ -79,7 +79,7 @@ def checked_s3_client(s3_client):
     except NoCredentialsError:
         exit('No credentials found.')
     except Exception as e:
-        exit('Unhanded exception: {0}'.format(e))
+        exit('Unhandled exception: {0}'.format(e))
 
 
 def get_boto3_session(aws_config):
