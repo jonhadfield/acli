@@ -51,9 +51,6 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
                                str(an_object.get('StorageClass')),
                                # str(an_object.get('Owner')),
                                str(an_object.get('ETag')[1:-1])])
-
-        else:
-            print("NO OBJECTS TO OUTPUT :(")
         output_ascii_table(table_title=Color('{autowhite}'+item+'{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
