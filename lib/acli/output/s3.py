@@ -23,7 +23,7 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
         for bucket in sorted_buckets:
             if output_media == 'console':
                 td.append([bucket.get('Name'),
-                           str(bucket.get('CreationDate'))])
+                           str(bucket.get('CreationDate').replace(tzinfo=None, microsecond=0))])
         output_ascii_table(table_title=Color('{autowhite}s3 buckets{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
@@ -47,7 +47,7 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
                 if an_object_key:
                     td.append([an_object_key,
                                str(an_object.get('Size')),
-                               str(an_object.get('LastModified').replace(tzinfo=None)),
+                               str(an_object.get('LastModified').replace(tzinfo=None, microsecond=0)),
                                str(an_object.get('StorageClass')),
                                # str(an_object.get('Owner')),
                                str(an_object.get('ETag')[1:-1])])
