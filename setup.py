@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 sys.path.insert(0, os.path.abspath('lib'))
 
-version = "0.0.1"
+version = "0.1.3"
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
@@ -49,8 +49,9 @@ setup(
     name='acli',
     version=version,
     author='Jon Hadfield',
-    author_email='jon.hadfield@lessknown.co.uk',
+    author_email='jon@lessknown.co.uk',
     url='http://github.com/jonhadfield/acli',
+    download_url='https://github.com/jonhadfield/acli/tarball/{0}'.format(version),
     install_requires=['docopt==0.6.2',
                       'colorclass==1.2.0',
                       'botocore>=1.2.10',
@@ -67,17 +68,17 @@ setup(
     include_package_data=True,
     classifiers=[
         'Programming Language :: Python',
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Natural Language :: English',
         'Environment :: Console',
         'Intended Audience :: System Administrators',
+        'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Topic :: System :: Operating System',
         'Topic :: System :: Networking',
     ],
     keywords=(
-        'aws, Python, cli'
+        'aws, Python, cli, amazon, ec2'
     ),
     tests_require=['requests>=2.7.0',
                    'pytest-cov>=2.2.0',

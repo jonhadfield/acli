@@ -138,7 +138,7 @@ def get_sec_groups_name_and_id(groups=None):
     """
     ret = []
     for group in groups:
-        ret.append('GroupName:{}, GroupId:{}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
+        ret.append('GroupName:{}\nGroupId:{}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
     return "\n".join(ret).rstrip()
 
 
@@ -214,7 +214,7 @@ def output_ec2_info(output_media=None, instance=None):
         td.append([Color('{autoblue}placement{/autoblue}'),
                    get_placement_details(instance.get('Placement'))])
         td.append([Color('{autoblue}monitored{/autoblue}'),
-                   str(dash_if_none(instance.get('Monitoring')))])
+                   'enabled' if instance.get('Monitoring')['State'] == 'enabled' else 'disabled'])
         td.append([Color('{autoblue}subnet id{/autoblue}'),
                    dash_if_none(instance.get('SubnetId'))])
         td.append([Color('{autoblue}vpc id{/autoblue}'),
@@ -314,12 +314,12 @@ def output_ec2_summary(output_media=None, summary=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['Running instances', str(summary.get('instances', '0')),
-                   'Load Balancers', str(summary.get('elbs', '0'))])
-        td.append(['Elastic IPs', str(summary.get('eips', '0')),
-                   'AMIs', str(summary.get('amis', '0'))])
-        td.append(['Security Groups', str(summary.get('secgroups', '0')),
-                   '', '' ])
+        td.append([Color('{autoblue}running instances{/autoblue}'), str(summary.get('instances', '0')),
+                   Color('{autoblue}load balancers{/autoblue}'), str(summary.get('elbs', '0'))])
+        td.append([Color('{autoblue}elastic IPs{/autoblue}'), str(summary.get('eips', '0')),
+                   Color('{autoblue}AMIs{/autoblue}'), str(summary.get('amis', '0'))])
+        td.append([Color('{autoblue}security groups{/autoblue}'), str(summary.get('secgroups', '0')),
+                   '', ''])
         output_ascii_table(table_title=Color('{autowhite}ec2 summary{/autowhite}'),
                            table_data=td)
     exit(0)

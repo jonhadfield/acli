@@ -30,7 +30,7 @@ def route53_info(aws_config=None, zone_id=None):
             output_route53_info(output_media='console',
                                 zone=hosted_zone,
                                 record_sets=record_sets)
-    except AttributeError:
-        exit("Cannot find hosted zone: {0}".format(zone_id))
+    #except AttributeError:
+    #    exit("Cannot find hosted zone: {0}".format(zone_id))
     except botocore.exceptions.ClientError:
         exit("Cannot request hosted zone: {0}".format(zone_id))

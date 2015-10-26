@@ -25,7 +25,7 @@ def asg_info(aws_config=None, asg_name=None):
     """
     asg_client = get_client(client_type='autoscaling', config=aws_config)
     asg = asg_client.describe_auto_scaling_groups(AutoScalingGroupNames=[asg_name])
-    if asg:
+    if asg.get('AutoScalingGroups'):
         output_asg_info(output_media='console', asg=asg.get('AutoScalingGroups')[0])
     else:
         exit("Auto Scaling Group: {0} not found.".format(asg_name))

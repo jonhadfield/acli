@@ -33,4 +33,5 @@ def test_elb_list_service(route53_zone):
 
 def test_elb_info_service(route53_zone):
     with pytest.raises(SystemExit):
-        assert route53_info(aws_config=config, zone_id=route53_zone.get('Id'))
+        print(route53_zone)
+        assert route53_info(aws_config=config, zone_id=route53_zone.get('HostedZones')[0].get('Id'))

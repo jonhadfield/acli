@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import output_ascii_table, dash_if_none, get_tags
+from colorclass import Color, Windows
+Windows.enable(auto_colors=True, reset_atexit=True)
 
 
 def get_instances_output(instances):
@@ -21,7 +23,9 @@ def output_asg_list(output_media=None, asg_list=None):
     """
     if isinstance(asg_list, list):
         if output_media == 'console':
-            td = [['name', 'instances', 'min', 'max', 'lc']]
+            td = [[Color('{autoblue}name{/autoblue}'), Color('{autoblue}instances{/autoblue}'),
+                   Color('{autoblue}min{/autoblue}'), Color('{autoblue}max{/autoblue}'),
+                   Color('{autoblue}lc{/autoblue}')]]
             for asg in asg_list:
                 td.append([asg.get('AutoScalingGroupName', '-'),
                            str(len(asg.get('Instances', '-'))),
@@ -29,7 +33,7 @@ def output_asg_list(output_media=None, asg_list=None):
                            str(asg.get('MaxSize', '-')),
                            asg.get('LaunchConfigurationName', '-')
                            ])
-            output_ascii_table(table_title="ASGs",
+            output_ascii_table(table_title=Color('{autowhite}ASGs{/autowhite}'),
                                table_data=td,
                                inner_heading_row_border=True)
     exit(0)
@@ -42,27 +46,27 @@ def output_asg_info(output_media=None, asg=None):
     """
     if output_media == 'console':
         td = list()
-        td.append(['name', dash_if_none(asg.get('AutoScalingGroupName'))])
-        td.append(['arn', dash_if_none(asg.get('AutoScalingGroupARN'))])
-        td.append(['lc', dash_if_none(asg.get('LaunchConfigurationName'))])
-        td.append(['min size', str(dash_if_none(asg.get('MinSize')))])
-        td.append(['max size', str(dash_if_none(asg.get('MaxSize')))])
-        td.append(['desired size', str(dash_if_none(asg.get('DesiredCapacity')))])
-        td.append(['default cooldown', str(dash_if_none(asg.get('DefaultCooldown')))])
-        td.append(['availability zones', str(dash_if_none(asg.get('AvailabilityZones')))])
-        td.append(['load balancer names', str(dash_if_none(asg.get('LoadBalancerNames')))])
-        td.append(['health check type', str(dash_if_none(asg.get('HealthCheckType')))])
-        td.append(['HealthCheckGracePeriod', str(dash_if_none(asg.get('HealthCheckGracePeriod')))])
-        td.append(['instances', dash_if_none(get_instances_output(asg.get('Instances')))])
-        td.append(['CreatedTime', str(dash_if_none(asg.get('CreatedTime')))])
-        td.append(['SuspendedProcesses', str(dash_if_none(asg.get('SuspendedProcesses')))])
-        td.append(['PlacementGroup', str(dash_if_none(asg.get('PlacementGroup')))])
-        td.append(['VPCZoneIdentifier', str(dash_if_none(asg.get('VPCZoneIdentifier')))])
-        td.append(['EnabledMetrics', str(dash_if_none(asg.get('EnabledMetrics')))])
-        td.append(['Status', str(dash_if_none(asg.get('Status')))])
-        td.append(['Tags', dash_if_none(get_tags(asg.get('Tags')))])
-        td.append(['TerminationPolicies', str(dash_if_none(asg.get('TerminationPolicies')))])
-        output_ascii_table(table_title="ASG Info",
+        td.append([Color('{autoblue}name{/autoblue}'), dash_if_none(asg.get('AutoScalingGroupName'))])
+        #td.append([Color('{autoblue}arn{/autoblue}'), dash_if_none(asg.get('AutoScalingGroupARN'))])
+        td.append([Color('{autoblue}lc{/autoblue}'), dash_if_none(asg.get('LaunchConfigurationName'))])
+        td.append([Color('{autoblue}min size{/autoblue}'), str(dash_if_none(asg.get('MinSize')))])
+        td.append([Color('{autoblue}max size{/autoblue}'), str(dash_if_none(asg.get('MaxSize')))])
+        td.append([Color('{autoblue}desired size{/autoblue}'), str(dash_if_none(asg.get('DesiredCapacity')))])
+        td.append([Color('{autoblue}default cooldown{/autoblue}'), str(dash_if_none(asg.get('DefaultCooldown')))])
+        td.append([Color('{autoblue}availability zones{/autoblue}'), str(dash_if_none('\n'.join(asg.get('AvailabilityZones'))))])
+        td.append([Color('{autoblue}load balancer names{/autoblue}'), str(dash_if_none('\n'.join(asg.get('LoadBalancerNames'))))])
+        td.append([Color('{autoblue}health check type{/autoblue}'), str(dash_if_none(asg.get('HealthCheckType')))])
+        td.append([Color('{autoblue}health check grace period{/autoblue}'), str(dash_if_none(asg.get('HealthCheckGracePeriod')))])
+        td.append([Color('{autoblue}instances{/autoblue}'), dash_if_none(get_instances_output(asg.get('Instances')))])
+        td.append([Color('{autoblue}created{/autoblue}'), str(dash_if_none(asg.get('CreatedTime').replace(tzinfo=None)))])
+        td.append([Color('{autoblue}suspended processes{/autoblue}'), dash_if_none(asg.get('SuspendedProcesses'))])
+        td.append([Color('{autoblue}placement group{/autoblue}'), dash_if_none(asg.get('PlacementGroup'))])
+        td.append([Color('{autoblue}vpc zone identifier{/autoblue}'), str(dash_if_none(asg.get('VPCZoneIdentifier')))])
+        td.append([Color('{autoblue}metrics enabled{/autoblue}'), dash_if_none(asg.get('EnabledMetrics'))])
+        td.append([Color('{autoblue}status{/autoblue}'), dash_if_none(asg.get('Status'))])
+        td.append([Color('{autoblue}tags{/autoblue}'), dash_if_none(get_tags(asg.get('Tags')))])
+        td.append([Color('{autoblue}termination policies{/autoblue}'), str(dash_if_none(asg.get('TerminationPolicies')))])
+        output_ascii_table(table_title=Color('{autowhite}asg info{/autowhite}'),
                            table_data=td)
     exit(0)
 
@@ -74,14 +78,15 @@ def output_lc_list(output_media=None, lc_list=None):
     """
     if isinstance(lc_list, list):
         if output_media == 'console':
-            td = [['Name', 'ImageId', 'InstanceType', 'CreatedTime']]
+            td = [[Color('{autoblue}name{/autoblue}'), Color('{autoblue}image id{/autoblue}'),
+                   Color('{autoblue}instance type{/autoblue}'), Color('{autoblue}created{/autoblue}')]]
             for lc in lc_list:
                 td.append([lc.get('LaunchConfigurationName', '-'),
                            str(lc.get('ImageId', '-')),
                            str(lc.get('InstanceType', '-')),
-                           str(lc.get('CreatedTime', '-'))
+                           str(lc.get('CreatedTime').replace(tzinfo=None, microsecond=0))
                            ])
-            output_ascii_table(table_title="Launch Configurations",
+            output_ascii_table(table_title=Color('{autowhite}launch configurations{/autowhite}'),
                                table_data=td,
                                inner_heading_row_border=True)
     exit(0)
@@ -112,6 +117,6 @@ def output_lc_info(output_media=None, lc=None):
         td.append(['Instance Type', str(dash_if_none(lc.get('InstanceType')))])
         td.append(['associate public IP', str(dash_if_none(lc.get('AssociatePublicIpAddress')))])
         td.append(['user data', str(dash_if_none(lc.get('UserData')))])
-        output_ascii_table(table_title="Launch Configuration Info",
+        output_ascii_table(table_title=Color('{autowhite}launch configuration info{/autowhite}'),
                            table_data=td)
     exit(0)
