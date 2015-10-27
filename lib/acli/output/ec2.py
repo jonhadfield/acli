@@ -238,6 +238,11 @@ def output_ec2_info(output_media=None, instance=None):
     exit(0)
 
 
+def trim_creation_date(creation_date=None):
+    if creation_date:
+        return creation_date[:-5].replace('T', ' ')
+
+
 def output_ami_list(output_media=None, amis=None):
     """
     @type output_media: unicode
@@ -251,7 +256,7 @@ def output_ami_list(output_media=None, amis=None):
         for ami in amis:
             td.append([ami.get('ImageId'),
                        dash_if_none(ami.get('Name')),
-                       dash_if_none(ami.get('CreationDate')[:-5].replace('T', ' '))])
+                       dash_if_none(trim_creation_date(ami.get('CreationDate')))])
         output_ascii_table(table_title=Color('{autowhite}AMIs{/autowhite}'),
                            inner_heading_row_border=True,
                            table_data=td)
@@ -293,7 +298,7 @@ def output_ami_info(output_media=None, ami=None):
         td.append([Color('{autoblue}name{/autoblue}'),
                    ami.get('Name')])
         td.append([Color('{autoblue}created (UTC){/autoblue}'),
-                   ami.get('CreationDate')[:-5].replace('T', ' ')])
+                   dash_if_none(trim_creation_date(ami.get('CreationDate')))])
         td.append([Color('{autoblue}description{/autoblue}'),
                    dash_if_none(ami.get('Description'))])
         td.append([Color('{autoblue}hypervisor{/autoblue}'),
