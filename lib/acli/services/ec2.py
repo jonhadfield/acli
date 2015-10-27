@@ -4,6 +4,7 @@ from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info,
                              output_ec2_summary)
 from acli.connections import get_client
+from botocore.exceptions import ClientError
 
 
 def ec2_summary(aws_config=None):
@@ -122,8 +123,11 @@ def ami_info(aws_config=None, ami_id=None):
     @type ami_id: unicode
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
-    output_ami_info(output_media='console',
-                    ami=ec2_client.describe_images(ImageIds=[ami_id]).get('Images')[0])
+    try:
+        output_ami_info(output_media='console',
+                        ami=ec2_client.describe_images(ImageIds=[ami_id]).get('Images')[0])
+    except ClientError:
+        exit('Unable to find ami: {0}'.format(ami_id))
 
 
 def ami_list(aws_config):
