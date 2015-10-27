@@ -238,6 +238,11 @@ def output_ec2_info(output_media=None, instance=None):
     exit(0)
 
 
+def trim_creation_date(creation_date=None):
+    if creation_date:
+        return creation_date[:-5].replace('T', ' ')
+
+
 def output_ami_list(output_media=None, amis=None):
     """
     @type output_media: unicode
@@ -245,9 +250,13 @@ def output_ami_list(output_media=None, amis=None):
     """
     amis = sorted(amis, key=lambda k: k.get('CreationDate'), reverse=True)
     if output_media == 'console':
-        td = [[Color('{autoblue}image id{/autoblue}'), Color('{autoblue}name{/autoblue}'), Color('{autoblue}created{/autoblue}')]]
+        td = [[Color('{autoblue}image id{/autoblue}'),
+               Color('{autoblue}name{/autoblue}'),
+               Color('{autoblue}created (UTC){/autoblue}')]]
         for ami in amis:
-            td.append([ami.get('ImageId'), dash_if_none(ami.get('Name')), dash_if_none(ami.get('CreationDate'))])
+            td.append([ami.get('ImageId'),
+                       dash_if_none(ami.get('Name')),
+                       dash_if_none(trim_creation_date(ami.get('CreationDate')))])
         output_ascii_table(table_title=Color('{autowhite}AMIs{/autowhite}'),
                            inner_heading_row_border=True,
                            table_data=td)
@@ -284,24 +293,42 @@ def output_ami_info(output_media=None, ami=None):
     """
     if output_media == 'console':
         td = list()
-        td.append([Color('{autoblue}id{/autoblue}'), ami.get('ImageId')])
-        td.append([Color('{autoblue}name{/autoblue}'), ami.get('Name')])
-        td.append([Color('{autoblue}created{/autoblue}'), dash_if_none(ami.get('CreationDate'))])
-        td.append([Color('{autoblue}description{/autoblue}'), dash_if_none(ami.get('Description'))])
-        td.append([Color('{autoblue}hypervisor{/autoblue}'), dash_if_none(ami.get('Hypervisor'))])
-        td.append([Color('{autoblue}public{/autoblue}'), dash_if_none(str(ami.get('Public')))])
-        td.append([Color('{autoblue}kernel id{/autoblue}'), dash_if_none(ami.get('KernelId'))])
-        td.append([Color('{autoblue}location{/autoblue}'), dash_if_none(ami.get('ImageLocation'))])
-        td.append([Color('{autoblue}owner id{/autoblue}'), dash_if_none(ami.get('OwnerId'))])
-        td.append([Color('{autoblue}owner alias{/autoblue}'), dash_if_none(ami.get('ImageOwnerAlias'))])
-        td.append([Color('{autoblue}platform{/autoblue}'), dash_if_none(ami.get('Platform'))])
-        td.append([Color('{autoblue}product codes{/autoblue}'), dash_if_none(get_product_codes(ami.get('ProductCodes')))])
-        td.append([Color('{autoblue}root device name{/autoblue}'), dash_if_none(ami.get('RootDeviceName'))])
-        td.append([Color('{autoblue}root device typr{/autoblue}'), dash_if_none(ami.get('RootDeviceType'))])
-        td.append([Color('{autoblue}sriov net support{/autoblue}'), dash_if_none(ami.get('SriovNetSupport'))])
-        td.append([Color('{autoblue}state{/autoblue}'), dash_if_none(ami.get('State'))])
-        td.append([Color('{autoblue}virtualisation type{/autoblue}'), dash_if_none(ami.get('VirtualizationType'))])
-        td.append([Color('{autoblue}block device mapping{/autoblue}'), get_block_devices(bdms=ami.get('BlockDeviceMappings'))])
+        td.append([Color('{autoblue}id{/autoblue}'),
+                   ami.get('ImageId')])
+        td.append([Color('{autoblue}name{/autoblue}'),
+                   ami.get('Name')])
+        td.append([Color('{autoblue}created (UTC){/autoblue}'),
+                   dash_if_none(trim_creation_date(ami.get('CreationDate')))])
+        td.append([Color('{autoblue}description{/autoblue}'),
+                   dash_if_none(ami.get('Description'))])
+        td.append([Color('{autoblue}hypervisor{/autoblue}'),
+                   dash_if_none(ami.get('Hypervisor'))])
+        td.append([Color('{autoblue}public{/autoblue}'),
+                   dash_if_none(str(ami.get('Public')))])
+        td.append([Color('{autoblue}kernel id{/autoblue}'),
+                   dash_if_none(ami.get('KernelId'))])
+        td.append([Color('{autoblue}location{/autoblue}'),
+                   dash_if_none(ami.get('ImageLocation'))])
+        td.append([Color('{autoblue}owner id{/autoblue}'),
+                   dash_if_none(ami.get('OwnerId'))])
+        td.append([Color('{autoblue}owner alias{/autoblue}'),
+                   dash_if_none(ami.get('ImageOwnerAlias'))])
+        td.append([Color('{autoblue}platform{/autoblue}'),
+                   dash_if_none(ami.get('Platform'))])
+        td.append([Color('{autoblue}product codes{/autoblue}'),
+                   dash_if_none(get_product_codes(ami.get('ProductCodes')))])
+        td.append([Color('{autoblue}root device name{/autoblue}'),
+                   dash_if_none(ami.get('RootDeviceName'))])
+        td.append([Color('{autoblue}root device typr{/autoblue}'),
+                   dash_if_none(ami.get('RootDeviceType'))])
+        td.append([Color('{autoblue}sriov net support{/autoblue}'),
+                   dash_if_none(ami.get('SriovNetSupport'))])
+        td.append([Color('{autoblue}state{/autoblue}'),
+                   dash_if_none(ami.get('State'))])
+        td.append([Color('{autoblue}virtualisation type{/autoblue}'),
+                   dash_if_none(ami.get('VirtualizationType'))])
+        td.append([Color('{autoblue}block device mapping{/autoblue}'),
+                   get_block_devices(bdms=ami.get('BlockDeviceMappings'))])
         output_ascii_table(table_title=Color('{autowhite}AMI info{/autowhite}'),
                            table_data=td)
     exit(0)
