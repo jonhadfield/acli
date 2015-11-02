@@ -9,7 +9,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
        acli lc list [options]
        acli asg list [options]
-       acli asg (info | cpu | mem | net) <asg_name> [options]
+       acli asg (info | cpu | mem | net | delete) <asg_name> [options]
        acli ami (list | info <ami_id>)
        acli eip (list | info <eip>)
        acli elb (list | info <elb_name>)
@@ -123,6 +123,8 @@ def real_main():
                                period=asg_res.get('--end'),
                                intervals=asg_res.get('intervals')
                                )
+        elif asg_res.get('delete'):
+            asg.asg_delete(aws_config, asg_name=asg_res.get('<asg_name>'))
     if args['<command>'] == 'ami':
         from acli.commands import ami as command_ami
         ami_res = docopt(command_ami.__doc__, argv=argv)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Usage:
     acli asg list [options]
-    acli asg (info | cpu | mem | net) <asg_name> [options]
+    acli asg (info | cpu | mem | net | delete) <asg_name> [options]
 
     -s, --start=<start_date>        metrics start-date
     -e, --end=<end_date>            metrics end-date
