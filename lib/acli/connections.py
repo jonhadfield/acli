@@ -5,13 +5,18 @@ from contextlib import contextmanager
 from botocore.exceptions import NoCredentialsError, NoRegionError
 
 
+def exit_with_credentials_message():
+    exit('Credentials not found. See here for more information:\n'
+         'http://boto3.readthedocs.org/en/latest/guide/configuration.html#configuration-files')
+
+
 @contextmanager
 def checked_autoscaling_client(autoscaling_client):
     try:
         assert autoscaling_client.describe_launch_configurations()
         yield autoscaling_client
     except NoCredentialsError:
-        exit('No credentials found.')
+        exit_with_credentials_message()
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
 
@@ -22,7 +27,7 @@ def checked_iam_client(iam_client):
         assert iam_client.list_users()
         yield iam_client
     except NoCredentialsError:
-        exit('No credentials found.')
+        exit_with_credentials_message()
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
 
@@ -33,7 +38,7 @@ def checked_ec2_client(ec2_client):
         assert ec2_client.describe_instances(MaxResults=5)
         yield ec2_client
     except NoCredentialsError:
-        exit('No credentials found.')
+        exit_with_credentials_message()
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
 
@@ -44,7 +49,7 @@ def checked_elb_client(elb_client):
         assert elb_client.describe_load_balancers()
         yield elb_client
     except NoCredentialsError:
-        exit('No credentials found.')
+        exit_with_credentials_message()
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
 
@@ -55,7 +60,7 @@ def checked_cloudwatch_client(cloudwatch_client):
         assert cloudwatch_client.describe_alarms(MaxRecords=1)
         yield cloudwatch_client
     except NoCredentialsError:
-        exit('No credentials found.')
+        exit_with_credentials_message()
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
 
@@ -66,7 +71,7 @@ def checked_route53_client(route53_client):
         assert route53_client.list_hosted_zones(MaxItems='1')
         yield route53_client
     except NoCredentialsError:
-        exit('No credentials found.')
+        exit_with_credentials_message()
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
 
@@ -77,7 +82,7 @@ def checked_s3_client(s3_client):
         assert s3_client.list_buckets()
         yield s3_client
     except NoCredentialsError:
-        exit('No credentials found.')
+        exit_with_credentials_message()
     except Exception as e:
         exit('Unhandled exception: {0}'.format(e))
 
