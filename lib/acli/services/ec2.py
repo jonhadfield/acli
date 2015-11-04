@@ -78,7 +78,7 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
                 elif instance_state in ('stopping', 'stopped', 'shutting-down'):
                     exit("Instance {0} is already {1}.".format(instance_id, instance_state))
                 else:
-                    instance.stop()
+                    ec2_client.stop_instances(InstanceIds=[instance_id])
                     exit("Instance {0} stopping.".format(instance_id))
             if action == 'start':
                 if instance_state in ('rebooting', 'stopping',
@@ -90,7 +90,7 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
                                         'shutting-down', 'running'):
                     exit("Instance {0} is already {1}.".format(instance_id, instance_state))
                 else:
-                    instance.start()
+                    ec2_client.start_instances(InstanceIds=[instance_id])
                     exit("Instance {0} starting.".format(instance_id))
             if action == 'reboot':
                 if instance_state in ('pending', 'stopping', 'terminated', 'shutting-down'):
@@ -99,7 +99,7 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
                 elif instance_state == 'rebooting':
                     exit("Instance {0} is already {1}.".format(instance_id, instance_state))
                 else:
-                    instance.reboot()
+                    ec2_client.reboot_instances(InstanceIds=[instance_id])
                     exit("Instance {0} rebooting.".format(instance_id))
             if action == 'terminate':
                 if instance_state in ('rebooting', 'stopping',
@@ -111,7 +111,7 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
                                         'shutting-down'):
                     exit("Instance {0} is already {1}.".format(instance_id, instance_state))
                 else:
-                    instance.terminate()
+                    ec2_client.terminate_instances(InstanceIds=[instance_id])
                     exit("Instance {0} terminating.".format(instance_id))
     except AttributeError:
         exit("Cannot find instance: {0}".format(instance_id))
