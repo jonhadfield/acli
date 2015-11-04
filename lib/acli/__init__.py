@@ -49,7 +49,7 @@ from acli import utils
 
 def real_main():
     args = docopt(__doc__,
-                  version='0.1.5',
+                  version='0.1.6',
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
