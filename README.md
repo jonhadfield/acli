@@ -29,7 +29,7 @@ Alternatively, you can specify them on the command line (see -h option for detai
 
 Usage
 -----
-To see available services and commends, run:
+To see available services and commands, run:
 
     acli --help
 
