@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, dash_if_none)
+from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
@@ -19,10 +19,10 @@ def output_vpc_list(output_media=None, vpcs=None):
     """
     if output_media == 'console':
         td = list()
-        td.append([Color('{autoblue}vpc id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
-                   Color('{autoblue}CIDR block{/autoblue}'), Color('{autoblue}tenancy{/autoblue}'),
-                   Color('{autoblue}state{/autoblue}'), Color('{autoblue}DHCP options{/autoblue}'),
-                   Color('{autoblue}default vpc{/autoblue}')])
+        table_header = [Color('{autoblue}vpc id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
+                        Color('{autoblue}CIDR block{/autoblue}'), Color('{autoblue}tenancy{/autoblue}'),
+                        Color('{autoblue}state{/autoblue}'), Color('{autoblue}DHCP options{/autoblue}'),
+                        Color('{autoblue}default vpc{/autoblue}')]
         for vpc in vpcs.get('Vpcs'):
             vpcid = vpc.get('VpcId')
             cidr_block = vpc.get('CidrBlock')
@@ -37,9 +37,10 @@ def output_vpc_list(output_media=None, vpcs=None):
                        dash_if_none(state),
                        dash_if_none(dhcpoptions),
                        default])
-        output_ascii_table(table_title=Color('{autowhite}VPCs{/autowhite}'),
-                           table_data=td,
-                           inner_heading_row_border=True)
+        output_ascii_table_list(table_title=Color('{autowhite}VPCs{/autowhite}'),
+                                table_data=td,
+                                table_header=table_header,
+                                inner_heading_row_border=True)
     exit(0)
 
 
