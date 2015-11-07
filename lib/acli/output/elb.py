@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import output_ascii_table, dash_if_none
+from acli.output import output_ascii_table, output_ascii_table_list, dash_if_none
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
@@ -21,14 +21,16 @@ def output_elbs(output_media=None, elbs=None):
     if elbs:
         elbs.sort(key=lambda k: k.get('DNSName'))
         if output_media == 'console':
-            td = [[Color('{autoblue}name{/autoblue}'),
+            td = list()
+            table_header = [Color('{autoblue}name{/autoblue}'),
                    Color('{autoblue}instances{/autoblue}'),
-                   Color('{autoblue}dns name{/autoblue}')]]
+                   Color('{autoblue}dns name{/autoblue}')]
             for elb in elbs:
                 td.append([elb.get('LoadBalancerName'), str(len(elb.get('Instances'))), elb.get('DNSName')])
-            output_ascii_table(table_title=Color('{autowhite}ELBs{/autowhite}'),
-                               table_data=td,
-                               inner_heading_row_border=True)
+            output_ascii_table_list(table_title=Color('{autowhite}ELBs{/autowhite}'),
+                                    table_data=td,
+                                    table_header=table_header,
+                                    inner_heading_row_border=True)
     else:
         print("No ELBs found.")
     exit(0)
