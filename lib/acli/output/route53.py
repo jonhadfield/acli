@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, dash_if_none)
+from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
@@ -15,9 +15,9 @@ def output_route53_list(output_media=None, zones=None):
     for hosted_zone_dict in zones:
             if output_media == 'console':
                 td = list()
-                td.append([Color('{autoblue}id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
-                           Color('{autoblue}count{/autoblue}'), Color('{autoblue}comment{/autoblue}'),
-                           Color('{autoblue}private zone{/autoblue}')])
+                table_header = [Color('{autoblue}id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
+                                Color('{autoblue}count{/autoblue}'), Color('{autoblue}comment{/autoblue}'),
+                                Color('{autoblue}private zone{/autoblue}')]
                 hosted_zones = sorted(hosted_zone_dict.get('HostedZones'), key=lambda k: k['Name'])
                 for hosted_zone in hosted_zones:
                     zone_id = dash_if_none(hosted_zone.get('Id'))
@@ -30,9 +30,10 @@ def output_route53_list(output_media=None, zones=None):
                                record_count,
                                comment,
                                private_zone])
-                output_ascii_table(table_title=Color('{autowhite}route53 zones{/autowhite}'),
-                                   table_data=td,
-                                   inner_heading_row_border=True)
+                output_ascii_table_list(table_title=Color('{autowhite}route53 zones{/autowhite}'),
+                                        table_data=td,
+                                        table_header=table_header,
+                                        inner_heading_row_border=True)
     exit(0)
 
 
