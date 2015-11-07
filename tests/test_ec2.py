@@ -84,13 +84,13 @@ def test_ec2_info_service(ec2_instances):
 def test_ec2_list_output(ec2_instances):
     with pytest.raises(SystemExit):
         print(ec2_instances)
-        assert output_ec2_list(output_media='console', instances=ec2_instances)
+        assert output_ec2_list(instances=ec2_instances)
 
 
 def test_ec2_output(ec2_instances):
     with pytest.raises(SystemExit):
         instance = list(ec2_instances)[0]
-        assert output_ec2_info(output_media='console', instance=instance)
+        assert output_ec2_info(instance=instance)
 
 
 def test_ami_list_service(amis):

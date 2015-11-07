@@ -21,7 +21,7 @@ def ec2_summary(aws_config=None):
     eips = len([x for x, _ in enumerate(addresses)])
     summary = {'instances': instances, 'elbs': elbs, 'eips': eips,
                'amis': amis, 'secgroups': secgroups}
-    output_ec2_summary(output_media='console', summary=summary)
+    output_ec2_summary(summary=summary)
     exit(0)
 
 
@@ -38,7 +38,7 @@ def ec2_list(aws_config=None):
             all_instances.append(instance)
 
     if len(list(all_instances)):
-        output_ec2_list(output_media='console', instances=all_instances)
+        output_ec2_list(instances=all_instances)
     exit('No ec2 instances found.')
 
 
@@ -53,8 +53,7 @@ def ec2_info(aws_config=None, instance_id=None):
     try:
         instance = reservations[0].get('Instances')[0]
         if instance.get('InstanceId', None):
-            output_ec2_info(output_media='console',
-                            instance=instance)
+            output_ec2_info(instance=instance)
     except IndexError:
         raise SystemExit("Cannot find instance: {0}".format(instance_id))
 
@@ -124,8 +123,7 @@ def ami_info(aws_config=None, ami_id=None):
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
     try:
-        output_ami_info(output_media='console',
-                        ami=ec2_client.describe_images(ImageIds=[ami_id]).get('Images')[0])
+        output_ami_info(ami=ec2_client.describe_images(ImageIds=[ami_id]).get('Images')[0])
     except ClientError:
         exit('Unable to find ami: {0}'.format(ami_id))
 
@@ -135,8 +133,7 @@ def ami_list(aws_config):
     @type aws_config: Config
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
-    output_ami_list(output_media='console',
-                    amis=ec2_client.describe_images(Owners=['self']).get('Images'))
+    output_ami_list(amis=ec2_client.describe_images(Owners=['self']).get('Images'))
 
 
 def ec2_get_instance_vols(aws_config=None, instance_id=None):

@@ -11,10 +11,9 @@ def output_account_info(output_media=None, account_id=None, account_aliases=None
     @type account_id: unicode
     @type account_aliases: list
     """
-    if output_media == 'console':
-        td = list()
-        td.append([Color('{autoblue}id{/autoblue}'), dash_if_none(account_id)])
-        td.append([Color('{autoblue}aliases{/autoblue}'), dash_if_none(", ".join(account_aliases))])
-        output_ascii_table(table_title=Color('{autowhite}Account Info{/autowhite}'),
-                           table_data=td)
+    td = list()
+    td.append([Color('{autoblue}id{/autoblue}'), dash_if_none(account_id)])
+    td.append([Color('{autoblue}aliases{/autoblue}'), dash_if_none(", ".join(account_aliases))])
+    output_ascii_table(table_title=Color('{autowhite}Account Info{/autowhite}'),
+                       table_data=td)
     exit(0)

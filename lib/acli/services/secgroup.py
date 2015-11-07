@@ -11,7 +11,7 @@ def secgroup_list(aws_config=None):
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
     secgroups = ec2_client.describe_security_groups()
-    output_secgroup_list(output_media='console', secgroups=secgroups)
+    output_secgroup_list(secgroups=secgroups)
 
 
 def secgroup_info(aws_config=None, secgroup_id=None):
@@ -24,6 +24,6 @@ def secgroup_info(aws_config=None, secgroup_id=None):
         result = ec2_client.describe_security_groups(GroupIds=[secgroup_id])
         secgroups = result.get('SecurityGroups', None)
         secgroup = secgroups[0]
-        output_secgroup_info(output_media='console', secgroup=secgroup)
+        output_secgroup_info(secgroup=secgroup)
     except (ClientError, IndexError):
         exit("Cannot find security group: {0}.".format(secgroup_id))

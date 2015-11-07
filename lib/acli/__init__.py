@@ -19,6 +19,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli s3 list [<item>]
        acli s3 info <item>
 
+
 options:
    -h, --help      help
 
@@ -35,7 +36,6 @@ The most common commands are:
    route53      Manage route 53 configuration
    vpc          Manage VPCs
    secgroup     Manage Security Groups
-
 See 'acli help <command>'
 """
 
@@ -79,7 +79,6 @@ def real_main():
         elif ec2_res.get('net'):
             cloudwatch.ec2_net(aws_config=aws_config,
                                instance_id=ec2_res.get('<instance_id>'),
-                               output_type=ec2_res.get('--output', None),
                                start=ec2_res.get('--start', None),
                                period=ec2_res.get('--end', None),
                                intervals=ec2_res.get('intervals', None)
@@ -87,7 +86,6 @@ def real_main():
         elif ec2_res.get('vols'):
             cloudwatch.ec2_vol(aws_config=aws_config,
                                instance_id=ec2_res.get('<instance_id>'),
-                               output_type=ec2_res.get('--output', None),
                                start=ec2_res.get('--start', None),
                                period=ec2_res.get('--end', None),
                                intervals=ec2_res.get('intervals', None)

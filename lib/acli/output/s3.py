@@ -6,10 +6,9 @@ from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def output_s3_list(output_media=None, buckets=None, bucket_name=None,
+def output_s3_list(buckets=None, bucket_name=None,
                    objects=None, folders=None, item=None):
     """
-    @type output_media: unicode
     @type buckets: dict
     @type objects: dict
     @type bucket_name: unicode
@@ -22,9 +21,8 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None,
         td = list()
         td.append([Color('{autoblue}name{/autoblue}'), Color('{autoblue}created{/autoblue}')])
         for bucket in sorted_buckets:
-            if output_media == 'console':
-                td.append([bucket.get('Name'),
-                           str(bucket.get('CreationDate').replace(tzinfo=None, microsecond=0))])
+            td.append([bucket.get('Name'),
+                       str(bucket.get('CreationDate').replace(tzinfo=None, microsecond=0))])
         output_ascii_table(table_title=Color('{autowhite}s3 buckets{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)

@@ -27,24 +27,22 @@ def split_string(the_string=None, chunk_size=None):
     return output.rstrip()
 
 
-def output_secgroup_list(output_media=None, secgroups=None):
+def output_secgroup_list(secgroups=None):
     """
-    @type output_media: unicode
     @type secgroups: dict
     """
-    if output_media == 'console':
-        td = list()
-        table_header = [Color('{autoblue}group id{/autoblue}'),
-                        Color('{autoblue}group name{/autoblue}'),
-                        Color('{autoblue}description{/autoblue}')]
-        for secgroup in secgroups.get('SecurityGroups'):
-            td.append([secgroup.get('GroupId'),
-                      split_string(secgroup.get('GroupName'), chunk_size=30),
-                      split_string(secgroup.get('Description'), chunk_size=40)])
-        output_ascii_table_list(table_title=Color('{autowhite}security groups{/autowhite}'),
-                                table_data=td,
-                                table_header=table_header,
-                                inner_heading_row_border=True)
+    td = list()
+    table_header = [Color('{autoblue}group id{/autoblue}'),
+                    Color('{autoblue}group name{/autoblue}'),
+                    Color('{autoblue}description{/autoblue}')]
+    for secgroup in secgroups.get('SecurityGroups'):
+        td.append([secgroup.get('GroupId'),
+                  split_string(secgroup.get('GroupName'), chunk_size=30),
+                  split_string(secgroup.get('Description'), chunk_size=40)])
+    output_ascii_table_list(table_title=Color('{autowhite}security groups{/autowhite}'),
+                            table_data=td,
+                            table_header=table_header,
+                            inner_heading_row_border=True)
     exit(0)
 
 
@@ -62,49 +60,47 @@ def get_uid_group_pairs(uid_gps=None):
     return out.strip()
 
 
-def output_secgroup_info(output_media=None, secgroup=None):
+def output_secgroup_info(secgroup=None):
     """
-    @type output_media: unicode
     @type secgroup: ec2.SecurityGroup
     """
     if secgroup:
-        if output_media == 'console':
-            td = list()
-            td.append([Color('{autoblue}group id{/autoblue}'), secgroup.get('GroupId')])
-            td.append([Color('{autoblue}group name{/autoblue}'), secgroup.get('GroupName')])
-            td.append([Color('{autoblue}description{/autoblue}'), secgroup.get('Description')])
-            td.append([Color('{autoblue}vpc id{/autoblue}'), dash_if_none(secgroup.get('VpcId'))])
-            if secgroup.get('IpPermissions'):
-                td.append(['ip permissions', '{0}'.format("-" * 30)])
-                for ip_perm in secgroup.get('IpPermissions'):
-                    td.append([Color('{autoblue}from port{/autoblue}'),
-                               dash_if_none(ip_perm.get('FromPort'))])
-                    td.append([Color('{autoblue}to port{/autoblue}'),
-                               dash_if_none(ip_perm.get('ToPort'))])
-                    td.append([Color('{autoblue}ip ranges{/autoblue}'),
-                               dash_if_none(get_ip_ranges(ip_perm.get('IpRanges')))])
-                    td.append([Color('{autoblue}ip protocol{/autoblue}'),
-                               dash_if_none(ip_perm.get('IpProtocol'))])
-                    if ip_perm.get('UserIdGroupPairs'):
-                        td.append(['user id group pairs', '{0}'.format("-" * 30)])
-                        td.append(['', get_uid_group_pairs(uid_gps=ip_perm.get('UserIdGroupPairs'))])
+        td = list()
+        td.append([Color('{autoblue}group id{/autoblue}'), secgroup.get('GroupId')])
+        td.append([Color('{autoblue}group name{/autoblue}'), secgroup.get('GroupName')])
+        td.append([Color('{autoblue}description{/autoblue}'), secgroup.get('Description')])
+        td.append([Color('{autoblue}vpc id{/autoblue}'), dash_if_none(secgroup.get('VpcId'))])
+        if secgroup.get('IpPermissions'):
+            td.append(['ip permissions', '{0}'.format("-" * 30)])
+            for ip_perm in secgroup.get('IpPermissions'):
+                td.append([Color('{autoblue}from port{/autoblue}'),
+                           dash_if_none(ip_perm.get('FromPort'))])
+                td.append([Color('{autoblue}to port{/autoblue}'),
+                           dash_if_none(ip_perm.get('ToPort'))])
+                td.append([Color('{autoblue}ip ranges{/autoblue}'),
+                           dash_if_none(get_ip_ranges(ip_perm.get('IpRanges')))])
+                td.append([Color('{autoblue}ip protocol{/autoblue}'),
+                           dash_if_none(ip_perm.get('IpProtocol'))])
+                if ip_perm.get('UserIdGroupPairs'):
+                    td.append(['user id group pairs', '{0}'.format("-" * 30)])
+                    td.append(['', get_uid_group_pairs(uid_gps=ip_perm.get('UserIdGroupPairs'))])
 
-            if secgroup.get('IpPermissionsEgress'):
-                td.append(['ip permissions egress', '{0}'.format("-" * 30)])
-                for ip_perm_egress in secgroup.get('IpPermissionsEgress'):
-                    td.append([Color('{autoblue}prefix list ids{/autoblue}'),
-                               dash_if_none(ip_perm_egress.get('PrefixListIds'))])
-                    td.append([Color('{autoblue}from port{/autoblue}'),
-                               dash_if_none(ip_perm_egress.get('FromPort'))])
-                    td.append([Color('{autoblue}to port{/autoblue}'),
-                               dash_if_none(ip_perm_egress.get('ToPort'))])
-                    td.append([Color('{autoblue}ip ranges{/autoblue}'),
-                               dash_if_none(get_ip_ranges(ip_perm_egress.get('IpRanges')))])
-                    td.append([Color('{autoblue}ip protocol{/autoblue}'),
-                               dash_if_none(ip_perm_egress.get('IpProtocol'))])
-                    if ip_perm_egress.get('UserIdGroupPairs'):
-                        td.append(['user id group pairs', '{0}'.format("-" * 30)])
-                        td.append(['', get_uid_group_pairs(uid_gps=ip_perm_egress.get('UserIdGroupPairs'))])
+        if secgroup.get('IpPermissionsEgress'):
+            td.append(['ip permissions egress', '{0}'.format("-" * 30)])
+            for ip_perm_egress in secgroup.get('IpPermissionsEgress'):
+                td.append([Color('{autoblue}prefix list ids{/autoblue}'),
+                           dash_if_none(ip_perm_egress.get('PrefixListIds'))])
+                td.append([Color('{autoblue}from port{/autoblue}'),
+                           dash_if_none(ip_perm_egress.get('FromPort'))])
+                td.append([Color('{autoblue}to port{/autoblue}'),
+                           dash_if_none(ip_perm_egress.get('ToPort'))])
+                td.append([Color('{autoblue}ip ranges{/autoblue}'),
+                           dash_if_none(get_ip_ranges(ip_perm_egress.get('IpRanges')))])
+                td.append([Color('{autoblue}ip protocol{/autoblue}'),
+                           dash_if_none(ip_perm_egress.get('IpProtocol'))])
+                if ip_perm_egress.get('UserIdGroupPairs'):
+                    td.append(['user id group pairs', '{0}'.format("-" * 30)])
+                    td.append(['', get_uid_group_pairs(uid_gps=ip_perm_egress.get('UserIdGroupPairs'))])
         output_ascii_table(table_title=Color('{autowhite}security group info{/autowhite}'),
                            table_data=td)
     else:

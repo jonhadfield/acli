@@ -13,6 +13,5 @@ def account_info(aws_config):
     if users.get('Users', None):
         account_id = users.get('Users')[0]['Arn'].split(':')[4]
         aliases = iam_client.list_account_aliases().get('AccountAliases')
-        output_account_info(output_media='console',
-                            account_id=account_id,
+        output_account_info(account_id=account_id,
                             account_aliases=aliases)

@@ -23,7 +23,7 @@ def s3_list(aws_config=None, item=None):
     buckets = s3_client.list_buckets()
     if not item:
         if buckets.get('Buckets', None):
-            output_s3_list(output_media='console', buckets=buckets.get('Buckets'))
+            output_s3_list(buckets=buckets.get('Buckets'))
         else:
             exit("No buckets found.")
     else:

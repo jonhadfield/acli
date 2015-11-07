@@ -33,8 +33,7 @@ def elb_list(aws_config):
     """
     @type aws_config: Config
     """
-    output_elbs(output_media='console',
-                elbs=get_elb_list(aws_config))
+    output_elbs(elbs=get_elb_list(aws_config))
 
 
 def elb_info(aws_config=None, elb_name=None):
@@ -42,6 +41,5 @@ def elb_info(aws_config=None, elb_name=None):
     @type aws_config: Config
     @type elb_name: unicode
     """
-    output_elb_info(output_media='console',
-                    elb=get_elb(aws_config,
+    output_elb_info(elb=get_elb(aws_config,
                                 elb_name=elb_name))
