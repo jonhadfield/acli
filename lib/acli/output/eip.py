@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, dash_if_none)
+from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
@@ -23,18 +23,19 @@ def output_eip_list(output_media=None, addresses=None):
     """
     if output_media == 'console':
         td = list()
-        td.append([Color('{autoblue}public ip{/autoblue}'),
+        table_header = [Color('{autoblue}public ip{/autoblue}'),
                    Color('{autoblue}instance id{/autoblue}'),
                    Color('{autoblue}domain{/autoblue}'),
-                   Color('{autoblue}private ip address{/autoblue}')])
+                   Color('{autoblue}private ip address{/autoblue}')]
         for addr in addresses:
             td.append([dash_if_none(addr.get('PublicIp', None)),
                        dash_if_none(addr.get('InstanceId')),
                        dash_if_none(addr.get('Domain', None)),
                        dash_if_none(addr.get('PrivateIpAddress', None))])
-        output_ascii_table(table_title=Color('{autowhite}address list{/autowhite}'),
-                           table_data=td,
-                           inner_heading_row_border=True)
+        output_ascii_table_list(table_title=Color('{autowhite}address list{/autowhite}'),
+                                table_data=td,
+                                table_header=table_header,
+                                inner_heading_row_border=True)
     exit(0)
 
 
