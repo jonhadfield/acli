@@ -43,8 +43,10 @@ def output_ascii_table_list(table_title=None,
     items_per_page = console_rows - 7
     num_pages = 0
     if full_display_length > console_rows:
-        num_pages = int(math.ceil(float(len(table_data)) / float(items_per_page)))
-
+        try:
+            num_pages = int(math.ceil(float(len(table_data)) / float(items_per_page)))
+        except ZeroDivisionError:
+            exit('Console too small to display.')
     if num_pages:
         running_count = 0
         for page in range(1, num_pages+1):
