@@ -44,7 +44,7 @@ from docopt import docopt
 from acli.services import (ec2, elb, account, cloudwatch, vpc,
                            eip, asg, route53, secgroup, s3)
 from acli.config import Config
-from acli import utils
+from acli.utils import install_completion
 
 
 def real_main():
@@ -54,7 +54,7 @@ def real_main():
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
     if args['--install-completion']:
-        utils.install_completion()
+        install_completion()
     if args['<command>'] == 'account':
         from acli.commands import account as command_account
         # acc_res = docopt(command_account.__doc__, argv=argv)

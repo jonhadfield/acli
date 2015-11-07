@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, dash_if_none)
+from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
 import six
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
@@ -87,11 +87,12 @@ def output_ec2_list(output_media=None, instances=None):
     @type instances: list
     """
     if output_media == 'console':
+
         td = list()
-        td.append([Color('{autoblue}id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
-                   Color('{autoblue}state{/autoblue}'), Color('{autoblue}type{/autoblue}'),
-                   Color('{autoblue}image{/autoblue}'),
-                   Color('{autoblue}public ip{/autoblue}'), Color('{autoblue}private ip{/autoblue}')])
+        table_header = [Color('{autoblue}id{/autoblue}'), Color('{autoblue}name{/autoblue}'),
+                        Color('{autoblue}state{/autoblue}'), Color('{autoblue}type{/autoblue}'),
+                        Color('{autoblue}image{/autoblue}'),
+                        Color('{autoblue}public ip{/autoblue}'), Color('{autoblue}private ip{/autoblue}')]
         instances = sorted(instances,
                            key=lambda k: get_ec2_instance_tags(ec2_instance=k, tag_key='Name'))
         for instance in instances:
@@ -110,7 +111,8 @@ def output_ec2_list(output_media=None, instances=None):
                            image_id,
                            public_ip,
                            private_ip])
-        output_ascii_table(table_title=Color('{autowhite}ec2 instances{/autowhite}'),
+        output_ascii_table_list(table_title=Color('{autowhite}ec2 instances{/autowhite}'),
+                           table_header=table_header,
                            table_data=td,
                            inner_heading_row_border=True)
     exit(0)

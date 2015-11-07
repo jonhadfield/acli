@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
+import math
+import os
 from terminaltables import AsciiTable
 from colorclass import Color, Windows
+from acli.utils import get_console_dimensions
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
@@ -20,6 +23,54 @@ def output_ascii_table(table_title=None,
     table.inner_row_border = inner_row_border
     table.title = table_title
     print(table.table)
+
+
+def output_ascii_table_list(table_title=None,
+                            table_data=None,
+                            table_header=None,
+                            inner_heading_row_border=False,
+                            inner_row_border=False):
+    """
+    @type table_title: unicode
+    @type table_data: list
+    @type inner_heading_row_border: bool
+    @type inner_row_border: bool
+    @type table_header: list
+    """
+    console_rows, console_columns = get_console_dimensions()
+    console_rows = int(console_rows)
+    full_display_length = len(table_data)+7
+    items_per_page = console_rows - 7
+    num_pages = 0
+    if full_display_length > console_rows:
+        num_pages = int(math.ceil(float(len(table_data)) / float(items_per_page)))
+
+    if num_pages:
+        running_count = 0
+        for page in range(1, num_pages+1):
+            page_table_output = list()
+            page_table_output.insert(0, table_header)
+            upper = (console_rows + running_count) - 7
+            if upper > len(table_data):
+                upper = len(table_data)
+            for x in range(running_count, upper):
+                page_table_output.append(table_data[x])
+                running_count += 1
+            table = AsciiTable(page_table_output)
+            table.inner_heading_row_border = inner_heading_row_border
+            table.inner_row_border = inner_row_border
+            table.title = table_title
+            print(table.table)
+            if page < num_pages:
+                raw_input("Press Enter to continue...")
+                os.system('clear')
+    else:
+        table_data.insert(0, table_header)
+        table = AsciiTable(table_data)
+        table.inner_heading_row_border = inner_heading_row_border
+        table.inner_row_border = inner_row_border
+        table.title = table_title
+        print(table.table)
 
 
 def dash_if_none(item=None):

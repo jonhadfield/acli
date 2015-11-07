@@ -33,3 +33,8 @@ def install_completion():
 
     else:
         sys.exit("Shell completion only available on Linux and OS X.")
+
+
+def get_console_dimensions():
+    rows, columns = os.popen('stty size', 'r').read().split()
+    return rows, columns

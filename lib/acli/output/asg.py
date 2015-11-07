@@ -23,9 +23,10 @@ def output_asg_list(output_media=None, asg_list=None):
     """
     if isinstance(asg_list, list):
         if output_media == 'console':
-            td = [[Color('{autoblue}name{/autoblue}'), Color('{autoblue}instances{/autoblue}'),
-                   Color('{autoblue}desired{/autoblue}'), Color('{autoblue}min{/autoblue}'), Color('{autoblue}max{/autoblue}'),
-                   Color('{autoblue}lc{/autoblue}')]]
+            td = list()
+            table_header = [Color('{autoblue}name{/autoblue}'), Color('{autoblue}instances{/autoblue}'),
+                            Color('{autoblue}desired{/autoblue}'), Color('{autoblue}min{/autoblue}'), Color('{autoblue}max{/autoblue}'),
+                            Color('{autoblue}lc{/autoblue}')]
             for asg in asg_list:
                 td.append([asg.get('AutoScalingGroupName', '-'),
                            str(len(asg.get('Instances', '-'))),
@@ -36,6 +37,7 @@ def output_asg_list(output_media=None, asg_list=None):
                            ])
             output_ascii_table(table_title=Color('{autowhite}ASGs{/autowhite}'),
                                table_data=td,
+                               table_header=table_header,
                                inner_heading_row_border=True)
     exit(0)
 
