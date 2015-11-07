@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table)
+from acli.output import (output_ascii_table, output_ascii_table_list)
 import re
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=None, folders=None, item=None):
+def output_s3_list(output_media=None, buckets=None, bucket_name=None,
+                   objects=None, folders=None, item=None):
     """
     @type output_media: unicode
     @type buckets: dict
@@ -29,9 +30,9 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
                            inner_heading_row_border=True)
     if any((objects, folders)):
         td = list()
-        td.append([Color('{autoblue}item{/autoblue}'), Color('{autoblue}size (bytes){/autoblue}'),
+        table_header = [Color('{autoblue}item{/autoblue}'), Color('{autoblue}size (bytes){/autoblue}'),
                   Color('{autoblue}last modified (UTC){/autoblue}'),
-                  Color('{autoblue}class{/autoblue}'), Color('{autoblue}etag{/autoblue}')])
+                  Color('{autoblue}class{/autoblue}'), Color('{autoblue}etag{/autoblue}')]
         if folders:
             for folder in folders:
                 td.append([Color('{autogreen}'+folder.get('Prefix')[to_remove_len:]+'{/autogreen}'),
@@ -51,7 +52,8 @@ def output_s3_list(output_media=None, buckets=None, bucket_name=None, objects=No
                                str(an_object.get('StorageClass')),
                                # str(an_object.get('Owner')),
                                str(an_object.get('ETag')[1:-1])])
-        output_ascii_table(table_title=Color('{autowhite}'+item+'{/autowhite}'),
-                           table_data=td,
-                           inner_heading_row_border=True)
+        output_ascii_table_list(table_title=Color('{autowhite}'+item+'{/autowhite}'),
+                                table_data=td,
+                                table_header=table_header,
+                                inner_heading_row_border=True)
     exit(0)
