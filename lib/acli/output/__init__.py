@@ -60,6 +60,8 @@ def output_ascii_table_list(table_title=None,
             table.inner_heading_row_border = inner_heading_row_border
             table.inner_row_border = inner_row_border
             table.title = table_title
+            if page != 1:
+                print('')
             print(table.table)
             if page < num_pages:
                 raw_input("Press Enter to continue...")
