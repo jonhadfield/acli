@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.s3 import (output_s3_list)
+from acli.output.s3 import (output_s3_list, output_s3_info)
 import botocore.exceptions
 from acli.connections import get_client
 
@@ -50,3 +50,33 @@ def s3_list(aws_config=None, item=None):
                 exit('Bucket not found.')
             else:
                 exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
+
+
+def s3_info(aws_config=None, item=None):
+    """
+    @type aws_config: Config
+    @type item: unicode
+    """
+    s3_client = get_client(client_type='s3', config=aws_config)
+    prefix = ''
+    if item and '/' in item:
+        path_elements = item.split('/')
+        bucket_name = path_elements[0]
+        prefix = "/".join(path_elements[1:])
+        if prefix.endswith('/'):
+            prefix = prefix[:-1]
+    else:
+        bucket_name = item
+    check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+    try:
+        s3_object = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
+        if 'Contents' in s3_object.keys():
+            output_s3_info(s3_object=s3_object)
+        else:
+            # TODO: Decide on output or message
+            print("path, not object was requested")
+    except botocore.exceptions.ClientError as error:
+        if 'NoSuchBucket' in error.response['Error']['Code']:
+            exit('Bucket not found.')
+        else:
+            exit('Unhandled error: {0}'.format(error.response['Error']['Code']))

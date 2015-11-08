@@ -19,7 +19,6 @@ usage: acli [--version] [--help] [--install-completion]
        acli s3 list [<item>]
        acli s3 info <item>
 
-
 options:
    -h, --help      help
 
@@ -36,6 +35,7 @@ The most common commands are:
    route53      Manage route 53 configuration
    vpc          Manage VPCs
    secgroup     Manage Security Groups
+   s3           Manage S3 storage
 See 'acli help <command>'
 """
 

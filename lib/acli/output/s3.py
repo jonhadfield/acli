@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, output_ascii_table_list)
+from acli.output import dash_if_none
 import re
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
@@ -54,4 +55,25 @@ def output_s3_list(buckets=None, bucket_name=None,
                                 table_data=td,
                                 table_header=table_header,
                                 inner_heading_row_border=True)
+    exit(0)
+
+
+def output_s3_info(s3_object=None):
+    """
+    @type s3_object: dict
+    """
+    td = list()
+    if 'Contents' in s3_object.keys():
+        td.append([Color('{autoblue}last modified{/autoblue}'),
+                   str(s3_object['Contents'][0]['LastModified'])])
+        td.append([Color('{autoblue}ETag{/autoblue}'),
+                   str(s3_object['Contents'][0]['ETag'])])
+        td.append([Color('{autoblue}size{/autoblue}'),
+                   str(s3_object['Contents'][0]['Size'])])
+        td.append([Color('{autoblue}storage class{/autoblue}'),
+                   str(s3_object['Contents'][0]['StorageClass'])])
+        td.append([Color('{autoblue}owner{/autoblue}'),
+                   str(s3_object['Contents'][0]['Owner']['DisplayName'])])
+        output_ascii_table(table_title=Color('{autowhite}'+s3_object.get('Name')+'/'+s3_object.get('Prefix')+'{/autowhite}'),
+                           table_data=td)
     exit(0)
