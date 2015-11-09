@@ -18,7 +18,6 @@ def get_instances_output(instances):
 
 def output_asg_list(asg_list=None):
     """
-    @type output_media: unicode
     @type asg_list: list
     """
     if isinstance(asg_list, list):
@@ -71,9 +70,8 @@ def output_asg_info(asg=None):
     exit(0)
 
 
-def output_lc_list(output_media=None, lc_list=None):
+def output_lc_list(lc_list=None):
     """
-    @type output_media: unicode
     @type lc_list: list
     """
     if isinstance(lc_list, list):
@@ -91,9 +89,8 @@ def output_lc_list(output_media=None, lc_list=None):
     exit(0)
 
 
-def output_lc_info(output_media=None, lc=None):
+def output_lc_info(lc=None):
     """
-    @type output_media: unicode
     @type lc: dict
     """
     td = list()

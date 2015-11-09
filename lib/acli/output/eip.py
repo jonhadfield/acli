@@ -16,9 +16,8 @@ def colour_state(state=None):
         return Color('{autoyellow}'+state+'{/autoyellow}')
 
 
-def output_eip_list(output_media=None, addresses=None):
+def output_eip_list(addresses=None):
     """
-    @type output_media: unicode
     @type addresses: list
     """
     td = list()

@@ -348,7 +348,7 @@ def output_ami_info(output_media='console', ami=None):
     exit(0)
 
 
-def output_ec2_summary(output_media=None, summary=None):
+def output_ec2_summary(output_media='console', summary=None):
     """
     @type output_media: unicode
     @type summary: dict

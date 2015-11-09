@@ -5,9 +5,8 @@ from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def output_route53_list(output_media=None, zones=None):
+def output_route53_list(zones=None):
     """
-    @type output_media: unicode
     @type zones: list | dict
     """
     if isinstance(zones, dict):
