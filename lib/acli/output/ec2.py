@@ -257,7 +257,7 @@ def trim_creation_date(creation_date=None):
         return creation_date[:-5].replace('T', ' ')
 
 
-def output_ami_list(output_media=None, amis=None):
+def output_ami_list(output_media='console', amis=None):
     """
     @type output_media: unicode
     @type amis: list
@@ -300,7 +300,7 @@ def get_product_codes(product_codes=None):
         return out
 
 
-def output_ami_info(output_media=None, ami=None):
+def output_ami_info(output_media='console', ami=None):
     """
     @type output_media: unicode
     @type ami: ec2.Ami
