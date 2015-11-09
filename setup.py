@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 sys.path.insert(0, os.path.abspath('lib'))
 
-version = "0.1.9"
+version = "0.1.10"
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
