@@ -264,16 +264,18 @@ def output_ami_list(output_media='console', amis=None):
     """
     amis = sorted(amis, key=lambda k: k.get('CreationDate'), reverse=True)
     if output_media == 'console':
-        td = [[Color('{autoblue}image id{/autoblue}'),
-               Color('{autoblue}name{/autoblue}'),
-               Color('{autoblue}created (UTC){/autoblue}')]]
+        td = list()
+        table_header = [Color('{autoblue}image id{/autoblue}'),
+                        Color('{autoblue}name{/autoblue}'),
+                        Color('{autoblue}created (UTC){/autoblue}')]
         for ami in amis:
             td.append([ami.get('ImageId'),
                        dash_if_none(ami.get('Name')),
                        dash_if_none(trim_creation_date(ami.get('CreationDate')))])
-        output_ascii_table(table_title=Color('{autowhite}AMIs{/autowhite}'),
-                           inner_heading_row_border=True,
-                           table_data=td)
+        output_ascii_table_list(table_title=Color('{autowhite}AMIs{/autowhite}'),
+                                table_header=table_header,
+                                inner_heading_row_border=True,
+                                table_data=td)
     exit(0)
 
 
