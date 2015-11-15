@@ -36,5 +36,8 @@ def install_completion():
 
 
 def get_console_dimensions():
-    rows, columns = os.popen('stty size', 'r').read().split()
+    try:
+        rows, columns = os.popen('stty size', 'r').read().split()
+    except ValueError:
+        rows, columns = 80, 25
     return rows, columns
