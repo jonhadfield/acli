@@ -69,12 +69,8 @@ def s3_info(aws_config=None, item=None):
         bucket_name = item
     check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
     try:
-        s3_object = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
-        if 'Contents' in s3_object.keys():
-            output_s3_info(s3_object=s3_object)
-        else:
-            # TODO: Decide on output or message
-            print("path, not object was requested")
+        s3_object = s3_client.get_object(Bucket=bucket_name, Key=prefix)
+        output_s3_info(s3_object=s3_object, key=prefix, bucket=bucket_name)
     except botocore.exceptions.ClientError as error:
         if 'NoSuchBucket' in error.response['Error']['Code']:
             exit('Bucket not found.')

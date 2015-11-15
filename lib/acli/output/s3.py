@@ -58,22 +58,24 @@ def output_s3_list(buckets=None, bucket_name=None,
     exit(0)
 
 
-def output_s3_info(s3_object=None):
+def output_s3_info(s3_object=None, key=None, bucket=None):
     """
     @type s3_object: dict
     """
     td = list()
-    if 'Contents' in s3_object.keys():
-        td.append([Color('{autoblue}last modified{/autoblue}'),
-                   str(s3_object['Contents'][0]['LastModified'])])
-        td.append([Color('{autoblue}ETag{/autoblue}'),
-                   str(s3_object['Contents'][0]['ETag'])])
-        td.append([Color('{autoblue}size{/autoblue}'),
-                   str(s3_object['Contents'][0]['Size'])])
-        td.append([Color('{autoblue}storage class{/autoblue}'),
-                   str(s3_object['Contents'][0]['StorageClass'])])
-        td.append([Color('{autoblue}owner{/autoblue}'),
-                   str(s3_object['Contents'][0]['Owner']['DisplayName'])])
-        output_ascii_table(table_title=Color('{autowhite}'+s3_object.get('Name')+'/'+s3_object.get('Prefix')+'{/autowhite}'),
-                           table_data=td)
+    td.append([Color('{autoblue}name{/autoblue}'),
+               str(key.split('/')[-1])])
+    td.append([Color('{autoblue}last modified{/autoblue}'),
+               str(s3_object['LastModified'])])
+    td.append([Color('{autoblue}ETag{/autoblue}'),
+               str(s3_object['ETag'])])
+    td.append([Color('{autoblue}size{/autoblue}'),
+               str(s3_object['ContentLength'])])
+    td.append([Color('{autoblue}content type{/autoblue}'),
+               str(s3_object['ContentType'])])
+    td.append([Color('{autoblue}version id{/autoblue}'),
+               str(s3_object['VersionId'])])
+    table_title = '{0}/{1}/'.format(bucket, '/'.join(key.split('/')[:-1]))
+    output_ascii_table(table_title=Color('{autowhite}'+table_title+'{/autowhite}'),
+                       table_data=td)
     exit(0)
