@@ -8,7 +8,7 @@ from acli.connections import get_client
 
 
 def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
-            start=None, end=datetime.datetime.utcnow(), output_type=None):
+            start=None, end=datetime.datetime.utcnow()):
     """
     @type aws_config: Config
     @type instance_id: unicode
@@ -16,7 +16,6 @@ def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
     @type period: int
     @type start: datetime
     @type end: datetime
-    @type output_type: unicode
     """
     if not intervals:
         intervals = 60
@@ -62,7 +61,7 @@ def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
 
 
 def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
-            start=None, end=datetime.datetime.utcnow(), output_type=None):
+            start=None, end=datetime.datetime.utcnow()):
     """
     @type aws_config: Config
     @type instance_id: unicode
@@ -70,7 +69,6 @@ def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
     @type period: int
     @type start: datetime
     @type end: datetime
-    @type output_type: unicode
     """
     if not intervals:
         intervals = 60
@@ -156,7 +154,7 @@ def asg_cpu(aws_config=None, asg_name=None, intervals=None, period=None,
 
 
 def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
-            start=None, end=datetime.datetime.utcnow(), output_type=None):
+            start=None, end=datetime.datetime.utcnow()):
     """
     @type aws_config: Config
     @type instance_id: unicode
@@ -164,7 +162,6 @@ def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
     @type period: int
     @type start: datetime
     @type end: datetime
-    @type output_type: unicode
     """
     ebs_vols = ec2_get_instance_vols(aws_config=aws_config, instance_id=instance_id)
     if not intervals:

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
-import pprint
-import json
 import six
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)

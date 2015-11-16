@@ -37,7 +37,7 @@ def output_ascii_table_list(table_title=None,
     @type inner_row_border: bool
     @type table_header: list
     """
-    console_rows, console_columns = get_console_dimensions()
+    console_rows, _ = get_console_dimensions()
     console_rows = int(console_rows)
     full_display_length = len(table_data)+7
     items_per_page = console_rows - 7

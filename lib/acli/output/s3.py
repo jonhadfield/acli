@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, output_ascii_table_list)
-from acli.output import dash_if_none
 import re
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
@@ -42,7 +41,7 @@ def output_s3_list(buckets=None, bucket_name=None,
         object_list = objects.get('Contents', None)
         if objects.get('Contents', None):
             sorted_object_list = sorted(object_list, key=lambda k: ['Key'])
-            for index, an_object in enumerate(sorted_object_list):
+            for an_object in sorted_object_list:
                 an_object_key = an_object.get('Key')[to_remove_len:]
                 if an_object_key:
                     td.append([an_object_key,
