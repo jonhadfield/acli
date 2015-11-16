@@ -39,4 +39,4 @@ class Config(object):
     def load_acli_config(self):
         if os.path.isfile('acli.cfg'):
             configparser.read('acli.cfg')
-            pass
+
