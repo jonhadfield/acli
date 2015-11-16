@@ -110,7 +110,7 @@ def output_elb_info(elb=None):
     td.append([Color('{autoblue}availability zones{/autoblue}'),
                ",".join(elb.get('AvailabilityZones'))])
     td.append([Color('{autoblue}source security group{/autoblue}'),
-               dash_if_none(get_source_secgroup_name(elb.get('SourceSecurityGroup', None)))])
+               dash_if_none(get_source_secgroup_name(elb.get('SourceSecurityGroup')))])
     td.append([Color('{autoblue}security groups{/autoblue}'),
                ",".join(elb.get('SecurityGroups'))])
     td.append([Color('{autoblue}subnets{/autoblue}'),

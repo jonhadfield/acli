@@ -26,10 +26,10 @@ def output_eip_list(addresses=None):
                     Color('{autoblue}domain{/autoblue}'),
                     Color('{autoblue}private ip address{/autoblue}')]
     for addr in addresses:
-        td.append([dash_if_none(addr.get('PublicIp', None)),
+        td.append([dash_if_none(addr.get('PublicIp')),
                    dash_if_none(addr.get('InstanceId')),
-                   dash_if_none(addr.get('Domain', None)),
-                   dash_if_none(addr.get('PrivateIpAddress', None))])
+                   dash_if_none(addr.get('Domain')),
+                   dash_if_none(addr.get('PrivateIpAddress'))])
     output_ascii_table_list(table_title=Color('{autowhite}address list{/autowhite}'),
                             table_data=td,
                             table_header=table_header,
@@ -43,21 +43,21 @@ def output_eip_info(address=None):
     """
     td = list()
     td.append([Color('{autoblue}public ip{/autoblue}'),
-               dash_if_none(address.get('PublicIp', None))])
+               dash_if_none(address.get('PublicIp'))])
     td.append([Color('{autoblue}allocation id{/autoblue}'),
-               dash_if_none(address.get('AllocationId', None))])
+               dash_if_none(address.get('AllocationId'))])
     td.append([Color('{autoblue}instance id{/autoblue}'),
-               dash_if_none(address.get('InstanceId', None))])
+               dash_if_none(address.get('InstanceId'))])
     td.append([Color('{autoblue}association id{/autoblue}'),
-               dash_if_none(address.get('AssociationId', None))])
+               dash_if_none(address.get('AssociationId'))])
     td.append([Color('{autoblue}domain{/autoblue}'),
-               dash_if_none(address.get('Domain', None))])
+               dash_if_none(address.get('Domain'))])
     td.append([Color('{autoblue}network interface id{/autoblue}'),
-               dash_if_none(address.get('NetworkInterfaceId', None))])
+               dash_if_none(address.get('NetworkInterfaceId'))])
     td.append([Color('{autoblue}network interface owner id{/autoblue}'),
-               dash_if_none(address.get('NetworkInterfaceOwnerId', None))])
+               dash_if_none(address.get('NetworkInterfaceOwnerId'))])
     td.append([Color('{autoblue}private ip{/autoblue}'),
-               dash_if_none(address.get('PrivateIpAddress', None))])
+               dash_if_none(address.get('PrivateIpAddress'))])
     output_ascii_table(table_title=Color('{autowhite}eip info{/autowhite}'),
                        table_data=td)
     exit(0)

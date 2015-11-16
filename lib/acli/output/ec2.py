@@ -36,13 +36,13 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
     @type tag_key: unicode
     @type max_length: int
     """
-    if ec2_instance.get('Tags', None):
+    if ec2_instance.get('Tags'):
         ret = []
         for tag in ec2_instance.get('Tags'):
             if tag_key and tag.get('Key') == tag_key:
                 return tag.get('Value', "-")
             else:
-                val = tag.get('Value', None)
+                val = tag.get('Value')
                 if val and len(val) > max_length:
                     val = "{0}...".format(val[:max_length-3])
                 ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
@@ -118,11 +118,11 @@ def output_ec2_list(instances=None):
     for instance in instances:
         if instance:
             instance_id = instance.get('InstanceId')
-            instance_state = colour_state(instance.get('State').get('Name', None))
-            instance_type = dash_if_none(str(instance.get('InstanceType', None)))
+            instance_state = colour_state(instance.get('State').get('Name'))
+            instance_type = dash_if_none(str(instance.get('InstanceType')))
             image_id = dash_if_none(instance.get('ImageId'))
-            public_ip = dash_if_none(instance.get('PublicIpAddress', None))
-            private_ip = dash_if_none(instance.get('PrivateIpAddress', None))
+            public_ip = dash_if_none(instance.get('PublicIpAddress'))
+            private_ip = dash_if_none(instance.get('PrivateIpAddress'))
             instance_name = dash_if_none(get_ec2_instance_tags(ec2_instance=instance, tag_key='Name'))
             td.append([instance_id,
                        instance_name,
@@ -142,8 +142,8 @@ def short_instance_profile(instance_profile=None):
     """
     @type instance_profile: dict
     """
-    if instance_profile and instance_profile.get('Arn', None):
-        return instance_profile.get('Arn', None)
+    if instance_profile and instance_profile.get('Arn'):
+        return instance_profile.get('Arn')
 
 
 def get_sec_group_names(groups=None):
@@ -177,7 +177,7 @@ def get_state_reason(state_reason=None):
     @type state_reason: dict
     """
     if state_reason:
-        return state_reason.get('Message', None)
+        return state_reason.get('Message')
 
 
 def get_block_devices(bdms=None):
@@ -188,7 +188,7 @@ def get_block_devices(bdms=None):
     if bdms:
         for bdm in bdms:
             ret += "{0}\n".format(bdm.get('DeviceName', '-'))
-            ebs = bdm.get('Ebs', None)
+            ebs = bdm.get('Ebs')
             if ebs:
                 ret += " Status: {0}\n".format(ebs.get('Status', '-'))
                 ret += " Snapshot Id: {0}\n".format(ebs.get('SnapshotId', '-'))
@@ -214,19 +214,19 @@ def output_ec2_info(instance=None):
     td.append([Color('{autoblue}groups{/autoblue}'),
                dash_if_none(get_sec_groups_name_and_id(instance.get('SecurityGroups')))])
     td.append([Color('{autoblue}public ip{/autoblue}'),
-               dash_if_none(instance.get('PublicIpAddress', None))])
+               dash_if_none(instance.get('PublicIpAddress'))])
     td.append([Color('{autoblue}public dns name{/autoblue}'),
-               dash_if_none(instance.get('PublicDnsName', None))])
+               dash_if_none(instance.get('PublicDnsName'))])
     td.append([Color('{autoblue}private ip{/autoblue}'),
-               dash_if_none(instance.get('PrivateIpAddress', None))])
+               dash_if_none(instance.get('PrivateIpAddress'))])
     td.append([Color('{autoblue}private dns name{/autoblue}'),
-               dash_if_none(instance.get('PrivateDnsName', None))])
+               dash_if_none(instance.get('PrivateDnsName'))])
     td.append([Color('{autoblue}state{/autoblue}'),
                colour_state(instance.get('State')['Name'])])
     td.append([Color('{autoblue}key name{/autoblue}'),
-               dash_if_none(instance.get('KeyName', None))])
+               dash_if_none(instance.get('KeyName'))])
     td.append([Color('{autoblue}instance type{/autoblue}'),
-               dash_if_none(instance.get('InstanceType', None))])
+               dash_if_none(instance.get('InstanceType'))])
     td.append([Color('{autoblue}launch time{/autoblue}'),
                str(instance.get('LaunchTime'))])
     td.append([Color('{autoblue}image id{/autoblue}'),
@@ -240,19 +240,19 @@ def output_ec2_info(instance=None):
     td.append([Color('{autoblue}vpc id{/autoblue}'),
                dash_if_none(instance.get('VpcId'))])
     td.append([Color('{autoblue}root device type{/autoblue}'),
-               dash_if_none(instance.get('RootDeviceType', None))])
+               dash_if_none(instance.get('RootDeviceType'))])
     td.append([Color('{autoblue}state transition reason{/autoblue}'),
-               dash_if_none(instance.get('StateTransitionReason', None))])
+               dash_if_none(instance.get('StateTransitionReason'))])
     td.append([Color('{autoblue}ebs optimized{/autoblue}'),
-               dash_if_none(instance.get('EbsOptimized', None))])
+               dash_if_none(instance.get('EbsOptimized'))])
     td.append([Color('{autoblue}instance profile{/autoblue}'),
-               dash_if_none(short_instance_profile(instance.get('IamInstanceProfile', None)))])
+               dash_if_none(short_instance_profile(instance.get('IamInstanceProfile')))])
     td.append([Color('{autoblue}tags{/autoblue}'),
                get_ec2_instance_tags(ec2_instance=instance)])
     td.append([Color('{autoblue}block devices{/autoblue}'),
                get_block_devices(instance.get('BlockDeviceMappings'))])
     td.append([Color('{autoblue}interfaces{/autoblue}'),
-               dash_if_none(get_interfaces(instance.get('NetworkInterfaces', None)))])
+               dash_if_none(get_interfaces(instance.get('NetworkInterfaces')))])
     output_ascii_table(table_title=Color('{autowhite}instance info{/autowhite}'),
                        table_data=td)
     exit(0)
