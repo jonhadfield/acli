@@ -1,24 +1,32 @@
 # -*- coding: utf-8 -*-
-from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
+from __future__ import (absolute_import,
+                        print_function,
+                        unicode_literals)
+from acli.output import (output_ascii_table,
+                         output_ascii_table_list,
+                         dash_if_none)
 import six
-from colorclass import Color, Windows
+from colorclass import (Color,
+                        Windows)
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def default(obj):
-    """Default JSON serializer."""
-    import calendar, datetime
+def default(datetime_object=None):
+    """
+    @type datetime_object: datetime
+    """
+    import calendar
+    import datetime
 
-    if isinstance(obj, datetime.datetime):
-        if obj.utcoffset() is not None:
-            obj = obj - obj.utcoffset()
+    if isinstance(datetime_object, datetime.datetime):
+        if datetime_object.utcoffset() is not None:
+            datetime_object = datetime_object - datetime_object.utcoffset()
         millis = int(
-            calendar.timegm(obj.timetuple()) * 1000 +
-            obj.microsecond / 1000
+            calendar.timegm(datetime_object.timetuple()) * 1000 +
+            datetime_object.microsecond / 1000
         )
         return millis
-    raise TypeError('Not sure how to serialize %s' % obj)
+    raise TypeError('Not sure how to serialize %s' % datetime_object)
 
 
 def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
@@ -52,16 +60,16 @@ def get_interfaces(interfaces):
         ret.append("{0}\n".format(interface.get('NetworkInterfaceId')))
         ret.append(" Attachment:\n")
         for akey, avalue in six.iteritems(interface.get('Attachment')):
-                ret.append("  {}:{}\n".format(str(akey), str(avalue)))
+            ret.append("  {}:{}\n".format(str(akey), str(avalue)))
         ret.append(" Private IP Addresses:\n")
         for private_ip_address in interface.get('PrivateIpAddresses'):
-                for pkey, pvalue in six.iteritems(private_ip_address):
-                    if pkey == "Association":
-                        ret.append("  Association:\n")
-                        for qqkey, qqvalue in six.iteritems(pvalue):
-                            ret.append("   {}:{}\n".format(qqkey, qqvalue))
-                    else:
-                        ret.append("  {}:{}\n".format(str(pkey), str(pvalue)))
+            for pkey, pvalue in six.iteritems(private_ip_address):
+                if pkey == "Association":
+                    ret.append("  Association:\n")
+                    for qqkey, qqvalue in six.iteritems(pvalue):
+                        ret.append("   {}:{}\n".format(qqkey, qqvalue))
+                else:
+                    ret.append("  {}:{}\n".format(str(pkey), str(pvalue)))
         ret.append(" Security Groups:\n")
         for group in interface.get('Groups'):
             for gkey, gvalue in six.iteritems(group):
