@@ -215,4 +215,4 @@ def real_main():
     elif args['<command>'] in ['help', None] and not args['<args>']:
         print("usage: acli help <command>")
     else:
-        exit("%r is not an acli command. See 'acli --help'." % args['<command>'])
+        exit("{0} is not an acli command. See 'acli --help'.".format(args['<command>']))

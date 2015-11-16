@@ -36,8 +36,7 @@ def ec2_list(aws_config=None):
     for reservation in reservations:
         for instance in reservation.get('Instances'):
             all_instances.append(instance)
-
-    if len(list(all_instances)):
+    if all_instances:
         output_ec2_list(instances=all_instances)
     exit('No ec2 instances found.')
 

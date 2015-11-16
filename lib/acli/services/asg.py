@@ -38,18 +38,17 @@ def asg_delete(aws_config=None, asg_name=None):
     asg_client = get_client(client_type='autoscaling', config=aws_config)
     asg = asg_client.describe_auto_scaling_groups(AutoScalingGroupNames=[asg_name])
     if asg.get('AutoScalingGroups'):
-        if len(asg.get('AutoScalingGroups')):
-            asg_instance = asg.get('AutoScalingGroups')[0]
-            asg_instance_name = asg_instance.get('AutoScalingGroupName')
-            asg_client.update_auto_scaling_group(
-                                                AutoScalingGroupName=asg_instance_name,
-                                                MinSize=0,
-                                                MaxSize=0,
-                                                )
-            asg_client.delete_auto_scaling_group(
-                                                AutoScalingGroupName=asg_instance_name,
-                                                ForceDelete=False
-                                                )
+        asg_instance = asg.get('AutoScalingGroups')[0]
+        asg_instance_name = asg_instance.get('AutoScalingGroupName')
+        asg_client.update_auto_scaling_group(
+                                            AutoScalingGroupName=asg_instance_name,
+                                            MinSize=0,
+                                            MaxSize=0,
+                                            )
+        asg_client.delete_auto_scaling_group(
+                                            AutoScalingGroupName=asg_instance_name,
+                                            ForceDelete=False
+                                            )
         exit("Auto Scaling Group {0} is being deleted.".format(asg_instance_name))
     else:
         exit("Auto Scaling Group: {0} not found.".format(asg_name))

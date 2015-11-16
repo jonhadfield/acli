@@ -60,25 +60,25 @@ def get_interfaces(interfaces):
         ret.append("{0}\n".format(interface.get('NetworkInterfaceId')))
         ret.append(" Attachment:\n")
         for akey, avalue in six.iteritems(interface.get('Attachment')):
-            ret.append("  {}:{}\n".format(str(akey), str(avalue)))
+            ret.append("  {0}:{1}\n".format(str(akey), str(avalue)))
         ret.append(" Private IP Addresses:\n")
         for private_ip_address in interface.get('PrivateIpAddresses'):
             for pkey, pvalue in six.iteritems(private_ip_address):
                 if pkey == "Association":
                     ret.append("  Association:\n")
                     for qqkey, qqvalue in six.iteritems(pvalue):
-                        ret.append("   {}:{}\n".format(qqkey, qqvalue))
+                        ret.append("   {0}:{1}\n".format(qqkey, qqvalue))
                 else:
-                    ret.append("  {}:{}\n".format(str(pkey), str(pvalue)))
+                    ret.append("  {0}:{1}\n".format(str(pkey), str(pvalue)))
         ret.append(" Security Groups:\n")
         for group in interface.get('Groups'):
             for gkey, gvalue in six.iteritems(group):
-                ret.append("  {}:{}\n".format(str(gkey), str(gvalue)))
+                ret.append("  {0}:{1}\n".format(str(gkey), str(gvalue)))
         for key, value in six.iteritems(interface):
             if str(key) not in ("Attachment", "NetworkInterfaceId",
                                 "PrivateIpAddresses", "Groups", "Association",
                                 "PrivateIpAddress"):
-                ret.append(" {}:{}\n".format(str(key), str(value)))
+                ret.append(" {0}:{1}\n".format(str(key), str(value)))
     return ("".join(ret)).rstrip()
 
 
@@ -160,7 +160,7 @@ def get_sec_groups_name_and_id(groups=None):
     """
     ret = []
     for group in groups:
-        ret.append('GroupName:{}\nGroupId:{}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
+        ret.append('GroupName:{0}\nGroupId:{1}'.format(group.get('GroupName', '-'), group.get('GroupId', '-')))
     return "\n".join(ret).rstrip()
 
 

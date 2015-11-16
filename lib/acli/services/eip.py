@@ -20,12 +20,13 @@ def eip_list(aws_config=None):
 def eip_info(aws_config=None, eip=None):
     """
     @type aws_config: Config
+    @type eip: unicode
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
     try:
         addresses_response = ec2_client.describe_addresses(PublicIps=[eip])
         address = addresses_response.get('Addresses', None)[0]
-        if len(list(address)):
+        if address:
             output_eip_info(address=address)
     except ClientError:
         exit('EIP {0} not found.'.format(eip))
