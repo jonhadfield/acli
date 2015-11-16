@@ -5,9 +5,8 @@ from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def output_account_info(output_media=None, account_id=None, account_aliases=None):
+def output_account_info(account_id=None, account_aliases=None):
     """
-    @type output_media: unicode
     @type account_id: unicode
     @type account_aliases: list
     """
