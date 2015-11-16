@@ -57,6 +57,55 @@ def ec2_info(aws_config=None, instance_id=None):
         raise SystemExit("Cannot find instance: {0}".format(instance_id))
 
 
+def ec2_instance_stop(instance_id=None, instance_state=None, ec2_client=None):
+    if instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down'):
+        exit("Cannot stop instance as state is {0}.".format(instance_state))
+    elif instance_state in ('stopping', 'stopped', 'shutting-down'):
+        exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+    else:
+        ec2_client.stop_instances(InstanceIds=[instance_id])
+        exit("Instance {0} stopping.".format(instance_id))
+
+
+def ec2_instance_start(instance_id=None, instance_state=None, ec2_client=None):
+    if instance_state in ('rebooting', 'stopping',
+                          'terminated', 'shutting-down'):
+        exit("Cannot start instance {0} as state is {1}.".format(instance_id,
+                                                                 instance_state))
+    elif instance_state in ('pending', 'rebooting',
+                            'stopping', 'terminated',
+                            'shutting-down', 'running'):
+        exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+    else:
+        ec2_client.start_instances(InstanceIds=[instance_id])
+        exit("Instance {0} starting.".format(instance_id))
+
+
+def ec2_instance_reboot(instance_id=None, instance_state=None, ec2_client=None):
+    if instance_state in ('pending', 'stopping', 'terminated', 'shutting-down'):
+        exit("Cannot reboot instance {0} as state is {1}.".format(instance_id,
+                                                                  instance_state))
+    elif instance_state == 'rebooting':
+        exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+    else:
+        ec2_client.reboot_instances(InstanceIds=[instance_id])
+        exit("Instance {0} rebooting.".format(instance_id))
+
+
+def ec2_instance_terminate(instance_id=None, instance_state=None, ec2_client=None):
+    if instance_state in ('rebooting', 'stopping',
+                          'terminated', 'shutting-down'):
+        exit("Cannot terminate instance {0} as state is {1}.".format(instance_id,
+                                                                     instance_state))
+    elif instance_state in ('rebooting',
+                            'stopping', 'terminated',
+                            'shutting-down'):
+        exit("Instance {0} is already {1}.".format(instance_id, instance_state))
+    else:
+        ec2_client.terminate_instances(InstanceIds=[instance_id])
+        exit("Instance {0} terminating.".format(instance_id))
+
+
 def ec2_manage(aws_config=None, instance_id=None, action=None):
     """
     @type aws_config: Config
@@ -71,46 +120,21 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
         instance_state = instance['State']['Name']
         if instance_id:
             if action == 'stop':
-                if instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down'):
-                    exit("Cannot stop instance as state is {0}.".format(instance_state))
-                elif instance_state in ('stopping', 'stopped', 'shutting-down'):
-                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
-                else:
-                    ec2_client.stop_instances(InstanceIds=[instance_id])
-                    exit("Instance {0} stopping.".format(instance_id))
-            if action == 'start':
-                if instance_state in ('rebooting', 'stopping',
-                                      'terminated', 'shutting-down'):
-                    exit("Cannot start instance {0} as state is {1}.".format(instance_id,
-                                                                             instance_state))
-                elif instance_state in ('pending', 'rebooting',
-                                        'stopping', 'terminated',
-                                        'shutting-down', 'running'):
-                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
-                else:
-                    ec2_client.start_instances(InstanceIds=[instance_id])
-                    exit("Instance {0} starting.".format(instance_id))
-            if action == 'reboot':
-                if instance_state in ('pending', 'stopping', 'terminated', 'shutting-down'):
-                    exit("Cannot reboot instance {0} as state is {1}.".format(instance_id,
-                                                                              instance_state))
-                elif instance_state == 'rebooting':
-                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
-                else:
-                    ec2_client.reboot_instances(InstanceIds=[instance_id])
-                    exit("Instance {0} rebooting.".format(instance_id))
-            if action == 'terminate':
-                if instance_state in ('rebooting', 'stopping',
-                                      'terminated', 'shutting-down'):
-                    exit("Cannot terminate instance {0} as state is {1}.".format(instance_id,
-                                                                                 instance_state))
-                elif instance_state in ('rebooting',
-                                        'stopping', 'terminated',
-                                        'shutting-down'):
-                    exit("Instance {0} is already {1}.".format(instance_id, instance_state))
-                else:
-                    ec2_client.terminate_instances(InstanceIds=[instance_id])
-                    exit("Instance {0} terminating.".format(instance_id))
+                ec2_instance_stop(instance_id=instance_id,
+                                  instance_state=instance_state,
+                                  ec2_client=ec2_client)
+            elif action == 'start':
+                ec2_instance_start(instance_id=instance_id,
+                                   instance_state=instance_state,
+                                   ec2_client=ec2_client)
+            elif action == 'reboot':
+                ec2_instance_reboot(instance_id=instance_id,
+                                    instance_state=instance_state,
+                                    ec2_client=ec2_client)
+            elif action == 'terminate':
+                ec2_instance_terminate(instance_id=instance_id,
+                                       instance_state=instance_state,
+                                       ec2_client=ec2_client)
     except AttributeError:
         exit("Cannot find instance: {0}".format(instance_id))
 
