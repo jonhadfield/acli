@@ -208,10 +208,6 @@ def real_main():
         eip_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 's3':
         s3_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] in ['help', None] and args['<args>']:
-        if args['<args>'][0] == 'ec2':
-            from acli.commands import ec2 as command_ec2
-            print(docopt(command_ec2.__doc__, argv=argv))
     elif args['<command>'] in ['help', None] and not args['<args>']:
         print("usage: acli help <command>")
     else:
