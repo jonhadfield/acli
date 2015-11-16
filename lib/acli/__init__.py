@@ -102,6 +102,82 @@ def ami_command(argv=None, aws_config=None):
         ec2.ami_info(aws_config, ami_id=ami_res.get('<ami_id>'))
 
 
+def lc_command(argv=None, aws_config=None):
+    from acli.commands import lc as command_lc
+    lc_res = docopt(command_lc.__doc__, argv=argv)
+    if lc_res.get('list'):
+        asg.lc_list(aws_config)
+    elif lc_res.get('info'):
+        asg.lc_info(aws_config, lc_name=lc_res.get('<lc_name>'))
+
+
+def asg_command(argv=None, aws_config=None):
+    from acli.commands import asg as command_asg
+    asg_res = docopt(command_asg.__doc__, argv=argv)
+    if asg_res.get('list'):
+        asg.asg_list(aws_config)
+    elif asg_res.get('info'):
+        asg.asg_info(aws_config, asg_name=asg_res.get('<asg_name>'))
+    elif asg_res.get('cpu'):
+        cloudwatch.asg_cpu(aws_config=aws_config,
+                           asg_name=asg_res.get('<asg_name>'),
+                           output_type=asg_res.get('--output'),
+                           start=asg_res.get('--start'),
+                           period=asg_res.get('--end'),
+                           intervals=asg_res.get('intervals')
+                           )
+    elif asg_res.get('delete'):
+        asg.asg_delete(aws_config, asg_name=asg_res.get('<asg_name>'))
+
+
+def route53_command(argv=None, aws_config=None):
+    from acli.commands import route53 as command_route53
+    route53_res = docopt(command_route53.__doc__, argv=argv)
+    if route53_res.get('list'):
+        route53.route53_list(aws_config)
+    elif route53_res.get('info'):
+        route53.route53_info(aws_config, zone_id=route53_res.get('<zone_id>'))
+
+
+def vpc_command(argv=None, aws_config=None):
+    from acli.commands import vpc as command_vpc
+    vpc_res = docopt(command_vpc.__doc__, argv=argv)
+    if vpc_res.get('list'):
+        vpc.vpc_list(aws_config)
+    elif vpc_res.get('info'):
+        vpc.vpc_info(aws_config, vpc_id=vpc_res.get('<vpc_id>'))
+
+
+def secgroup_command(argv=None, aws_config=None):
+    from acli.commands import secgroup as command_secgroup
+    secgroup_res = docopt(command_secgroup.__doc__, argv=argv)
+    if secgroup_res.get('list'):
+        secgroup.secgroup_list(aws_config)
+    elif secgroup_res.get('info'):
+        secgroup.secgroup_info(aws_config, secgroup_id=secgroup_res.get('<secgroup_id>'))
+
+
+def eip_command(argv=None, aws_config=None):
+    from acli.commands import eip as command_eip
+    eip_res = docopt(command_eip.__doc__, argv=argv)
+    if eip_res.get('list'):
+        eip.eip_list(aws_config)
+    elif eip_res.get('info'):
+        eip.eip_info(aws_config, eip=eip_res.get('<eip>'))
+
+
+def s3_command(argv=None, aws_config=None):
+    from acli.commands import s3 as command_s3
+    s3_res = docopt(command_s3.__doc__, argv=argv)
+    if s3_res.get('list'):
+        path = s3_res.get('<item>')
+        if path and not '/' == path[-1:]:
+            path += '/'
+        s3.s3_list(aws_config, item=path)
+    elif s3_res.get('info'):
+        s3.s3_info(aws_config, item=s3_res.get('<item>'))
+
+
 def real_main():
     args = docopt(__doc__,
                   version='0.1.13',
@@ -117,69 +193,21 @@ def real_main():
     if args['<command>'] == 'elb':
         elb_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'lc':
-        from acli.commands import lc as command_lc
-        lc_res = docopt(command_lc.__doc__, argv=argv)
-        if lc_res.get('list'):
-            asg.lc_list(aws_config)
-        elif lc_res.get('info'):
-            asg.lc_info(aws_config, lc_name=lc_res.get('<lc_name>'))
+        lc_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'asg':
-        from acli.commands import asg as command_asg
-        asg_res = docopt(command_asg.__doc__, argv=argv)
-        if asg_res.get('list'):
-            asg.asg_list(aws_config)
-        elif asg_res.get('info'):
-            asg.asg_info(aws_config, asg_name=asg_res.get('<asg_name>'))
-        elif asg_res.get('cpu'):
-            cloudwatch.asg_cpu(aws_config=aws_config,
-                               asg_name=asg_res.get('<asg_name>'),
-                               output_type=asg_res.get('--output'),
-                               start=asg_res.get('--start'),
-                               period=asg_res.get('--end'),
-                               intervals=asg_res.get('intervals')
-                               )
-        elif asg_res.get('delete'):
-            asg.asg_delete(aws_config, asg_name=asg_res.get('<asg_name>'))
+        asg_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'ami':
         ami_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'route53':
-        from acli.commands import route53 as command_route53
-        route53_res = docopt(command_route53.__doc__, argv=argv)
-        if route53_res.get('list'):
-            route53.route53_list(aws_config)
-        elif route53_res.get('info'):
-            route53.route53_info(aws_config, zone_id=route53_res.get('<zone_id>'))
+        route53_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'vpc':
-        from acli.commands import vpc as command_vpc
-        vpc_res = docopt(command_vpc.__doc__, argv=argv)
-        if vpc_res.get('list'):
-            vpc.vpc_list(aws_config)
-        elif vpc_res.get('info'):
-            vpc.vpc_info(aws_config, vpc_id=vpc_res.get('<vpc_id>'))
+        vpc_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'secgroup':
-        from acli.commands import secgroup as command_secgroup
-        secgroup_res = docopt(command_secgroup.__doc__, argv=argv)
-        if secgroup_res.get('list'):
-            secgroup.secgroup_list(aws_config)
-        elif secgroup_res.get('info'):
-            secgroup.secgroup_info(aws_config, secgroup_id=secgroup_res.get('<secgroup_id>'))
+        secgroup_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'eip':
-        from acli.commands import eip as command_eip
-        eip_res = docopt(command_eip.__doc__, argv=argv)
-        if eip_res.get('list'):
-            eip.eip_list(aws_config)
-        elif eip_res.get('info'):
-            eip.eip_info(aws_config, eip=eip_res.get('<eip>'))
+        eip_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 's3':
-        from acli.commands import s3 as command_s3
-        s3_res = docopt(command_s3.__doc__, argv=argv)
-        if s3_res.get('list'):
-            path = s3_res.get('<item>')
-            if path and not '/' == path[-1:]:
-                path += '/'
-            s3.s3_list(aws_config, item=path)
-        elif s3_res.get('info'):
-            s3.s3_info(aws_config, item=s3_res.get('<item>'))
+        s3_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
             from acli.commands import ec2 as command_ec2
