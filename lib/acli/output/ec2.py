@@ -26,7 +26,7 @@ def default(datetime_object=None):
             datetime_object.microsecond / 1000
         )
         return millis
-    raise TypeError('Not sure how to serialize %s' % datetime_object)
+    raise TypeError('Not sure how to serialize {0}'.format(datetime_object))
 
 
 def get_ec2_instance_tags(ec2_instance=None, tag_key=None,

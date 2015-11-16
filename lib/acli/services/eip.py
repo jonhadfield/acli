@@ -12,7 +12,7 @@ def eip_list(aws_config=None):
     ec2_client = get_client(client_type='ec2', config=aws_config)
     addresses_response = ec2_client.describe_addresses()
     addresses = addresses_response.get('Addresses', None)
-    if len(list(addresses)):
+    if addresses:
         output_eip_list(addresses=addresses)
     exit('No elastic IPs found.')
 

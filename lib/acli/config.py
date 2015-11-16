@@ -36,7 +36,7 @@ class Config(object):
         if cli_secret_access_key:
             self.secret_access_key = cli_secret_access_key
 
-    def load_acli_config(self):
+    @staticmethod
+    def load_acli_config():
         if os.path.isfile('acli.cfg'):
             configparser.read('acli.cfg')
-
