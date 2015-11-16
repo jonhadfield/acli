@@ -69,19 +69,37 @@ def ec2_command(argv=None, aws_config=None):
     elif ec2_res.get('net'):
         cloudwatch.ec2_net(aws_config=aws_config,
                            instance_id=ec2_res.get('<instance_id>'),
-                           start=ec2_res.get('--start', None),
-                           period=ec2_res.get('--end', None),
-                           intervals=ec2_res.get('intervals', None)
+                           start=ec2_res.get('--start'),
+                           period=ec2_res.get('--end'),
+                           intervals=ec2_res.get('intervals')
                            )
     elif ec2_res.get('vols'):
         cloudwatch.ec2_vol(aws_config=aws_config,
                            instance_id=ec2_res.get('<instance_id>'),
-                           start=ec2_res.get('--start', None),
-                           period=ec2_res.get('--end', None),
-                           intervals=ec2_res.get('intervals', None)
+                           start=ec2_res.get('--start'),
+                           period=ec2_res.get('--end'),
+                           intervals=ec2_res.get('intervals')
                            )
     elif ec2_res.get('summary'):
         ec2.ec2_summary(aws_config=aws_config)
+
+
+def elb_command(argv=None, aws_config=None):
+    from acli.commands import elb as command_elb
+    elb_res = docopt(command_elb.__doc__, argv=argv)
+    if elb_res.get('list'):
+        elb.elb_list(aws_config)
+    elif elb_res.get('info'):
+        elb.elb_info(aws_config, elb_name=elb_res.get('<elb_name>'))
+
+
+def ami_command(argv=None, aws_config=None):
+    from acli.commands import ami as command_ami
+    ami_res = docopt(command_ami.__doc__, argv=argv)
+    if ami_res.get('list'):
+        ec2.ami_list(aws_config)
+    elif ami_res.get('info'):
+        ec2.ami_info(aws_config, ami_id=ami_res.get('<ami_id>'))
 
 
 def real_main():
@@ -97,12 +115,7 @@ def real_main():
     if args['<command>'] == 'ec2':
         ec2_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'elb':
-        from acli.commands import elb as command_elb
-        elb_res = docopt(command_elb.__doc__, argv=argv)
-        if elb_res.get('list'):
-            elb.elb_list(aws_config)
-        elif elb_res.get('info'):
-            elb.elb_info(aws_config, elb_name=elb_res.get('<elb_name>'))
+        elb_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'lc':
         from acli.commands import lc as command_lc
         lc_res = docopt(command_lc.__doc__, argv=argv)
@@ -120,7 +133,7 @@ def real_main():
         elif asg_res.get('cpu'):
             cloudwatch.asg_cpu(aws_config=aws_config,
                                asg_name=asg_res.get('<asg_name>'),
-                               output_type=asg_res.get('--output', None),
+                               output_type=asg_res.get('--output'),
                                start=asg_res.get('--start'),
                                period=asg_res.get('--end'),
                                intervals=asg_res.get('intervals')
@@ -128,12 +141,7 @@ def real_main():
         elif asg_res.get('delete'):
             asg.asg_delete(aws_config, asg_name=asg_res.get('<asg_name>'))
     if args['<command>'] == 'ami':
-        from acli.commands import ami as command_ami
-        ami_res = docopt(command_ami.__doc__, argv=argv)
-        if ami_res.get('list'):
-            ec2.ami_list(aws_config)
-        elif ami_res.get('info'):
-            ec2.ami_info(aws_config, ami_id=ami_res.get('<ami_id>'))
+        ami_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'route53':
         from acli.commands import route53 as command_route53
         route53_res = docopt(command_route53.__doc__, argv=argv)
