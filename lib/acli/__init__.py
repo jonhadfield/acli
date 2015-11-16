@@ -39,12 +39,49 @@ The most common commands are:
 See 'acli help <command>'
 """
 
-from __future__ import (absolute_import, print_function, unicode_literals)
+from __future__ import (absolute_import,
+                        print_function,
+                        unicode_literals)
 from docopt import docopt
 from acli.services import (ec2, elb, account, cloudwatch, vpc,
                            eip, asg, route53, secgroup, s3)
 from acli.config import Config
 from acli.utils import install_completion
+
+
+def ec2_command(argv=None, aws_config=None):
+    from acli.commands import ec2 as command_ec2
+    ec2_res = docopt(command_ec2.__doc__, argv=argv)
+    if ec2_res.get('list'):
+        ec2.ec2_list(aws_config)
+    elif ec2_res.get('info'):
+        ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
+    elif ec2_res.get('stop'):
+        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="stop")
+    elif ec2_res.get('reboot'):
+        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="reboot")
+    elif ec2_res.get('start'):
+        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="start")
+    elif ec2_res.get('terminate'):
+        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="terminate")
+    elif ec2_res.get('cpu'):
+        cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
+    elif ec2_res.get('net'):
+        cloudwatch.ec2_net(aws_config=aws_config,
+                           instance_id=ec2_res.get('<instance_id>'),
+                           start=ec2_res.get('--start', None),
+                           period=ec2_res.get('--end', None),
+                           intervals=ec2_res.get('intervals', None)
+                           )
+    elif ec2_res.get('vols'):
+        cloudwatch.ec2_vol(aws_config=aws_config,
+                           instance_id=ec2_res.get('<instance_id>'),
+                           start=ec2_res.get('--start', None),
+                           period=ec2_res.get('--end', None),
+                           intervals=ec2_res.get('intervals', None)
+                           )
+    elif ec2_res.get('summary'):
+        ec2.ec2_summary(aws_config=aws_config)
 
 
 def real_main():
@@ -58,38 +95,7 @@ def real_main():
     if args['<command>'] == 'account':
         account.account_info(aws_config)
     if args['<command>'] == 'ec2':
-        from acli.commands import ec2 as command_ec2
-        ec2_res = docopt(command_ec2.__doc__, argv=argv)
-        if ec2_res.get('list'):
-            ec2.ec2_list(aws_config)
-        elif ec2_res.get('info'):
-            ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
-        elif ec2_res.get('stop'):
-            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="stop")
-        elif ec2_res.get('reboot'):
-            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="reboot")
-        elif ec2_res.get('start'):
-            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="start")
-        elif ec2_res.get('terminate'):
-            ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="terminate")
-        elif ec2_res.get('cpu'):
-            cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
-        elif ec2_res.get('net'):
-            cloudwatch.ec2_net(aws_config=aws_config,
-                               instance_id=ec2_res.get('<instance_id>'),
-                               start=ec2_res.get('--start', None),
-                               period=ec2_res.get('--end', None),
-                               intervals=ec2_res.get('intervals', None)
-                               )
-        elif ec2_res.get('vols'):
-            cloudwatch.ec2_vol(aws_config=aws_config,
-                               instance_id=ec2_res.get('<instance_id>'),
-                               start=ec2_res.get('--start', None),
-                               period=ec2_res.get('--end', None),
-                               intervals=ec2_res.get('intervals', None)
-                               )
-        elif ec2_res.get('summary'):
-            ec2.ec2_summary(aws_config=aws_config)
+        ec2_command(argv=argv, aws_config=aws_config)
     if args['<command>'] == 'elb':
         from acli.commands import elb as command_elb
         elb_res = docopt(command_elb.__doc__, argv=argv)
