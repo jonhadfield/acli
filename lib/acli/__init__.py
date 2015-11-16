@@ -18,6 +18,8 @@ usage: acli [--version] [--help] [--install-completion]
        acli secgroup (list | info)
        acli s3 list [<item>]
        acli s3 info <item>
+       acli s3 cp <source> <dest>
+
 
 options:
    -h, --help      help
@@ -176,6 +178,8 @@ def s3_command(argv=None, aws_config=None):
         s3.s3_list(aws_config, item=path)
     elif s3_res.get('info'):
         s3.s3_info(aws_config, item=s3_res.get('<item>'))
+    elif s3_res.get('cp'):
+        s3.s3_cp(aws_config, source=s3_res.get('<source>'), dest=s3_res.get('<dest>'))
 
 
 def real_main():

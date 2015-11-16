@@ -76,3 +76,52 @@ def s3_info(aws_config=None, item=None):
             exit('Bucket not found.')
         else:
             exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
+
+
+def s3_cp(aws_config=None, source=None, dest=None):
+    """
+    @type aws_config: Config
+    @type source: unicode
+    @type dest: unicode
+    """
+    from acli.utils import (is_readable,
+                            is_writeable)
+    from boto3.s3.transfer import S3Transfer, TransferConfig
+    import os
+    config = TransferConfig(
+                            multipart_threshold=200 * 1024 * 1024,
+                            max_concurrency=10,
+                            num_download_attempts=10,
+                            )
+
+    s3_prefix = 's3://'
+    s3_client = get_client(client_type='s3', config=aws_config)
+    if source.startswith(s3_prefix) and not dest.startswith(s3_prefix):
+        # COPYING FROM S3 TO LOCAL
+        print('Transferring: {0} to: {1}'.format(source, dest))
+        s3_location = source[5:].split('/')
+        bucket_name = s3_location[0]
+        s3_source = '/'.join(s3_location[1:])
+        check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+        transfer = S3Transfer(s3_client, config)
+        transfer.download_file(bucket_name, s3_source, dest)
+    elif source.startswith(s3_prefix) and dest.startswith(s3_prefix):
+        # COPYING FROM S3 TO S3
+        print('Transferring: {0} to: {1}'.format(source, dest))
+    elif not source.startswith(s3_prefix) and dest.startswith(s3_prefix):
+        # COPYING FROM LOCAL TO S3
+        print('Transferring: {0} to: {1}'.format(source, dest))
+        if not os.path.isfile(source):
+            exit('File transfers only for now.')
+        if not is_readable(source):
+            exit('Cannot access: {0}'.format(source))
+        s3_location = dest[5:].split('/')
+        bucket_name = s3_location[0]
+        s3_dest = '/'.join(s3_location[1:])
+        print('bucket_name = {}'.format(bucket_name))
+        check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+        transfer = S3Transfer(s3_client, config)
+        transfer.upload_file(source, bucket_name, s3_dest)
+    else:
+        exit('Source or dest must be an S3 location defined with s3://.')
+    exit()
