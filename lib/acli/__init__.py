@@ -56,8 +56,6 @@ def real_main():
     if args['--install-completion']:
         install_completion()
     if args['<command>'] == 'account':
-        from acli.commands import account as command_account
-        # acc_res = docopt(command_account.__doc__, argv=argv)
         account.account_info(aws_config)
     if args['<command>'] == 'ec2':
         from acli.commands import ec2 as command_ec2
