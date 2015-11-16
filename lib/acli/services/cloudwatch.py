@@ -105,17 +105,17 @@ def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
     exit(0)
 
 
-def asg_cpu(aws_config=None, asg_name=None, intervals=None, period=None,
-            start=None, end=datetime.datetime.utcnow(), output_type=None):
+def asg_cpu(aws_config=None, asg_name=None, start=None, period=None, intervals=None,
+            output_type=None):
     """
     @type aws_config: Config
     @type asg_name: unicode
     @type intervals: int
     @type period: int
     @type start: datetime
-    @type end: datetime
     @type output_type: unicode
     """
+    end = datetime.datetime.utcnow()
     if not output_type or output_type == 'graph':
         if not intervals:
             intervals = 60
