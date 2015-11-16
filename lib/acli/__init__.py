@@ -186,27 +186,27 @@ def real_main():
     argv = [args['<command>']] + args['<args>']
     if args['--install-completion']:
         install_completion()
-    if args['<command>'] == 'account':
+    elif args['<command>'] == 'account':
         account.account_info(aws_config)
-    if args['<command>'] == 'ec2':
+    elif args['<command>'] == 'ec2':
         ec2_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'elb':
+    elif args['<command>'] == 'elb':
         elb_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'lc':
+    elif args['<command>'] == 'lc':
         lc_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'asg':
+    elif args['<command>'] == 'asg':
         asg_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'ami':
+    elif args['<command>'] == 'ami':
         ami_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'route53':
+    elif args['<command>'] == 'route53':
         route53_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'vpc':
+    elif args['<command>'] == 'vpc':
         vpc_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'secgroup':
+    elif args['<command>'] == 'secgroup':
         secgroup_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 'eip':
+    elif args['<command>'] == 'eip':
         eip_command(argv=argv, aws_config=aws_config)
-    if args['<command>'] == 's3':
+    elif args['<command>'] == 's3':
         s3_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] in ['help', None] and args['<args>']:
         if args['<args>'][0] == 'ec2':
