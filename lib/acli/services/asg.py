@@ -10,7 +10,7 @@ def asg_list(aws_config=None):
     @type aws_config: Config
     """
     asg_client = get_client(client_type='autoscaling', config=aws_config)
-    all_asgs = asg_client.describe_auto_scaling_groups().get('AutoScalingGroups', None)
+    all_asgs = asg_client.describe_auto_scaling_groups().get('AutoScalingGroups')
     if all_asgs:
         output_asg_list(asg_list=all_asgs)
     else:
@@ -59,7 +59,7 @@ def lc_list(aws_config=None):
     @type aws_config: Config
     """
     asg_client = get_client(client_type='autoscaling', config=aws_config)
-    all_lcs = asg_client.describe_launch_configurations().get('LaunchConfigurations', None)
+    all_lcs = asg_client.describe_launch_configurations().get('LaunchConfigurations')
     if all_lcs:
         output_lc_list(lc_list=all_lcs)
     else:
@@ -73,7 +73,7 @@ def lc_info(aws_config=None, lc_name=None):
     """
     asg_client = get_client(client_type='autoscaling', config=aws_config)
     lc = asg_client.describe_launch_configurations(LaunchConfigurationNames=[lc_name])
-    lc_details = lc.get('LaunchConfigurations', None)
+    lc_details = lc.get('LaunchConfigurations')
     if lc_details:
         output_lc_info(lc=lc_details[0])
     else:

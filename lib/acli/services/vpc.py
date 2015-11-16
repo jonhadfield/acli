@@ -11,7 +11,7 @@ def vpc_list(aws_config=None):
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
     vpcs = ec2_client.describe_vpcs()
-    if vpcs.get('Vpcs', None):
+    if vpcs.get('Vpcs'):
         output_vpc_list(vpcs=vpcs)
     else:
         exit("No VPCs found.")

@@ -10,7 +10,7 @@ def account_info(aws_config):
     """
     iam_client = get_client(client_type='iam', config=aws_config)
     users = iam_client.list_users(MaxItems=1)
-    if users.get('Users', None):
+    if users.get('Users'):
         account_id = users.get('Users')[0]['Arn'].split(':')[4]
         aliases = iam_client.list_account_aliases().get('AccountAliases')
         output_account_info(account_id=account_id,

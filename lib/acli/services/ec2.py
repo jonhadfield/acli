@@ -51,7 +51,7 @@ def ec2_info(aws_config=None, instance_id=None):
     reservations = ec2_query.get('Reservations')
     try:
         instance = reservations[0].get('Instances')[0]
-        if instance.get('InstanceId', None):
+        if instance.get('InstanceId'):
             output_ec2_info(instance=instance)
     except IndexError:
         raise SystemExit("Cannot find instance: {0}".format(instance_id))

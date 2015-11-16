@@ -23,7 +23,7 @@ def get_elb(aws_config, elb_name=None):
         try:
             elb_client = get_client(client_type='elb', config=aws_config)
             elbs = elb_client.describe_load_balancers(LoadBalancerNames=[elb_name])
-            if elbs and elbs.get('LoadBalancerDescriptions', None):
+            if elbs and elbs.get('LoadBalancerDescriptions'):
                 return elbs.get('LoadBalancerDescriptions')[0]
         except botocore.exceptions.ClientError:
             exit('ELB: {0} could not be found.'.format(elb_name))

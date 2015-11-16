@@ -11,7 +11,7 @@ def route53_list(aws_config=None):
     """
     route53_client = get_client(client_type='route53', config=aws_config)
     zones = route53_client.list_hosted_zones()
-    if zones.get('HostedZones', None):
+    if zones.get('HostedZones'):
         output_route53_list(zones=route53_client.list_hosted_zones())
     else:
         exit("No hosted zones found.")

@@ -22,7 +22,7 @@ def s3_list(aws_config=None, item=None):
     s3_client = get_client(client_type='s3', config=aws_config)
     buckets = s3_client.list_buckets()
     if not item:
-        if buckets.get('Buckets', None):
+        if buckets.get('Buckets'):
             output_s3_list(buckets=buckets.get('Buckets'))
         else:
             exit("No buckets found.")
@@ -37,8 +37,8 @@ def s3_list(aws_config=None, item=None):
         check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
         try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
-            if not any((objects.get('CommonPrefixes', None),
-                        (objects.get('Contents', None) and len(objects.get('Contents')) > 1))):
+            if not any((objects.get('CommonPrefixes'),
+                        (objects.get('Contents') and len(objects.get('Contents')) > 1))):
                 exit('Nothing found in: {0}'.format(item[:-1]))
             common_prefixes = objects.get('CommonPrefixes', list())
             folders = list()

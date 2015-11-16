@@ -38,8 +38,8 @@ def output_s3_list(buckets=None, bucket_name=None,
                            Color('{autoblack}-{/autoblack}'),
                            Color('{autoblack}-{/autoblack}'),
                            Color('{autoblack}-{/autoblack}')])
-        object_list = objects.get('Contents', None)
-        if objects.get('Contents', None):
+        object_list = objects.get('Contents')
+        if objects.get('Contents'):
             sorted_object_list = sorted(object_list, key=lambda k: ['Key'])
             for an_object in sorted_object_list:
                 an_object_key = an_object.get('Key')[to_remove_len:]

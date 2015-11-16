@@ -22,7 +22,7 @@ def secgroup_info(aws_config=None, secgroup_id=None):
     ec2_client = get_client(client_type='ec2', config=aws_config)
     try:
         result = ec2_client.describe_security_groups(GroupIds=[secgroup_id])
-        secgroups = result.get('SecurityGroups', None)
+        secgroups = result.get('SecurityGroups')
         secgroup = secgroups[0]
         output_secgroup_info(secgroup=secgroup)
     except (ClientError, IndexError):

@@ -29,7 +29,7 @@ def output_vpc_list(vpcs=None):
         dhcpoptions = vpc.get('DhcpOptionsId')
         default = str(vpc.get('IsDefault'))
         td.append([vpcid,
-                   dash_if_none(get_tag(name='Name', tags=vpc.get('Tags', None))),
+                   dash_if_none(get_tag(name='Name', tags=vpc.get('Tags'))),
                    dash_if_none(cidr_block),
                    dash_if_none(tenancy),
                    dash_if_none(state),
@@ -82,7 +82,7 @@ def output_vpc_info(vpc=None, subnets=None):
                 if subnet.get('Tags'):
                     td.append([Color('{autoblue}tags{/autoblue}'), "-"])
                     for tag in subnet.get('Tags'):
-                        tag_key, tag_value = dash_if_none(tag.get('Key', None)), dash_if_none(tag.get('Value', None))
+                        tag_key, tag_value = dash_if_none(tag.get('Key')), dash_if_none(tag.get('Value'))
                         td.append([Color('{autoblue}'+" {}".format(tag_key)+'{/autoblue}'), "{}".format(tag_value)])
         output_ascii_table(table_title=Color('{autowhite}vpc info{/autowhite}'),
                            table_data=td)

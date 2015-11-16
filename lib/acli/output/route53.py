@@ -52,15 +52,15 @@ def output_route53_info(zone=None, record_sets=None):
     """
     td = list()
     td.append([Color('{autoblue}id{/autoblue}'),
-               dash_if_none(zone.get('HostedZone').get('Id', None))])
+               dash_if_none(zone.get('HostedZone').get('Id'))])
     td.append([Color('{autoblue}name{/autoblue}'),
-               dash_if_none(zone.get('HostedZone').get('Name', None))])
+               dash_if_none(zone.get('HostedZone').get('Name'))])
     td.append([Color('{autoblue}records{/autoblue}'),
-               dash_if_none(zone.get('HostedZone').get('ResourceRecordSetCount', None))])
+               dash_if_none(zone.get('HostedZone').get('ResourceRecordSetCount'))])
     td.append([Color('{autoblue}comment{/autoblue}'),
-               dash_if_none(zone.get('HostedZone').get('Config').get('Comment', None))])
+               dash_if_none(zone.get('HostedZone').get('Config').get('Comment'))])
     td.append([Color('{autoblue}private{/autoblue}'),
-               dash_if_none(zone.get('HostedZone').get('Config').get('PrivateZone', None))])
+               dash_if_none(zone.get('HostedZone').get('Config').get('PrivateZone'))])
     td.append([Color('{autoblue}name servers{/autoblue}'),
                "\n".join(zone['DelegationSet']['NameServers'])])
     td.append([Color('{autoblue}records{/autoblue}'), ' '])
