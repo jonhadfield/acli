@@ -38,7 +38,7 @@ def s3_list(aws_config=None, item=None):
         try:
             objects = s3_client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
             if not any((objects.get('CommonPrefixes'),
-                        (objects.get('Contents') and len(objects.get('Contents')) > 1))):
+                        (objects.get('Contents')))):
                 exit('Nothing found in: {0}'.format(item[:-1]))
             common_prefixes = objects.get('CommonPrefixes', list())
             folders = list()
