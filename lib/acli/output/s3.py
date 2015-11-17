@@ -10,8 +10,12 @@ def output_s3_list(buckets=None, bucket_name=None,
                    objects=None, folders=None, item=None):
     """
     @type buckets: dict
+    @type bucket_name: unicode
     @type objects: dict
     @type bucket_name: unicode
+    @type objects: dict
+    @type folders: list
+    @type item: unicode
     """
     to_remove_len = 0
     if bucket_name:
@@ -29,8 +33,8 @@ def output_s3_list(buckets=None, bucket_name=None,
     if any((objects, folders)):
         td = list()
         table_header = [Color('{autoblue}item{/autoblue}'), Color('{autoblue}size (bytes){/autoblue}'),
-                  Color('{autoblue}last modified (UTC){/autoblue}'),
-                  Color('{autoblue}class{/autoblue}'), Color('{autoblue}etag{/autoblue}')]
+                        Color('{autoblue}last modified (UTC){/autoblue}'),
+                        Color('{autoblue}class{/autoblue}'), Color('{autoblue}etag{/autoblue}')]
         if folders:
             for folder in folders:
                 td.append([Color('{autogreen}'+folder.get('Prefix')[to_remove_len:]+'{/autogreen}'),
@@ -39,7 +43,7 @@ def output_s3_list(buckets=None, bucket_name=None,
                            Color('{autoblack}-{/autoblack}'),
                            Color('{autoblack}-{/autoblack}')])
         object_list = objects.get('Contents')
-        if objects.get('Contents'):
+        if object_list:
             sorted_object_list = sorted(object_list, key=lambda k: ['Key'])
             for an_object in sorted_object_list:
                 an_object_key = an_object.get('Key')[to_remove_len:]
@@ -48,8 +52,9 @@ def output_s3_list(buckets=None, bucket_name=None,
                                str(an_object.get('Size')),
                                str(an_object.get('LastModified').replace(tzinfo=None, microsecond=0)),
                                str(an_object.get('StorageClass')),
-                               # str(an_object.get('Owner')),
                                str(an_object.get('ETag')[1:-1])])
+            if not folders and not td:
+                td.append(['', ' ', ' ', ' ', ' '])
         output_ascii_table_list(table_title=Color('{autowhite}'+item+'{/autowhite}'),
                                 table_data=td,
                                 table_header=table_header,
@@ -60,6 +65,8 @@ def output_s3_list(buckets=None, bucket_name=None,
 def output_s3_info(s3_object=None, key=None, bucket=None):
     """
     @type s3_object: dict
+    @type key: unicode
+    @type bucket: unicode
     """
     td = list()
     td.append([Color('{autoblue}name{/autoblue}'),
