@@ -108,20 +108,29 @@ def s3_cp(aws_config=None, source=None, dest=None):
     elif source.startswith(s3_prefix) and dest.startswith(s3_prefix):
         # COPYING FROM S3 TO S3
         print('Transferring: {0} to: {1}'.format(source, dest))
+        exit('Not yet implemented.')
     elif not source.startswith(s3_prefix) and dest.startswith(s3_prefix):
-        # COPYING FROM LOCAL TO S3
-        print('Transferring: {0} to: {1}'.format(source, dest))
-        if not os.path.isfile(source):
-            exit('File transfers only for now.')
-        if not is_readable(source):
-            exit('Cannot access: {0}'.format(source))
-        s3_location = dest[5:].split('/')
-        bucket_name = s3_location[0]
-        s3_dest = '/'.join(s3_location[1:])
-        print('bucket_name = {}'.format(bucket_name))
-        check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
-        transfer = S3Transfer(s3_client, config)
-        transfer.upload_file(source, bucket_name, s3_dest)
+        try:
+            # COPYING ITEM(S) FROM LOCAL TO S3
+            print('Transferring: {0} to: {1}'.format(source, dest))
+            if not os.path.isfile(source):
+                exit('File transfers only for now.')
+            else:
+                # COPY LOCAL FILE TO S3
+                if not is_readable(source):
+                    exit('Cannot access: {0}'.format(source))
+                s3_location = dest[5:].split('/')
+                bucket_name = s3_location[0]
+                s3_dest = '/'.join(s3_location[1:])
+                # COPYING FILE TO A FOLDER
+                if dest.endswith('/'):
+                    file_name = source.split('/')[-1]
+                    s3_dest += file_name
+                check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+                transfer = S3Transfer(s3_client, config)
+                transfer.upload_file(source, bucket_name, s3_dest)
+        except Exception as e:
+            print('Unhandled exception: {0}'.format(e))
     else:
         exit('Source or dest must be an S3 location defined with s3://.')
     exit()
