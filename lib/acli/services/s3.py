@@ -103,8 +103,21 @@ def s3_cp(aws_config=None, source=None, dest=None):
         bucket_name = s3_location[0]
         s3_source = '/'.join(s3_location[1:])
         check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+        if dest == '/':
+            dest = '{0}{1}'.format(os.path.abspath(dest), s3_location[-1])
+        elif dest == '.' or dest.endswith('/'):
+            print('first')
+            dest = '{0}/{1}'.format(os.path.abspath(dest), s3_location[-1])
+        elif os.path.isdir(os.path.abspath(dest)):
+            dest = '{0}/{1}'.format(dest, s3_location[-1])
         transfer = S3Transfer(s3_client, config)
-        transfer.download_file(bucket_name, s3_source, dest)
+        try:
+            transfer.download_file(bucket_name, s3_source, dest)
+        except BaseException as e:
+            if e.strerror == 'Permission denied':
+                exit('Permission denied.')
+            else:
+                print(e)
     elif source.startswith(s3_prefix) and dest.startswith(s3_prefix):
         # COPYING FROM S3 TO S3
         print('Transferring: {0} to: {1}'.format(source, dest))
