@@ -117,7 +117,7 @@ def s3_cp(aws_config=None, source=None, dest=None):
             if e.strerror == 'Permission denied':
                 exit('Permission denied.')
             else:
-                print(e)
+                print('Unhandled exception: {0}'.format(e))
     elif source.startswith(s3_prefix) and dest.startswith(s3_prefix):
         # COPYING FROM S3 TO S3
         print('Transferring: {0} to: {1}'.format(source, dest))
