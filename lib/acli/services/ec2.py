@@ -146,7 +146,9 @@ def ami_info(aws_config=None, ami_id=None):
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
     try:
-        output_ami_info(ami=ec2_client.describe_images(ImageIds=[ami_id]).get('Images')[0])
+        output_ami_info(ami=ec2_client.describe_images(ImageIds=[ami_id]).get('Images')[0],
+                        launch_permissions=ec2_client.describe_image_attribute(ImageId=ami_id,
+                                                                               Attribute='launchPermission'))
     except ClientError:
         exit('Unable to find ami: {0}'.format(ami_id))
 

@@ -290,9 +290,10 @@ def output_ami_permissions(perms=None):
     @type perms: dict
     """
     out = ""
-    for i, (key, value) in enumerate(six.iteritems(perms)):
-        out += "{0},{1}".format(key, str(value))
-        if i < len(perms)-1:
+    for i, launch_perm in enumerate(perms.get('LaunchPermissions')):
+        if 'UserId' in launch_perm:
+            out += "UserId: {0}".format(launch_perm.get('UserId'))
+        if i < len(perms.get('LaunchPermissions'))-1:
             out += "\n"
     return out
 
@@ -308,11 +309,14 @@ def get_product_codes(product_codes=None):
         return out
 
 
-def output_ami_info(output_media='console', ami=None):
+def output_ami_info(output_media='console', ami=None, launch_permissions=None):
     """
     @type output_media: unicode
     @type ami: ec2.Ami
+    @type launch_permissions=dict
     """
+    print(launch_permissions.__class__.__name__)
+    print(output_ami_permissions(perms=launch_permissions))
     if output_media == 'console':
         td = list()
         td.append([Color('{autoblue}id{/autoblue}'),
@@ -327,6 +331,8 @@ def output_ami_info(output_media='console', ami=None):
                    dash_if_none(ami.get('Hypervisor'))])
         td.append([Color('{autoblue}public{/autoblue}'),
                    dash_if_none(str(ami.get('Public')))])
+        td.append([Color('{autoblue}permissions{/autoblue}'),
+                   dash_if_none(str(output_ami_permissions(perms=launch_permissions)))])
         td.append([Color('{autoblue}kernel id{/autoblue}'),
                    dash_if_none(ami.get('KernelId'))])
         td.append([Color('{autoblue}location{/autoblue}'),
