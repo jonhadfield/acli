@@ -315,8 +315,6 @@ def output_ami_info(output_media='console', ami=None, launch_permissions=None):
     @type ami: ec2.Ami
     @type launch_permissions=dict
     """
-    print(launch_permissions.__class__.__name__)
-    print(output_ami_permissions(perms=launch_permissions))
     if output_media == 'console':
         td = list()
         td.append([Color('{autoblue}id{/autoblue}'),
