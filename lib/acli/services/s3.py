@@ -74,6 +74,8 @@ def s3_info(aws_config=None, item=None):
     except botocore.exceptions.ClientError as error:
         if 'NoSuchBucket' in error.response['Error']['Code']:
             exit('Bucket not found.')
+        elif 'NoSuchKey' in error.response['Error']['Code']:
+            exit('Key not found.')
         else:
             exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
 
