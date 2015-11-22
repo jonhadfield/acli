@@ -70,16 +70,20 @@ def output_s3_info(s3_object=None, key=None, bucket=None):
     """
     td = list()
     last_modified = str(s3_object['LastModified'].replace(tzinfo=None, second=0))
+    etag = str(s3_object['ETag'])[1:-1]
+    multipart = 'yes' if '-' in etag else 'no'
     td.append([Color('{autoblue}name{/autoblue}'),
                str(key.split('/')[-1])])
     td.append([Color('{autoblue}last modified (UTC){/autoblue}'),
                last_modified])
     td.append([Color('{autoblue}ETag{/autoblue}'),
-               str(s3_object['ETag'])[1:-1]])
+               etag])
     td.append([Color('{autoblue}size (bytes){/autoblue}'),
                str(s3_object['ContentLength'])])
     td.append([Color('{autoblue}content type{/autoblue}'),
                str(s3_object['ContentType'])])
+    td.append([Color('{autoblue}multipart{/autoblue}'),
+               multipart])
     td.append([Color('{autoblue}version id{/autoblue}'),
                str(s3_object['VersionId'])])
     table_title = '{0}/{1}/'.format(bucket, '/'.join(key.split('/')[:-1]))
