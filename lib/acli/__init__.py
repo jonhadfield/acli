@@ -26,6 +26,8 @@ usage: acli [--version] [--help] [--install-completion]
        acli s3 (ls | list) [<item>]
        acli s3 info <item>
        acli s3 cp <source> <dest>
+       acli es (ls | list)
+       acli es info <domain>
 
 
 options:
@@ -53,7 +55,7 @@ from __future__ import (absolute_import,
                         unicode_literals)
 from docopt import docopt
 from acli.services import (ec2, elb, account, cloudwatch, vpc,
-                           eip, asg, route53, secgroup, s3)
+                           eip, asg, route53, secgroup, s3, es)
 from acli.config import Config
 from acli.utils import install_completion
 
@@ -189,6 +191,15 @@ def s3_command(argv=None, aws_config=None):
         s3.s3_cp(aws_config, source=s3_res.get('<source>'), dest=s3_res.get('<dest>'))
 
 
+def es_command(argv=None, aws_config=None):
+    from acli.commands import es as command_es
+    es_res = docopt(command_es.__doc__, argv=argv)
+    if any((es_res.get('ls'), es_res.get('list'))):
+        es.es_list(aws_config)
+    elif es_res.get('info'):
+        es.es_info(aws_config, domain_name=es_res.get('<domain>'))
+
+
 def real_main():
     args = docopt(__doc__,
                   version='0.1.17',
@@ -219,6 +230,8 @@ def real_main():
         eip_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 's3':
         s3_command(argv=argv, aws_config=aws_config)
+    elif args['<command>'] == 'es':
+        es_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] in ['help', None] and not args['<args>']:
         print("usage: acli help <command>")
     else:

@@ -87,6 +87,17 @@ def checked_s3_client(s3_client):
         exit('Unhandled exception: {0}'.format(e))
 
 
+@contextmanager
+def checked_es_client(es_client):
+    try:
+        assert es_client.list_domain_names()
+        yield es_client
+    except NoCredentialsError:
+        exit_with_credentials_message()
+    except Exception as e:
+        exit('Unhandled exception: {0}'.format(e))
+
+
 def get_boto3_session(aws_config):
     """
     @type aws_config: Config
@@ -129,6 +140,9 @@ def get_client(client_type=None, config=None):
         elif client_type == 's3':
             with checked_s3_client(session.client('s3')) as s3_client:
                 return s3_client
+        elif client_type == 'es':
+            with checked_es_client(session.client('es')) as es_client:
+                return es_client
     except NoRegionError:
         exit('Cannot perform this task without specifying an AWS region.\n'
              'Please check your boto/aws settings or specify using \'acli --region=<region>\'.')
