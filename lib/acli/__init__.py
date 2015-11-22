@@ -54,8 +54,8 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 from docopt import docopt
-from acli.services import (ec2, elb, account, cloudwatch, vpc,
-                           eip, asg, route53, secgroup, s3, es)
+from acli.services import (ec2, elb, account, vpc, eip, asg,
+                           route53, secgroup, s3, es)
 from acli.config import Config
 from acli.utils import install_completion
 from acli.commands.ec2 import ec2_command
