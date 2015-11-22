@@ -1,1 +1,1 @@
-include LICENSE.txt README.md tests/*py
+include LICENSE.txt README.md tests/*py CHANGELOG.md
