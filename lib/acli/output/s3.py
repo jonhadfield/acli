@@ -74,7 +74,7 @@ def output_s3_info(s3_object=None, key=None, bucket=None):
     td.append([Color('{autoblue}last modified{/autoblue}'),
                str(s3_object['LastModified'])])
     td.append([Color('{autoblue}ETag{/autoblue}'),
-               str(s3_object['ETag'])])
+               str(s3_object['ETag'])[1:-1]])
     td.append([Color('{autoblue}size{/autoblue}'),
                str(s3_object['ContentLength'])])
     td.append([Color('{autoblue}content type{/autoblue}'),
