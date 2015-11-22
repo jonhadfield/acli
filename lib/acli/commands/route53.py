@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli route53 list [options]
+    acli route53 (ls | list) [options]
     acli route53 info <zone_id> [options]
 
     -o, --output=<output_type>      table, json, yaml or graph [default: table].

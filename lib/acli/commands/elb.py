@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli elb (list | info <elb_name>)
+    acli elb (ls | list)
+    acli elb info <elb_name>
 
     -h, --help
 """

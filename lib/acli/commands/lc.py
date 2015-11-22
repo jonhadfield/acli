@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli lc (list | info <lc_name>) [options]
+    acli lc (ls | list) [options]
+    acli lc info <lc_name> [options]
 
     -h, --help
 """

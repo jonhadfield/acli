@@ -5,18 +5,25 @@ usage: acli [--version] [--help] [--install-completion]
        acli [--region=<region>] [--access_key_id=<access_key_id>] [--secret_access_key=<secret_access_key>]
             <command> [<args>...]
        acli account [options]
-       acli ec2 (list | summary) [options]
+       acli ec2 (ls | list) [options]
+       acli ec2 summary [options]
        acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
-       acli lc list [options]
-       acli asg list [options]
+       acli lc (ls | list) [options]
+       acli asg (ls | list) [options]
        acli asg (info | cpu | mem | net | delete) <asg_name> [options]
-       acli ami (list | info <ami_id>)
-       acli eip (list | info <eip>)
-       acli elb (list | info <elb_name>)
-       acli route53 (list | info <zone_id>)
-       acli vpc (list | info <vpc_id>)
-       acli secgroup (list | info)
-       acli s3 list [<item>]
+       acli ami (ls | list) info <ami_id>
+       acli ami info <ami_id>
+       acli eip ([ls | list]| info <eip>)
+       acli eip (ls | list)
+       acli elb (ls | list)
+       acli elb info <elb_name>
+       acli route53 (ls | list)
+       acli route53 info <zone_id>
+       acli vpc (ls | list)
+       acli vpc info <vpc_id>
+       acli secgroup (ls | list)
+       acli secgroup info <secgroup_id>
+       acli s3 (ls | list) [<item>]
        acli s3 info <item>
        acli s3 cp <source> <dest>
 
@@ -54,7 +61,7 @@ from acli.utils import install_completion
 def ec2_command(argv=None, aws_config=None):
     from acli.commands import ec2 as command_ec2
     ec2_res = docopt(command_ec2.__doc__, argv=argv)
-    if ec2_res.get('list'):
+    if any((ec2_res.get('ls'), ec2_res.get('list'))):
         ec2.ec2_list(aws_config)
     elif ec2_res.get('info'):
         ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
@@ -89,7 +96,7 @@ def ec2_command(argv=None, aws_config=None):
 def elb_command(argv=None, aws_config=None):
     from acli.commands import elb as command_elb
     elb_res = docopt(command_elb.__doc__, argv=argv)
-    if elb_res.get('list'):
+    if any((elb_res.get('ls'), elb_res.get('list'))):
         elb.elb_list(aws_config)
     elif elb_res.get('info'):
         elb.elb_info(aws_config, elb_name=elb_res.get('<elb_name>'))
@@ -107,7 +114,7 @@ def ami_command(argv=None, aws_config=None):
 def lc_command(argv=None, aws_config=None):
     from acli.commands import lc as command_lc
     lc_res = docopt(command_lc.__doc__, argv=argv)
-    if lc_res.get('list'):
+    if any((lc_res.get('ls'), lc_res.get('list'))):
         asg.lc_list(aws_config)
     elif lc_res.get('info'):
         asg.lc_info(aws_config, lc_name=lc_res.get('<lc_name>'))
@@ -116,7 +123,7 @@ def lc_command(argv=None, aws_config=None):
 def asg_command(argv=None, aws_config=None):
     from acli.commands import asg as command_asg
     asg_res = docopt(command_asg.__doc__, argv=argv)
-    if asg_res.get('list'):
+    if any((asg_res.get('ls'), asg_res.get('list'))):
         asg.asg_list(aws_config)
     elif asg_res.get('info'):
         asg.asg_info(aws_config, asg_name=asg_res.get('<asg_name>'))
@@ -135,7 +142,7 @@ def asg_command(argv=None, aws_config=None):
 def route53_command(argv=None, aws_config=None):
     from acli.commands import route53 as command_route53
     route53_res = docopt(command_route53.__doc__, argv=argv)
-    if route53_res.get('list'):
+    if any((route53_res.get('ls'), route53_res.get('list'))):
         route53.route53_list(aws_config)
     elif route53_res.get('info'):
         route53.route53_info(aws_config, zone_id=route53_res.get('<zone_id>'))
@@ -144,7 +151,7 @@ def route53_command(argv=None, aws_config=None):
 def vpc_command(argv=None, aws_config=None):
     from acli.commands import vpc as command_vpc
     vpc_res = docopt(command_vpc.__doc__, argv=argv)
-    if vpc_res.get('list'):
+    if any((vpc_res.get('ls'), vpc_res.get('list'))):
         vpc.vpc_list(aws_config)
     elif vpc_res.get('info'):
         vpc.vpc_info(aws_config, vpc_id=vpc_res.get('<vpc_id>'))
@@ -162,7 +169,7 @@ def secgroup_command(argv=None, aws_config=None):
 def eip_command(argv=None, aws_config=None):
     from acli.commands import eip as command_eip
     eip_res = docopt(command_eip.__doc__, argv=argv)
-    if eip_res.get('list'):
+    if any((eip_res.get('ls'), eip_res.get('list'))):
         eip.eip_list(aws_config)
     elif eip_res.get('info'):
         eip.eip_info(aws_config, eip=eip_res.get('<eip>'))
@@ -171,7 +178,7 @@ def eip_command(argv=None, aws_config=None):
 def s3_command(argv=None, aws_config=None):
     from acli.commands import s3 as command_s3
     s3_res = docopt(command_s3.__doc__, argv=argv)
-    if s3_res.get('list'):
+    if any((s3_res.get('ls'), s3_res.get('list'))):
         path = s3_res.get('<item>')
         if path and not '/' == path[-1:]:
             path += '/'

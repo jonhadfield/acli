@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli ami (list | info <ami_id>)
+    acli ami (ls | list)
+    acli ami info <ami_id>
 
     -h, --help
 """

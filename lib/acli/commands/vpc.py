@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli vpc list [options]
+    acli vpc (ls | list) [options]
     acli vpc info <vpc_id> [options]
 
     -o, --output=<output_type>      table, json, yaml or graph [default: table].

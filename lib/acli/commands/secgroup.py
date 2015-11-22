@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli secgroup list [options]
+    acli secgroup (ls | list) [options]
     acli secgroup info <secgroup_id> [options]
 
     -o, --output=<output_type>      table, json, yaml or graph [default: table].
