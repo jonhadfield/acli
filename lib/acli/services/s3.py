@@ -2,6 +2,7 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output.s3 import (output_s3_list, output_s3_info)
 import botocore.exceptions
+import hashlib
 from acli.connections import get_client
 
 
@@ -13,6 +14,20 @@ def check_bucket_accessible(s3_client=None, bucket_name=None):
         exit("Unable to access bucket.")
     except Exception as unhandled:
         exit('Unhandled exception: {0}'.format(unhandled))
+
+
+def get_s3_file_md5(s3_client=None, bucket_name=None, path=None):
+    try:
+        key_detail = s3_client.head_object(Bucket=bucket_name, Key=path)
+        return key_detail.get('ETag')[1:-1]
+    except botocore.exceptions.ClientError:
+        pass
+
+
+def get_local_file_md5(path=None):
+    with open(path, "r") as local_file:
+        content = local_file.read()
+    return hashlib.md5(content).hexdigest()
 
 
 def s3_list(aws_config=None, item=None):
@@ -108,7 +123,6 @@ def s3_cp(aws_config=None, source=None, dest=None):
         if dest == '/':
             dest = '{0}{1}'.format(os.path.abspath(dest), s3_location[-1])
         elif dest == '.' or dest.endswith('/'):
-            print('first')
             dest = '{0}/{1}'.format(os.path.abspath(dest), s3_location[-1])
         elif os.path.isdir(os.path.abspath(dest)):
             dest = '{0}/{1}'.format(dest, s3_location[-1])
@@ -127,7 +141,6 @@ def s3_cp(aws_config=None, source=None, dest=None):
     elif not source.startswith(s3_prefix) and dest.startswith(s3_prefix):
         try:
             # COPYING ITEM(S) FROM LOCAL TO S3
-            print('Transferring: {0} to: {1}'.format(source, dest))
             if not os.path.isfile(source):
                 exit('File transfers only for now.')
             else:
@@ -142,6 +155,16 @@ def s3_cp(aws_config=None, source=None, dest=None):
                     file_name = source.split('/')[-1]
                     s3_dest += file_name
                 check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+                # CHECK IF FILES ARE IDENTICAL
+                s3_file_md5 = get_s3_file_md5(s3_client=s3_client,
+                                              bucket_name=bucket_name,
+                                              path=s3_dest)
+                # If it's mulipart, then don't bother checking and just transfer
+                if s3_file_md5 and '-' not in s3_file_md5:
+                    local_file_md5 = get_local_file_md5(path=source)
+                    if local_file_md5 == s3_file_md5:
+                        exit('Not transferring as identical file already exists.')
+                print('Transferring: {0} to: {1}'.format(source, dest))
                 transfer = S3Transfer(s3_client, config)
                 transfer.upload_file(source, bucket_name, s3_dest)
         except Exception as e:
