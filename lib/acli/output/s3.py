@@ -69,13 +69,14 @@ def output_s3_info(s3_object=None, key=None, bucket=None):
     @type bucket: unicode
     """
     td = list()
+    last_modified = str(s3_object['LastModified'].replace(tzinfo=None, second=0))
     td.append([Color('{autoblue}name{/autoblue}'),
                str(key.split('/')[-1])])
-    td.append([Color('{autoblue}last modified{/autoblue}'),
-               str(s3_object['LastModified'])])
+    td.append([Color('{autoblue}last modified (UTC){/autoblue}'),
+               last_modified])
     td.append([Color('{autoblue}ETag{/autoblue}'),
                str(s3_object['ETag'])[1:-1]])
-    td.append([Color('{autoblue}size{/autoblue}'),
+    td.append([Color('{autoblue}size (bytes){/autoblue}'),
                str(s3_object['ContentLength'])])
     td.append([Color('{autoblue}content type{/autoblue}'),
                str(s3_object['ContentType'])])
