@@ -58,41 +58,8 @@ from acli.services import (ec2, elb, account, cloudwatch, vpc,
                            eip, asg, route53, secgroup, s3, es)
 from acli.config import Config
 from acli.utils import install_completion
-
-
-def ec2_command(argv=None, aws_config=None):
-    from acli.commands import ec2 as command_ec2
-    ec2_res = docopt(command_ec2.__doc__, argv=argv)
-    if any((ec2_res.get('ls'), ec2_res.get('list'))):
-        ec2.ec2_list(aws_config)
-    elif ec2_res.get('info'):
-        ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
-    elif ec2_res.get('stop'):
-        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="stop")
-    elif ec2_res.get('reboot'):
-        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="reboot")
-    elif ec2_res.get('start'):
-        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="start")
-    elif ec2_res.get('terminate'):
-        ec2.ec2_manage(aws_config, instance_id=ec2_res.get('<instance_id>'), action="terminate")
-    elif ec2_res.get('cpu'):
-        cloudwatch.ec2_cpu(aws_config=aws_config, instance_id=ec2_res.get('<instance_id>'))
-    elif ec2_res.get('net'):
-        cloudwatch.ec2_net(aws_config=aws_config,
-                           instance_id=ec2_res.get('<instance_id>'),
-                           start=ec2_res.get('--start'),
-                           period=ec2_res.get('--end'),
-                           intervals=ec2_res.get('intervals')
-                           )
-    elif ec2_res.get('vols'):
-        cloudwatch.ec2_vol(aws_config=aws_config,
-                           instance_id=ec2_res.get('<instance_id>'),
-                           start=ec2_res.get('--start'),
-                           period=ec2_res.get('--end'),
-                           intervals=ec2_res.get('intervals')
-                           )
-    elif ec2_res.get('summary'):
-        ec2.ec2_summary(aws_config=aws_config)
+from acli.commands.ec2 import ec2_command
+from acli.commands.asg import asg_command
 
 
 def elb_command(argv=None, aws_config=None):
@@ -120,25 +87,6 @@ def lc_command(argv=None, aws_config=None):
         asg.lc_list(aws_config)
     elif lc_res.get('info'):
         asg.lc_info(aws_config, lc_name=lc_res.get('<lc_name>'))
-
-
-def asg_command(argv=None, aws_config=None):
-    from acli.commands import asg as command_asg
-    asg_res = docopt(command_asg.__doc__, argv=argv)
-    if any((asg_res.get('ls'), asg_res.get('list'))):
-        asg.asg_list(aws_config)
-    elif asg_res.get('info'):
-        asg.asg_info(aws_config, asg_name=asg_res.get('<asg_name>'))
-    elif asg_res.get('cpu'):
-        cloudwatch.asg_cpu(aws_config=aws_config,
-                           asg_name=asg_res.get('<asg_name>'),
-                           output_type=asg_res.get('--output'),
-                           start=asg_res.get('--start'),
-                           period=asg_res.get('--end'),
-                           intervals=asg_res.get('intervals')
-                           )
-    elif asg_res.get('delete'):
-        asg.asg_delete(aws_config, asg_name=asg_res.get('<asg_name>'))
 
 
 def route53_command(argv=None, aws_config=None):
