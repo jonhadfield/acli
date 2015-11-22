@@ -5,8 +5,7 @@ acli
 
 acli is a simple CLI for querying and managing AWS services, written in Python using the [boto3](http://aws.amazon.com/sdk-for-python/ "boto3") SDK and [terminaltables](https://github.com/Robpol86/terminaltables "terminal tables") library.
 
-Whilst early in development, I'm focussing on reporting on the most common AWS services and then the most requested services.
-Any and all feedback appreciated.
+[Latest updates](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog")
 
 Installation
 ------------
