@@ -191,7 +191,7 @@ def s3_command(argv=None, aws_config=None):
 
 def real_main():
     args = docopt(__doc__,
-                  version='0.1.16',
+                  version='0.1.17',
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
