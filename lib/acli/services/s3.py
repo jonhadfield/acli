@@ -25,9 +25,12 @@ def get_s3_file_md5(s3_client=None, bucket_name=None, path=None):
 
 
 def get_local_file_md5(path=None):
-    with open(path, "r") as local_file:
-        content = local_file.read()
-    return hashlib.md5(content).hexdigest()
+    try:
+        with open(path, "r") as local_file:
+            content = local_file.read()
+        return hashlib.md5(content).hexdigest()
+    except IOError:
+        pass
 
 
 def s3_list(aws_config=None, item=None):
@@ -101,8 +104,7 @@ def s3_cp(aws_config=None, source=None, dest=None):
     @type source: unicode
     @type dest: unicode
     """
-    from acli.utils import (is_readable,
-                            is_writeable)
+    from acli.utils import (is_readable)
     from boto3.s3.transfer import S3Transfer, TransferConfig
     import os
     config = TransferConfig(
@@ -110,12 +112,10 @@ def s3_cp(aws_config=None, source=None, dest=None):
                             max_concurrency=10,
                             num_download_attempts=10,
                             )
-
     s3_prefix = 's3://'
     s3_client = get_client(client_type='s3', config=aws_config)
     if source.startswith(s3_prefix) and not dest.startswith(s3_prefix):
         # COPYING FROM S3 TO LOCAL
-        print('Transferring: {0} to: {1}'.format(source, dest))
         s3_location = source[5:].split('/')
         bucket_name = s3_location[0]
         s3_source = '/'.join(s3_location[1:])
@@ -126,11 +126,20 @@ def s3_cp(aws_config=None, source=None, dest=None):
             dest = '{0}/{1}'.format(os.path.abspath(dest), s3_location[-1])
         elif os.path.isdir(os.path.abspath(dest)):
             dest = '{0}/{1}'.format(dest, s3_location[-1])
+        s3_file_md5 = get_s3_file_md5(s3_client=s3_client,
+                                      bucket_name=bucket_name,
+                                      path=s3_source)
+        if s3_file_md5:
+            if s3_file_md5 == get_local_file_md5(dest):
+                exit('Not transferring as identical file already exists.')
+        else:
+            exit('Cannot find: {0}/{1}'.format(bucket_name, s3_source))
         transfer = S3Transfer(s3_client, config)
         try:
+            print('Transferring: {0} to: {1}'.format(source, dest))
             transfer.download_file(bucket_name, s3_source, dest)
         except BaseException as e:
-            if e.strerror == 'Permission denied':
+            if hasattr(e, 'strerror') and e.strerror == 'Permission denied':
                 exit('Permission denied.')
             else:
                 print('Unhandled exception: {0}'.format(e))
