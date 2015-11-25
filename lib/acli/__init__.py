@@ -150,7 +150,7 @@ def es_command(argv=None, aws_config=None):
 
 def real_main():
     args = docopt(__doc__,
-                  version='0.1.17',
+                  version='0.1.18',
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
