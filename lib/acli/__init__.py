@@ -26,6 +26,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli s3 (ls | list) [<item>]
        acli s3 info <item>
        acli s3 cp <source> <dest>
+       acli s3 (del | rm) <item>
        acli es (ls | list)
        acli es info <domain>
 
@@ -137,6 +138,8 @@ def s3_command(argv=None, aws_config=None):
         s3.s3_info(aws_config, item=s3_res.get('<item>'))
     elif s3_res.get('cp'):
         s3.s3_cp(aws_config, source=s3_res.get('<source>'), dest=s3_res.get('<dest>'))
+    elif any((s3_res.get('rm'), s3_res.get('del'))):
+        s3.s3_rm(aws_config, item=s3_res.get('<item>'))
 
 
 def es_command(argv=None, aws_config=None):

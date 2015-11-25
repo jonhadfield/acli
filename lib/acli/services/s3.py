@@ -181,3 +181,35 @@ def s3_cp(aws_config=None, source=None, dest=None):
     else:
         exit('Source or dest must be an S3 location defined with s3://.')
     exit()
+
+
+def s3_rm(aws_config=None, item=None):
+    """
+    @type aws_config: Config
+    @type item: unicode
+    """
+    s3_client = get_client(client_type='s3', config=aws_config)
+    prefix = ''
+    if item and '/' in item:
+        path_elements = item.split('/')
+        bucket_name = path_elements[0]
+        prefix = "/".join(path_elements[1:])
+        if prefix.endswith('/'):
+            exit('Only keys can currently be removed.')
+        check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+    else:
+        exit('Invalid key.')
+    try:
+        s3_client.head_object(Bucket=bucket_name, Key=prefix)
+    except botocore.exceptions.ClientError:
+        exit('Cannot access \'{0}\'.'.format(item))
+    try:
+        s3_client.delete_objects(Bucket=bucket_name, Delete={'Objects': [{'Key': prefix}, ]})
+        exit('\'{0}\' deleted.'.format(item))
+    except botocore.exceptions.ClientError as error:
+        if 'NoSuchBucket' in error.response['Error']['Code']:
+            exit('Bucket not found.')
+        elif 'NoSuchKey' in error.response['Error']['Code']:
+            exit('Key not found.')
+        else:
+            exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
