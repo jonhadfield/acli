@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli ec2 (ls | list) [options] [--region=<region>]
-    acli ec2 summary [options] [--region=<region>]
+    acli ec2 (ls | list | summary) [options] [--region=<region>]
     acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
 
     -f, --filter=<term>             filter results by term
