@@ -78,7 +78,7 @@ def ami_command(argv=None, aws_config=None):
     from acli.commands import ami as command_ami
     ami_res = docopt(command_ami.__doc__, argv=argv)
     if ami_res.get('list'):
-        ec2.ami_list(aws_config)
+        ec2.ami_list(aws_config, filter_term=ami_res.get('--filter'))
     elif ami_res.get('info'):
         ec2.ami_info(aws_config, ami_id=ami_res.get('<ami_id>'))
 

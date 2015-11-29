@@ -158,12 +158,18 @@ def ami_info(aws_config=None, ami_id=None):
         exit('Unable to find ami: {0}'.format(ami_id))
 
 
-def ami_list(aws_config):
+def ami_list(aws_config=None, filter_term=None):
     """
     @type aws_config: Config
+    @type filter_term: unicode
     """
+    all_images = list()
     ec2_client = get_client(client_type='ec2', config=aws_config)
-    output_ami_list(amis=ec2_client.describe_images(Owners=['self']).get('Images'))
+    for image in ec2_client.describe_images(Owners=['self']).get('Images'):
+        if filter_term and filter_term not in image.get('Name'):
+            continue
+        all_images.append(image)
+    output_ami_list(amis=all_images)
 
 
 def ec2_get_instance_vols(aws_config=None, instance_id=None):
