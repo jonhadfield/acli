@@ -29,6 +29,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli s3 (del | rm) <item>
        acli es (ls | list)
        acli es info <domain>
+       acli clean (delete_orphaned_snapshots | terminate_unnamed_instances)
 
 
 options:
@@ -56,7 +57,7 @@ from __future__ import (absolute_import,
                         unicode_literals)
 from docopt import docopt
 from acli.services import (ec2, elb, account, vpc, eip, asg,
-                           route53, secgroup, s3, es)
+                           route53, secgroup, s3, es, clean)
 from acli.config import Config
 from acli.utils import install_completion
 from acli.commands.ec2 import ec2_command
@@ -151,6 +152,15 @@ def es_command(argv=None, aws_config=None):
         es.es_info(aws_config, domain_name=es_res.get('<domain>'))
 
 
+def clean_command(argv=None, aws_config=None):
+    from acli.commands import clean as command_clean
+    clean_res = docopt(command_clean.__doc__, argv=argv)
+    if clean_res.get('delete_orphaned_snapshots'):
+        clean.delete_orphaned_snapshots(aws_config=aws_config, noop=clean_res.get('--noop'))
+    # elif clean_res.get('terminate_unnamed_instances'):
+    #    clean.terminate_unnamed_instances(aws_config=aws_config, noop=clean_res.get('--noop'))
+
+
 def real_main():
     args = docopt(__doc__,
                   version='0.1.18',
@@ -183,6 +193,8 @@ def real_main():
         s3_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 'es':
         es_command(argv=argv, aws_config=aws_config)
+    elif args['<command>'] == 'clean':
+        clean_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] in ['help', None] and not args['<args>']:
         print("usage: acli help <command>")
     else:
