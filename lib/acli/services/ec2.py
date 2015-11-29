@@ -15,7 +15,11 @@ def ec2_summary(aws_config=None):
     elb_client = get_client(client_type='elb', config=aws_config)
     ec2_client = get_client(client_type='ec2', config=aws_config)
     elbs = len(elb_client.describe_load_balancers().get('LoadBalancerDescriptions'))
-    instances = len(list(ec2_client.describe_instances().get('Reservations', [])))
+    instances = list()
+    for reservation in ec2_client.describe_instances().get('Reservations', []):
+        for instance in reservation.get('Instances'):
+            instances.append(instance)
+
     amis = len(list(ec2_client.describe_images(Owners=['self']).get('Images')))
     secgroups = len(ec2_client.describe_security_groups().get('SecurityGroups', 0))
     addresses = ec2_client.describe_addresses()['Addresses']

@@ -8,6 +8,7 @@ from acli.output import (output_ascii_table,
 import six
 from colorclass import (Color,
                         Windows)
+from collections import Counter
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
@@ -367,12 +368,25 @@ def output_ec2_summary(output_media='console', summary=None):
     """
     if output_media == 'console':
         td = list()
-        td.append([Color('{autoblue}running instances{/autoblue}'), str(summary.get('instances', '0')),
-                   Color('{autoblue}load balancers{/autoblue}'), str(summary.get('elbs', '0'))])
-        td.append([Color('{autoblue}elastic IPs{/autoblue}'), str(summary.get('eips', '0')),
-                   Color('{autoblue}AMIs{/autoblue}'), str(summary.get('amis', '0'))])
-        td.append([Color('{autoblue}security groups{/autoblue}'), str(summary.get('secgroups', '0')),
-                   '', ''])
+        instances = summary.get('instances')
+        no_instances = len(instances) if instances else 0
+        type_counts = dict()
+        type_list = (instance.get('InstanceType') for instance in summary.get('instances'))
+        for instance_type in type_list:
+            if instance_type in type_counts:
+                type_counts[instance_type] += 1
+            else:
+                type_counts[instance_type] = 1
+        import operator
+        sorted_type_counts = sorted(type_counts.items(), key=operator.itemgetter(1), reverse=True)
+        td.append([Color('{autoblue}running instances{/autoblue}'), str(no_instances)])
+        td.append([Color('{autoblue}load balancers{/autoblue}'), str(summary.get('elbs', '0'))])
+        td.append([Color('{autoblue}elastic IPs{/autoblue}'), str(summary.get('eips', '0'))])
+        td.append([Color('{autoblue}AMIs{/autoblue}'), str(summary.get('amis', '0'))])
+        td.append([Color('{autoblue}security groups{/autoblue}'), str(summary.get('secgroups', '0'))])
+        td.append([Color('{autoblue}types{/autoblue}'), '-'*20])
+        for instance_type_count in sorted_type_counts:
+            td.append([Color('{autoblue} '+instance_type_count[0]+'{/autoblue}'), str(instance_type_count[1])])
         output_ascii_table(table_title=Color('{autowhite}ec2 summary{/autowhite}'),
                            table_data=td)
     exit(0)
