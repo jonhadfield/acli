@@ -49,7 +49,9 @@ The most common commands are:
    vpc          Manage VPCs
    secgroup     Manage Security Groups
    s3           Manage S3 storage
-See 'acli help <command>'
+   es           Manage Elasticsearch
+   clean        Tools for reporting on and removing unused service items
+See 'acli <command> -h'
 """
 
 from __future__ import (absolute_import,
@@ -195,7 +197,9 @@ def real_main():
         es_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 'clean':
         clean_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] in ['help', None] and not args['<args>']:
-        print("usage: acli help <command>")
+    elif args['<command>'] in ['help'] and not args['<args>']:
+        print("usage: acli <command> -h")
+    elif args['<command>']:
+        exit("{0} is not an acli command. See 'acli -h'.".format(args['<command>']))
     else:
-        exit("{0} is not an acli command. See 'acli --help'.".format(args['<command>']))
+        print(__doc__)
