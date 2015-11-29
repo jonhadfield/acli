@@ -29,7 +29,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli s3 (del | rm) <item>
        acli es (ls | list)
        acli es info <domain>
-       acli clean (delete_orphaned_snapshots | terminate_unnamed_instances)
+       acli clean (delete_orphaned_snapshots | delete_unnammed_volumes)
 
 
 options:
@@ -157,8 +157,8 @@ def clean_command(argv=None, aws_config=None):
     clean_res = docopt(command_clean.__doc__, argv=argv)
     if clean_res.get('delete_orphaned_snapshots'):
         clean.delete_orphaned_snapshots(aws_config=aws_config, noop=clean_res.get('--noop'))
-    # elif clean_res.get('terminate_unnamed_instances'):
-    #    clean.terminate_unnamed_instances(aws_config=aws_config, noop=clean_res.get('--noop'))
+    elif clean_res.get('delete_unnamed_volumes'):
+       clean.delete_unnamed_volumes(aws_config=aws_config, noop=clean_res.get('--noop'))
 
 
 def real_main():

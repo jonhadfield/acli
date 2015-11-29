@@ -55,8 +55,44 @@ def delete_orphaned_snapshots(aws_config=None, noop=False):
             print('No orphaned snapshots were found.')
 
 
-# def terminate_unnamed_instances(aws_config=None, noop=False):
-#    """
-#    @type aws_config: Config
-#    @type noop: bool
-#    """
+def delete_unnamed_volumes(aws_config=None, noop=False):
+    """
+    @type aws_config: Config
+    @type noop: bool
+    """
+    ec2_client = get_client(client_type='ec2', config=aws_config)
+    desc_volumes_result = ec2_client.describe_volumes()
+    volumes = desc_volumes_result.get('Volumes')
+    total_volumes = len(volumes)
+    volumes_to_delete = list()
+    for volume in volumes:
+        volume_has_name = False
+        volume_tags = volume.get('Tags')
+        if volume_tags:
+            for volume_tag in volume_tags:
+                if volume_tag.get('Key') and volume_tag.get('Key') == 'Name':
+                    volume_has_name = True
+                    break
+        if not volume_has_name and not volume.get('Attachments'):
+            volumes_to_delete.append(volume)
+    total_volumes_to_delete = len(volumes_to_delete)
+    total_volumes_deleted = 0
+    if not noop:
+        try:
+            for index, volume_to_delete in enumerate(volumes_to_delete, start=1):
+                ec2_client.delete_volume(VolumeId=volume_to_delete.get('VolumeId'))
+                total_volumes_deleted = index
+        except:
+            print('An error occurred whislt deleting volumes.')
+        if total_volumes_to_delete:
+            exit('Deleted {0} volumes out of a total of {1} volumes '
+                 'that are unnamed and unattached.'.format(total_volumes_deleted,
+                                                       total_volumes_to_delete))
+        else:
+            exit('No unnamed and unattached volumes were found.')
+    elif total_volumes_to_delete:
+        exit('There are {0} volumes out of a total of {1} volumes '
+             'that are unnamed and unattached.'.format(total_volumes_to_delete,
+                                                       total_volumes))
+    else:
+        exit('No unnamed and unattached volumes were found.')

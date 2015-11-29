@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Usage:
-    acli clean (delete_orphaned_snapshots | terminate_unnamed_instances) [options]
+    acli clean (delete_orphaned_snapshots | delete_unnamed_volumes) [options]
 
     -n, --noop      Don't run but show what would be changed.
     -h, --help
