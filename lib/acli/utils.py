@@ -60,3 +60,10 @@ def is_writeable(path=None):
     """
     if os.path.isfile(path) and os.access(path, os.W_OK):
         return True
+
+
+def get_tag_value(name=None, tags=None):
+    if tags:
+        for tag in tags:
+            if tag.get('Key') == name:
+                return tag.get('Value')

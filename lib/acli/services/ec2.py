@@ -3,6 +3,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info,
                              output_ec2_summary)
+from acli.utils import get_tag_value
 from acli.connections import get_client
 from botocore.exceptions import ClientError
 
@@ -25,9 +26,10 @@ def ec2_summary(aws_config=None):
     exit(0)
 
 
-def ec2_list(aws_config=None):
+def ec2_list(aws_config=None, filter_term=None):
     """
     @type aws_config: Config
+    @type filter_term: unicode
     """
     ec2_client = get_client(client_type='ec2', config=aws_config)
     instances_req = ec2_client.describe_instances()
@@ -35,6 +37,9 @@ def ec2_list(aws_config=None):
     all_instances = list()
     for reservation in reservations:
         for instance in reservation.get('Instances'):
+            if filter_term and filter_term not in get_tag_value(name='Name',
+                                                                tags=instance.get('Tags')):
+                continue
             all_instances.append(instance)
     if all_instances:
         output_ec2_list(instances=all_instances)

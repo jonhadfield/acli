@@ -4,6 +4,7 @@
     acli ec2 summary [options] [--region=<region>]
     acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
 
+    -f, --filter=<term>             filter results by term
     -s, --start=<start_date>        metrics start-date
     -e, --end=<end_date>            metrics end-date
     -p, --period=<period>           metrics period
@@ -18,7 +19,7 @@ from acli.services import (ec2, cloudwatch)
 def ec2_command(argv=None, aws_config=None):
     ec2_res = docopt(__doc__, argv=argv)
     if any((ec2_res.get('ls'), ec2_res.get('list'))):
-        ec2.ec2_list(aws_config)
+        ec2.ec2_list(aws_config, filter_term=ec2_res.get('--filter'))
     elif ec2_res.get('info'):
         ec2.ec2_info(aws_config, instance_id=ec2_res.get('<instance_id>'))
     elif ec2_res.get('stop'):
