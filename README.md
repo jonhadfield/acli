@@ -9,7 +9,7 @@ Please submit any issues encountered.
 
 Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog"))
 ------------
-0.1.19 (29th November 2015)
+0.1.20 (29th November 2015)
 
 - Added ability to delete keys from S3
 
