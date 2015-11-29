@@ -6,7 +6,7 @@
 
     -s, --start=<start_date>        metrics start-date
     -e, --end=<end_date>            metrics end-date
-    -p, --period=<period>            metrics period
+    -p, --period=<period>           metrics period
     -i, --intervals=<intervals>     metrics intervals
     -h, --help
 """
