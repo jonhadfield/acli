@@ -370,6 +370,24 @@ def output_ec2_summary(output_media='console', summary=None):
         td = list()
         instances = summary.get('instances')
         no_instances = len(instances) if instances else 0
+        volume_details = dict()
+        gp2_no = 0
+        io1_no = 0
+        standard_no = 0
+        gp2_space_sum = 0
+        io1_space_sum = 0
+        standard_space_sum = 0
+        for volume in summary.get('volumes'):
+            if volume.get('VolumeType') == 'gp2':
+                gp2_no += 1
+                gp2_space_sum += volume.get('Size')
+            if volume.get('VolumeType') == 'io1':
+                io1_no += 1
+                io1_space_sum += volume.get('Size')
+            if volume.get('VolumeType') == 'standard':
+                standard_no += 1
+                standard_space_sum += volume.get('Size')
+
         type_counts = dict()
         type_list = (instance.get('InstanceType') for instance in summary.get('instances'))
         for instance_type in type_list:
@@ -387,6 +405,11 @@ def output_ec2_summary(output_media='console', summary=None):
         td.append([Color('{autoblue}types{/autoblue}'), '-'*20])
         for instance_type_count in sorted_type_counts:
             td.append([Color('{autoblue} '+instance_type_count[0]+'{/autoblue}'), str(instance_type_count[1])])
+        td.append([Color('{autoblue}volumes{/autoblue}'), '-'*20])
+        td.append([Color('{autoblue} standard{/autoblue}'), '{0} -Total space: {1} GiB'.format(standard_no, standard_space_sum)])
+        td.append([Color('{autoblue} gp2{/autoblue}'), '{0} - Total space: {1} GiB'.format(gp2_no, gp2_space_sum)])
+        td.append([Color('{autoblue} io1{/autoblue}'), '{0} - Total space: {1} GiB'.format(io1_no, io1_space_sum)])
+
         output_ascii_table(table_title=Color('{autowhite}ec2 summary{/autowhite}'),
                            table_data=td)
     exit(0)
