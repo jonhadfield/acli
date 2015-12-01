@@ -1,5 +1,12 @@
 CHANGELOG
 ---------
+0.1.21 (1st December 2015)
+
+- Show instance counts in output for 'acli ec2 summary'
+
+- Add filtering/searching on AMI lists
+
+    `example: acli ami ls --filter=webserver`
 
 0.1.20 (29th November 2015)
 
