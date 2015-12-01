@@ -42,8 +42,8 @@ def ec2_list(aws_config=None, filter_term=None):
     all_instances = list()
     for reservation in reservations:
         for instance in reservation.get('Instances'):
-            if filter_term and filter_term not in get_tag_value(name='Name',
-                                                                tags=instance.get('Tags')):
+            if instance.get('Tags') and filter_term and filter_term not in get_tag_value(name='Name',
+                                                                                         tags=instance.get('Tags')):
                 continue
             all_instances.append(instance)
     if all_instances:
