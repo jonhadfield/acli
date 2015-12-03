@@ -150,7 +150,7 @@ def s3_cp(aws_config=None, source=None, dest=None):
     elif not source.startswith(s3_prefix) and dest.startswith(s3_prefix):
         try:
             # COPYING ITEM(S) FROM LOCAL TO S3
-            if not os.path.isfile(source):
+            if os.path.isdir(source):
                 exit('File transfers only for now.')
             else:
                 # COPY LOCAL FILE TO S3
