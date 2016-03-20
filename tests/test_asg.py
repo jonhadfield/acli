@@ -58,9 +58,9 @@ def fake_asg():
         AvailabilityZones=[
             'string',
         ],
-        LoadBalancerNames=[
-            'string',
-        ],
+        # LoadBalancerNames=[
+        #    'string',
+        # ],
         HealthCheckType='string',
         HealthCheckGracePeriod=123,
         PlacementGroup='string',
