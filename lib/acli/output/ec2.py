@@ -8,7 +8,6 @@ from acli.output import (output_ascii_table,
 import six
 from colorclass import (Color,
                         Windows)
-from collections import Counter
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
