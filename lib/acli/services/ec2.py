@@ -174,7 +174,12 @@ def ami_list(aws_config=None, filter_term=None):
         if filter_term and filter_term not in image.get('Name'):
             continue
         all_images.append(image)
-    output_ami_list(amis=all_images)
+    if all_images:
+        output_ami_list(amis=all_images)
+    elif filter_term:
+        exit('No mathching amis found.')
+    else:
+        exit('No amis found.')
 
 
 def ec2_get_instance_vols(aws_config=None, instance_id=None):
