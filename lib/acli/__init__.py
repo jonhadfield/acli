@@ -56,13 +56,16 @@ See 'acli <command> -h'
 from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
+
 from docopt import docopt
+
+from acli.commands.asg import asg_command
+from acli.commands.ec2 import ec2_command
+from acli.config import Config
+from acli.errors import handle_boto_errors
 from acli.services import (ec2, elb, account, vpc, eip, asg,
                            route53, secgroup, s3, es, clean)
-from acli.config import Config
 from acli.utils import install_completion
-from acli.commands.ec2 import ec2_command
-from acli.commands.asg import asg_command
 
 
 def elb_command(argv=None, aws_config=None):
@@ -159,9 +162,10 @@ def clean_command(argv=None, aws_config=None):
     if clean_res.get('delete_orphaned_snapshots'):
         clean.delete_orphaned_snapshots(aws_config=aws_config, noop=clean_res.get('--noop'))
     elif clean_res.get('delete_unnamed_volumes'):
-       clean.delete_unnamed_volumes(aws_config=aws_config, noop=clean_res.get('--noop'))
+        clean.delete_unnamed_volumes(aws_config=aws_config, noop=clean_res.get('--noop'))
 
 
+@handle_boto_errors
 def real_main():
     args = docopt(__doc__,
                   version='0.1.23',
