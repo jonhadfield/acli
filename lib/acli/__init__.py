@@ -62,7 +62,6 @@ from docopt import docopt
 from acli.commands.asg import asg_command
 from acli.commands.ec2 import ec2_command
 from acli.config import Config
-from acli.errors import handle_boto_errors
 from acli.services import (ec2, elb, account, vpc, eip, asg,
                            route53, secgroup, s3, es, clean)
 from acli.utils import install_completion
