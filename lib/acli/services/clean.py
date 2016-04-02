@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.snapshots import (output_snapshot_list)
+
 from acli.connections import get_client
+from acli.output.snapshots import (output_snapshot_list)
+from acli.errors import handle_boto_errors
 
 
+@handle_boto_errors
 def delete_orphaned_snapshots(aws_config=None, noop=False):
     """
     @type aws_config: Config
@@ -87,7 +90,7 @@ def delete_unnamed_volumes(aws_config=None, noop=False):
         if total_volumes_to_delete:
             exit('Deleted {0} volumes out of a total of {1} volumes '
                  'that are unnamed and unattached.'.format(total_volumes_deleted,
-                                                       total_volumes_to_delete))
+                                                           total_volumes_to_delete))
         else:
             exit('No unnamed and unattached volumes were found.')
     elif total_volumes_to_delete:

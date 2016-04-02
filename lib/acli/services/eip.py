@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.eip import (output_eip_list, output_eip_info)
-from acli.connections import get_client
+
 from botocore.exceptions import ClientError
 
+from acli.connections import get_client
+from acli.errors import handle_boto_errors
+from acli.output.eip import (output_eip_list, output_eip_info)
 
+
+@handle_boto_errors
 def eip_list(aws_config=None):
     """
     @type aws_config: Config
@@ -17,6 +21,7 @@ def eip_list(aws_config=None):
     exit('No elastic IPs found.')
 
 
+@handle_boto_errors
 def eip_info(aws_config=None, eip=None):
     """
     @type aws_config: Config

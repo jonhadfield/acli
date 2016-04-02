@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.route53 import (output_route53_list, output_route53_info)
+
 import botocore.exceptions
+
 from acli.connections import get_client
+from acli.errors import handle_boto_errors
+from acli.output.route53 import (output_route53_list, output_route53_info)
 
 
+@handle_boto_errors
 def route53_list(aws_config=None):
     """
     @type aws_config: Config
@@ -17,6 +21,7 @@ def route53_list(aws_config=None):
         exit("No hosted zones found.")
 
 
+@handle_boto_errors
 def route53_info(aws_config=None, zone_id=None):
     """
     @type aws_config: Config

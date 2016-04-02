@@ -165,7 +165,6 @@ def clean_command(argv=None, aws_config=None):
         clean.delete_unnamed_volumes(aws_config=aws_config, noop=clean_res.get('--noop'))
 
 
-@handle_boto_errors
 def real_main():
     args = docopt(__doc__,
                   version='0.1.23',

@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.account import output_account_info
+
 from acli.connections import get_client
+from acli.errors import handle_boto_errors
+from acli.output.account import output_account_info
 
 
+@handle_boto_errors
 def account_info(aws_config):
     """
     @type aws_config: Config

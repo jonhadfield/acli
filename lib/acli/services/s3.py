@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.s3 import (output_s3_list, output_s3_info)
-import botocore.exceptions
+
 import hashlib
+
+import botocore.exceptions
+
 from acli.connections import get_client
+from acli.errors import handle_boto_errors
+from acli.output.s3 import (output_s3_list, output_s3_info)
 
 
+@handle_boto_errors
 def check_bucket_accessible(s3_client=None, bucket_name=None):
     try:
         s3_client.head_bucket(Bucket=bucket_name)
@@ -16,6 +21,7 @@ def check_bucket_accessible(s3_client=None, bucket_name=None):
         exit('Unhandled exception: {0}'.format(unhandled))
 
 
+@handle_boto_errors
 def get_s3_file_md5(s3_client=None, bucket_name=None, path=None):
     try:
         key_detail = s3_client.head_object(Bucket=bucket_name, Key=path)
@@ -33,6 +39,7 @@ def get_local_file_md5(path=None):
         pass
 
 
+@handle_boto_errors
 def s3_list(aws_config=None, item=None):
     """
     @type aws_config: Config
@@ -70,6 +77,7 @@ def s3_list(aws_config=None, item=None):
                 exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
 
 
+@handle_boto_errors
 def s3_info(aws_config=None, item=None):
     """
     @type aws_config: Config
@@ -98,6 +106,7 @@ def s3_info(aws_config=None, item=None):
             exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
 
 
+@handle_boto_errors
 def s3_cp(aws_config=None, source=None, dest=None):
     """
     @type aws_config: Config
@@ -108,10 +117,10 @@ def s3_cp(aws_config=None, source=None, dest=None):
     from boto3.s3.transfer import S3Transfer, TransferConfig
     import os
     config = TransferConfig(
-                            multipart_threshold=200 * 1024 * 1024,
-                            max_concurrency=10,
-                            num_download_attempts=10,
-                            )
+        multipart_threshold=200 * 1024 * 1024,
+        max_concurrency=10,
+        num_download_attempts=10,
+    )
     s3_prefix = 's3://'
     s3_client = get_client(client_type='s3', config=aws_config)
     if source.startswith(s3_prefix) and not dest.startswith(s3_prefix):
@@ -183,6 +192,7 @@ def s3_cp(aws_config=None, source=None, dest=None):
     exit()
 
 
+@handle_boto_errors
 def s3_rm(aws_config=None, item=None):
     """
     @type aws_config: Config
