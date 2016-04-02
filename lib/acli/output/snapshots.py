@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
+
 from colorclass import Color, Windows
+
+from acli.output import (output_ascii_table_list, dash_if_none)
+
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
@@ -9,11 +12,11 @@ def colour_state(state=None):
     if not state:
         return Color('{autoblack}-{/autoblack}')
     elif state == 'running':
-        return Color('{autogreen}'+state+'{/autogreen}')
+        return Color('{autogreen}' + state + '{/autogreen}')
     elif state in ('stopped', 'stopping', 'shutting-down', 'terminated'):
-        return Color('{autored}'+state+'{/autored}')
+        return Color('{autored}' + state + '{/autored}')
     elif state in ('rebooting', 'pending'):
-        return Color('{autoyellow}'+state+'{/autoyellow}')
+        return Color('{autoyellow}' + state + '{/autoyellow}')
 
 
 def output_snapshot_list(snapshots=None):
