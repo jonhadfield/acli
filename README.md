@@ -10,6 +10,11 @@ Please submit any issues encountered.
 Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog"))
 ------------
 
+0.1.24 (5th April 2016)
+
+- Improve permission checks to prevent false negatives
+- Minor fixes
+
 0.1.23 (30th March 2016)
 
 - Make it work with Python 2.6
