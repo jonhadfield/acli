@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.vpc import (output_vpc_list, output_vpc_info)
-from acli.connections import get_client
+
 from botocore.exceptions import ClientError
 
+from acli.connections import get_client
+from acli.errors import handle_boto_errors
+from acli.output.vpc import (output_vpc_list, output_vpc_info)
 
+
+@handle_boto_errors
 def vpc_list(aws_config=None):
     """
     @type aws_config: Config
@@ -17,6 +21,7 @@ def vpc_list(aws_config=None):
         exit("No VPCs found.")
 
 
+@handle_boto_errors
 def vpc_info(aws_config=None, vpc_id=None):
     """
     @type aws_config: Config

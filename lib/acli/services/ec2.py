@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
+
+from botocore.exceptions import ClientError
+
+from acli.connections import get_client
+from acli.errors import handle_boto_errors
 from acli.output.ec2 import (output_ec2_list, output_ec2_info,
                              output_ami_list, output_ami_info,
                              output_ec2_summary)
 from acli.utils import get_tag_value
-from acli.connections import get_client
-from botocore.exceptions import ClientError
 
 
+@handle_boto_errors
 def ec2_summary(aws_config=None):
     """
     @type aws_config: Config
@@ -31,6 +35,7 @@ def ec2_summary(aws_config=None):
     exit(0)
 
 
+@handle_boto_errors
 def ec2_list(aws_config=None, filter_term=None):
     """
     @type aws_config: Config
@@ -51,6 +56,7 @@ def ec2_list(aws_config=None, filter_term=None):
     exit('No ec2 instances found.')
 
 
+@handle_boto_errors
 def ec2_info(aws_config=None, instance_id=None):
     """
     @type aws_config: Config
@@ -67,6 +73,7 @@ def ec2_info(aws_config=None, instance_id=None):
         raise SystemExit("Cannot find instance: {0}".format(instance_id))
 
 
+@handle_boto_errors
 def ec2_instance_stop(instance_id=None, instance_state=None, ec2_client=None):
     if instance_state in ('pending', 'rebooting', 'stopping', 'terminated', 'shutting-down'):
         exit("Cannot stop instance as state is {0}.".format(instance_state))
@@ -77,6 +84,7 @@ def ec2_instance_stop(instance_id=None, instance_state=None, ec2_client=None):
         exit("Instance {0} stopping.".format(instance_id))
 
 
+@handle_boto_errors
 def ec2_instance_start(instance_id=None, instance_state=None, ec2_client=None):
     if instance_state in ('rebooting', 'stopping',
                           'terminated', 'shutting-down'):
@@ -91,6 +99,7 @@ def ec2_instance_start(instance_id=None, instance_state=None, ec2_client=None):
         exit("Instance {0} starting.".format(instance_id))
 
 
+@handle_boto_errors
 def ec2_instance_reboot(instance_id=None, instance_state=None, ec2_client=None):
     if instance_state in ('pending', 'stopping', 'terminated', 'shutting-down'):
         exit("Cannot reboot instance {0} as state is {1}.".format(instance_id,
@@ -102,6 +111,7 @@ def ec2_instance_reboot(instance_id=None, instance_state=None, ec2_client=None):
         exit("Instance {0} rebooting.".format(instance_id))
 
 
+@handle_boto_errors
 def ec2_instance_terminate(instance_id=None, instance_state=None, ec2_client=None):
     if instance_state in ('rebooting', 'stopping',
                           'terminated', 'shutting-down'):
@@ -116,6 +126,7 @@ def ec2_instance_terminate(instance_id=None, instance_state=None, ec2_client=Non
         exit("Instance {0} terminating.".format(instance_id))
 
 
+@handle_boto_errors
 def ec2_manage(aws_config=None, instance_id=None, action=None):
     """
     @type aws_config: Config
@@ -149,6 +160,7 @@ def ec2_manage(aws_config=None, instance_id=None, action=None):
         exit("Cannot find instance: {0}".format(instance_id))
 
 
+@handle_boto_errors
 def ami_info(aws_config=None, ami_id=None):
     """
     @type aws_config: Config
@@ -163,6 +175,7 @@ def ami_info(aws_config=None, ami_id=None):
         exit('Unable to find ami: {0}'.format(ami_id))
 
 
+@handle_boto_errors
 def ami_list(aws_config=None, filter_term=None):
     """
     @type aws_config: Config
@@ -182,6 +195,7 @@ def ami_list(aws_config=None, filter_term=None):
         exit('No amis found.')
 
 
+@handle_boto_errors
 def ec2_get_instance_vols(aws_config=None, instance_id=None):
     """
     @type aws_config: Config

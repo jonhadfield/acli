@@ -2,12 +2,15 @@
 from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
-from acli.output import (output_ascii_table,
-                         output_ascii_table_list,
-                         dash_if_none)
+
 import six
 from colorclass import (Color,
                         Windows)
+
+from acli.output import (output_ascii_table,
+                         output_ascii_table_list,
+                         dash_if_none)
+
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
@@ -44,7 +47,7 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
             else:
                 val = tag.get('Value')
                 if val and len(val) > max_length:
-                    val = "{0}...".format(val[:max_length-3])
+                    val = "{0}...".format(val[:max_length - 3])
                 ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
         return "".join(ret).rstrip()
     else:
@@ -97,11 +100,11 @@ def colour_state(state=None):
     if not state:
         return Color('{autoblack}-{/autoblack}')
     elif state == 'running':
-        return Color('{autogreen}'+state+'{/autogreen}')
+        return Color('{autogreen}' + state + '{/autogreen}')
     elif state in ('stopped', 'stopping', 'shutting-down', 'terminated'):
-        return Color('{autored}'+state+'{/autored}')
+        return Color('{autored}' + state + '{/autored}')
     elif state in ('rebooting', 'pending'):
-        return Color('{autoyellow}'+state+'{/autoyellow}')
+        return Color('{autoyellow}' + state + '{/autoyellow}')
 
 
 def output_ec2_list(instances=None):
@@ -293,7 +296,7 @@ def output_ami_permissions(perms=None):
     for i, launch_perm in enumerate(perms.get('LaunchPermissions')):
         if 'UserId' in launch_perm:
             out += "UserId: {0}".format(launch_perm.get('UserId'))
-        if i < len(perms.get('LaunchPermissions'))-1:
+        if i < len(perms.get('LaunchPermissions')) - 1:
             out += "\n"
     return out
 
@@ -369,7 +372,6 @@ def output_ec2_summary(output_media='console', summary=None):
         td = list()
         instances = summary.get('instances')
         no_instances = len(instances) if instances else 0
-        volume_details = dict()
         gp2_no = 0
         io1_no = 0
         standard_no = 0
@@ -401,11 +403,12 @@ def output_ec2_summary(output_media='console', summary=None):
         td.append([Color('{autoblue}elastic IPs{/autoblue}'), str(summary.get('eips', '0'))])
         td.append([Color('{autoblue}AMIs{/autoblue}'), str(summary.get('amis', '0'))])
         td.append([Color('{autoblue}security groups{/autoblue}'), str(summary.get('secgroups', '0'))])
-        td.append([Color('{autoblue}types{/autoblue}'), '-'*20])
+        td.append([Color('{autoblue}types{/autoblue}'), '-' * 20])
         for instance_type_count in sorted_type_counts:
-            td.append([Color('{autoblue} '+instance_type_count[0]+'{/autoblue}'), str(instance_type_count[1])])
-        td.append([Color('{autoblue}volumes{/autoblue}'), '-'*20])
-        td.append([Color('{autoblue} standard{/autoblue}'), '{0} -Total space: {1} GiB'.format(standard_no, standard_space_sum)])
+            td.append([Color('{autoblue} ' + instance_type_count[0] + '{/autoblue}'), str(instance_type_count[1])])
+        td.append([Color('{autoblue}volumes{/autoblue}'), '-' * 20])
+        td.append([Color('{autoblue} standard{/autoblue}'),
+                   '{0} -Total space: {1} GiB'.format(standard_no, standard_space_sum)])
         td.append([Color('{autoblue} gp2{/autoblue}'), '{0} - Total space: {1} GiB'.format(gp2_no, gp2_space_sum)])
         td.append([Color('{autoblue} io1{/autoblue}'), '{0} - Total space: {1} GiB'.format(io1_no, io1_space_sum)])
 

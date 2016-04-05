@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.elb import output_elbs, output_elb_info
-from acli.connections import get_client
+
 import botocore.exceptions
 
+from acli.connections import get_client
+from acli.errors import handle_boto_errors
+from acli.output.elb import output_elbs, output_elb_info
 
+
+@handle_boto_errors
 def get_elb_list(aws_config):
     """
     @type aws_config: Config
@@ -14,6 +18,7 @@ def get_elb_list(aws_config):
     return elbs
 
 
+@handle_boto_errors
 def get_elb(aws_config, elb_name=None):
     """
     @type aws_config: Config

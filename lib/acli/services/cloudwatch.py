@@ -5,8 +5,10 @@ from acli.output.cloudwatch import (output_ec2_cpu, output_ec2_net,
                                     output_asg_cpu, output_ec2_vols)
 from acli.services.ec2 import ec2_get_instance_vols
 from acli.connections import get_client
+from acli.errors import handle_boto_errors
 
 
+@handle_boto_errors
 def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow()):
     """
@@ -60,6 +62,7 @@ def ec2_net(aws_config=None, instance_id=None, intervals=None, period=None,
     exit(0)
 
 
+@handle_boto_errors
 def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow()):
     """
@@ -105,6 +108,7 @@ def ec2_cpu(aws_config=None, instance_id=None, intervals=None, period=None,
     exit(0)
 
 
+@handle_boto_errors
 def asg_cpu(aws_config=None, asg_name=None, start=None, period=None, intervals=None,
             output_type=None):
     """
@@ -153,6 +157,7 @@ def asg_cpu(aws_config=None, asg_name=None, start=None, period=None, intervals=N
         exit(0)
 
 
+@handle_boto_errors
 def ec2_vol(aws_config=None, instance_id=None, intervals=None, period=None,
             start=None, end=datetime.datetime.utcnow()):
     """

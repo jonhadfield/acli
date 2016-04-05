@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output.es import (output_domain_list, output_domain_info)
-from acli.connections import get_client
+
 from botocore.exceptions import ClientError
 
+from acli.connections import get_client
+from acli.errors import handle_boto_errors
+from acli.output.es import (output_domain_list, output_domain_info)
 
+
+@handle_boto_errors
 def es_list(aws_config=None):
     """
     @type aws_config: Config
@@ -18,6 +22,7 @@ def es_list(aws_config=None):
         exit("No domains found.")
 
 
+@handle_boto_errors
 def es_info(aws_config=None, domain_name=None):
     """
     @type aws_config: Config
