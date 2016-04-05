@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output.s3 import (output_s3_list, output_s3_info)
-import botocore.exceptions
+from botocore.exceptions import ClientError
 import hashlib
 from acli.connections import get_client
 
@@ -10,7 +10,7 @@ def check_bucket_accessible(s3_client=None, bucket_name=None):
     try:
         s3_client.head_bucket(Bucket=bucket_name)
         return True
-    except botocore.exceptions.ClientError:
+    except ClientError:
         exit("Unable to access bucket.")
     except Exception as unhandled:
         exit('Unhandled exception: {0}'.format(unhandled))
@@ -20,7 +20,7 @@ def get_s3_file_md5(s3_client=None, bucket_name=None, path=None):
     try:
         key_detail = s3_client.head_object(Bucket=bucket_name, Key=path)
         return key_detail.get('ETag')[1:-1]
-    except botocore.exceptions.ClientError:
+    except ClientError:
         pass
 
 
@@ -63,11 +63,11 @@ def s3_list(aws_config=None, item=None):
             for first_bit in common_prefixes:
                 folders.append(first_bit)
             output_s3_list(objects=objects, folders=folders, item=item, bucket_name=bucket_name)
-        except botocore.exceptions.ClientError as error:
-            if 'NoSuchBucket' in error.response['Error']['Code']:
+        except ClientError as ce:
+            if 'NoSuchBucket' in ce.response['Error']['Code']:
                 exit('Bucket not found.')
             else:
-                exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
+                exit('Unhandled error: {0}'.format(ce.response['Error']['Code']))
 
 
 def s3_info(aws_config=None, item=None):
@@ -89,13 +89,13 @@ def s3_info(aws_config=None, item=None):
     try:
         s3_object = s3_client.get_object(Bucket=bucket_name, Key=prefix)
         output_s3_info(s3_object=s3_object, key=prefix, bucket=bucket_name)
-    except botocore.exceptions.ClientError as error:
-        if 'NoSuchBucket' in error.response['Error']['Code']:
+    except ClientError as ce:
+        if 'NoSuchBucket' in ce.response['Error']['Code']:
             exit('Bucket not found.')
-        elif 'NoSuchKey' in error.response['Error']['Code']:
+        elif 'NoSuchKey' in ce.response['Error']['Code']:
             exit('Key not found.')
         else:
-            exit('Unhandled error: {0}'.format(error.response['Error']['Code']))
+            exit('Unhandled error: {0}'.format(ce.response['Error']['Code']))
 
 
 def s3_cp(aws_config=None, source=None, dest=None):
@@ -176,6 +176,9 @@ def s3_cp(aws_config=None, source=None, dest=None):
                 print('Transferring: {0} to: {1}'.format(source, dest))
                 transfer = S3Transfer(s3_client, config)
                 transfer.upload_file(source, bucket_name, s3_dest)
+        except ClientError as ce:
+            if 'AccessDenied' in ce.response['Error']['Code']:
+                exit('Access denied. Please check permissions.')
         except Exception as e:
             print('Unhandled exception: {0}'.format(e))
     else:
