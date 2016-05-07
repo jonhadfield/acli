@@ -371,7 +371,11 @@ def output_ec2_summary(output_media='console', summary=None):
     if output_media == 'console':
         td = list()
         instances = summary.get('instances')
-        no_instances = len(instances) if instances else 0
+        print(instances)
+        running_count = sum(1 for instance in instances if instance['State']['Name'] in ('pending', 'running'))
+        stopped_count = sum(1 for instance in instances if instance['State']['Name'] in ('stopping', 'stopped'))
+        no_running_instances = running_count if running_count else 0
+        no_stopped_instances = stopped_count if stopped_count else 0
         gp2_no = 0
         io1_no = 0
         standard_no = 0
@@ -398,7 +402,8 @@ def output_ec2_summary(output_media='console', summary=None):
                 type_counts[instance_type] = 1
         import operator
         sorted_type_counts = sorted(type_counts.items(), key=operator.itemgetter(1), reverse=True)
-        td.append([Color('{autoblue}running instances{/autoblue}'), str(no_instances)])
+        td.append([Color('{autoblue}running instances{/autoblue}'), str(no_running_instances)])
+        td.append([Color('{autoblue}stopped instances{/autoblue}'), str(no_stopped_instances)])
         td.append([Color('{autoblue}load balancers{/autoblue}'), str(summary.get('elbs', '0'))])
         td.append([Color('{autoblue}elastic IPs{/autoblue}'), str(summary.get('eips', '0'))])
         td.append([Color('{autoblue}AMIs{/autoblue}'), str(summary.get('amis', '0'))])
