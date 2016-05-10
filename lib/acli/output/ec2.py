@@ -371,7 +371,6 @@ def output_ec2_summary(output_media='console', summary=None):
     if output_media == 'console':
         td = list()
         instances = summary.get('instances')
-        print(instances)
         running_count = sum(1 for instance in instances if instance['State']['Name'] in ('pending', 'running'))
         stopped_count = sum(1 for instance in instances if instance['State']['Name'] in ('stopping', 'stopped'))
         no_running_instances = running_count if running_count else 0
