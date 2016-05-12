@@ -53,7 +53,7 @@ setup(
     url='http://github.com/jonhadfield/acli',
     download_url='https://github.com/jonhadfield/acli/tarball/{0}'.format(version),
     install_requires=['docopt==0.6.2',
-                      'colorclass==2.0.0',
+                      'colorclass==2.1.1',
                       'botocore>=1.2.10',
                       'boto3>=1.1.4',
                       'requests>=2.7.0',
