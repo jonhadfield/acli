@@ -88,7 +88,7 @@ setup(
                    'botocore>=1.4.17',
                    'boto3>=1.1.4',
                    'terminaltables>=2.1.0',
-                   'colorclass==2.0.0',
+                   'colorclass==2.2.0',
                    'matplotlib>=1.5.1'],
     cmdclass={'test': PyTest},
 )
