@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
 
+import humanize
 from colorclass import Color, Windows
 from six import iteritems
 
-from acli.output import (output_ascii_table, output_ascii_table_list)
+from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
 
 Windows.enable(auto_colors=True, reset_atexit=True)
 
@@ -21,10 +22,28 @@ def output_filesystems(filesystems=None):
     @type filesystems: dict
     """
     td = list()
-    table_header = [Color('{autoblue}domain name{/autoblue}')]
+    table_header = [Color('{autoblue}id{/autoblue}'),
+                    Color('{autoblue}owner id{/autoblue}'),
+                    Color('{autoblue}name{/autoblue}'),
+                    Color('{autoblue}state{/autoblue}'),
+                    Color('{autoblue}size (time){/autoblue}'),
+                    Color('{autoblue}performance mode{/autoblue}'),
+                    Color('{autoblue}mount targets{/autoblue}'),
+                    Color('{autoblue}created{/autoblue}')
+                    ]
     for fs in filesystems:
-        td.append([fs.get('Name')])
-    output_ascii_table_list(table_title=Color('{autowhite}EFS file systems{/autowhite}'),
+        size_in_bytes = fs.get('SizeInBytes')
+        td.append([fs.get('FileSystemId'),
+                   fs.get('OwnerId'),
+                   fs.get('Name'),
+                   fs.get('LifeCycleState'),
+                   '{0} ({1})'.format(dash_if_none(humanize.naturalsize(size_in_bytes.get('Value'))),
+                                      dash_if_none(size_in_bytes.get('Timestamp'))),
+                   fs.get('PerformanceMode'),
+                   fs.get('NumberOfMountTargets'),
+                   fs.get('CreationTime')
+                   ])
+    output_ascii_table_list(table_title=Color('{autowhite}EFS{/autowhite}'),
                             table_data=td,
                             table_header=table_header,
                             inner_heading_row_border=True)
