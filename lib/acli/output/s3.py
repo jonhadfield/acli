@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, output_ascii_table_list)
+from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
 import re
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
@@ -85,7 +85,7 @@ def output_s3_info(s3_object=None, key=None, bucket=None):
     td.append([Color('{autoblue}multipart{/autoblue}'),
                multipart])
     td.append([Color('{autoblue}version id{/autoblue}'),
-               str(s3_object['VersionId'])])
+               str(dash_if_none(s3_object.get('VersionId')))])
     table_title = '{0}/{1}/'.format(bucket, '/'.join(key.split('/')[:-1]))
     output_ascii_table(table_title=Color('{autowhite}'+table_title+'{/autowhite}'),
                        table_data=td)

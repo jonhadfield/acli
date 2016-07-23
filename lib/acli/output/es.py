@@ -3,7 +3,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, output_ascii_table_list)
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
-
+from six import iteritems
 
 def get_tag(name=None, tags=None):
     if tags:
@@ -32,7 +32,7 @@ def output_dict(dict_=None):
     @type dict_: dict
     """
     output = list()
-    for k, v in dict_.iteritems():
+    for k, v in iteritems(dict_):
         output.append('{0}: {1}\n'.format(k, str(v)))
     return ''.join(output).rstrip()
 

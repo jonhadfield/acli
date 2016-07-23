@@ -42,13 +42,17 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
     if ec2_instance.get('Tags'):
         ret = []
         for tag in ec2_instance.get('Tags'):
-            if tag_key and tag.get('Key') == tag_key:
-                return tag.get('Value', "-")
+            val = tag.get('Value')
+            key = tag.get('Key')
+            # Return specific tag if provided
+            if tag_key and key == tag_key:
+                if len(val) >= 1:
+                    return val
             else:
-                val = tag.get('Value')
+                # Return all tags
                 if val and len(val) > max_length:
                     val = "{0}...".format(val[:max_length - 3])
-                ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
+                ret.append('{0}: {1}\n'.format(key, dash_if_none(val)))
         return "".join(ret).rstrip()
     else:
         return ""
@@ -65,23 +69,25 @@ def get_interfaces(interfaces):
         for akey, avalue in six.iteritems(interface.get('Attachment')):
             ret.append("  {0}:{1}\n".format(str(akey), str(avalue)))
         ret.append(" Private IP Addresses:\n")
-        for private_ip_address in interface.get('PrivateIpAddresses'):
-            for pkey, pvalue in six.iteritems(private_ip_address):
-                if pkey == "Association":
-                    ret.append("  Association:\n")
-                    for qqkey, qqvalue in six.iteritems(pvalue):
-                        ret.append("   {0}:{1}\n".format(qqkey, qqvalue))
-                else:
-                    ret.append("  {0}:{1}\n".format(str(pkey), str(pvalue)))
+        if interface.get('PrivateIpAddresses'):
+            for private_ip_address in interface.get('PrivateIpAddresses'):
+                for pkey, pvalue in six.iteritems(private_ip_address):
+                    if pkey == "Association":
+                        ret.append("  Association:\n")
+                        for qqkey, qqvalue in six.iteritems(pvalue):
+                            ret.append("   {0}:{1}\n".format(qqkey, qqvalue))
+                    else:
+                        ret.append("  {0}:{1}\n".format(str(pkey), str(pvalue)))
         ret.append(" Security Groups:\n")
-        for group in interface.get('Groups'):
-            for gkey, gvalue in six.iteritems(group):
-                ret.append("  {0}:{1}\n".format(str(gkey), str(gvalue)))
-        for key, value in six.iteritems(interface):
-            if str(key) not in ("Attachment", "NetworkInterfaceId",
-                                "PrivateIpAddresses", "Groups", "Association",
-                                "PrivateIpAddress"):
-                ret.append(" {0}:{1}\n".format(str(key), str(value)))
+        if interface.get('Groups'):
+            for group in interface.get('Groups'):
+                for gkey, gvalue in six.iteritems(group):
+                    ret.append("  {0}:{1}\n".format(str(gkey), str(gvalue)))
+            for key, value in six.iteritems(interface):
+                if str(key) not in ("Attachment", "NetworkInterfaceId",
+                                    "PrivateIpAddresses", "Groups", "Association",
+                                    "PrivateIpAddress"):
+                    ret.append(" {0}:{1}\n".format(str(key), str(value)))
     return ("".join(ret)).rstrip()
 
 
@@ -251,9 +257,9 @@ def output_ec2_info(instance=None):
     td.append([Color('{autoblue}instance profile{/autoblue}'),
                dash_if_none(short_instance_profile(instance.get('IamInstanceProfile')))])
     td.append([Color('{autoblue}tags{/autoblue}'),
-               get_ec2_instance_tags(ec2_instance=instance)])
+               dash_if_none(get_ec2_instance_tags(ec2_instance=instance))])
     td.append([Color('{autoblue}block devices{/autoblue}'),
-               get_block_devices(instance.get('BlockDeviceMappings'))])
+               dash_if_none(get_block_devices(instance.get('BlockDeviceMappings')))])
     td.append([Color('{autoblue}interfaces{/autoblue}'),
                dash_if_none(get_interfaces(instance.get('NetworkInterfaces')))])
     output_ascii_table(table_title=Color('{autowhite}instance info{/autowhite}'),
