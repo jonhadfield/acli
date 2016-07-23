@@ -42,13 +42,19 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
     if ec2_instance.get('Tags'):
         ret = []
         for tag in ec2_instance.get('Tags'):
-            if tag_key and tag.get('Key') == tag_key:
-                return tag.get('Value', "-")
+            val = tag.get('Value')
+            key = tag.get('Key')
+            # Return specific tag if provided
+            if tag_key and key == tag_key:
+                if len(val) >= 1:
+                    return val
+                else:
+                    return '-'
             else:
-                val = tag.get('Value')
+                # Return all tags
                 if val and len(val) > max_length:
                     val = "{0}...".format(val[:max_length - 3])
-                ret.append('{0}:{1}\n'.format(tag.get('Key'), val))
+                ret.append('{0}: {1}\n'.format(key, dash_if_none(val)))
         return "".join(ret).rstrip()
     else:
         return ""
@@ -253,9 +259,9 @@ def output_ec2_info(instance=None):
     td.append([Color('{autoblue}instance profile{/autoblue}'),
                dash_if_none(short_instance_profile(instance.get('IamInstanceProfile')))])
     td.append([Color('{autoblue}tags{/autoblue}'),
-               get_ec2_instance_tags(ec2_instance=instance)])
+               dash_if_none(get_ec2_instance_tags(ec2_instance=instance))])
     td.append([Color('{autoblue}block devices{/autoblue}'),
-               get_block_devices(instance.get('BlockDeviceMappings'))])
+               dash_if_none(get_block_devices(instance.get('BlockDeviceMappings')))])
     td.append([Color('{autoblue}interfaces{/autoblue}'),
                dash_if_none(get_interfaces(instance.get('NetworkInterfaces')))])
     output_ascii_table(table_title=Color('{autowhite}instance info{/autowhite}'),
