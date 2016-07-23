@@ -48,8 +48,6 @@ def get_ec2_instance_tags(ec2_instance=None, tag_key=None,
             if tag_key and key == tag_key:
                 if len(val) >= 1:
                     return val
-                else:
-                    return '-'
             else:
                 # Return all tags
                 if val and len(val) > max_length:
