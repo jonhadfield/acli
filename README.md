@@ -10,6 +10,13 @@ Please submit any issues encountered.
 Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog"))
 ------------
 
+0.1.25 (23rd July 2016)
+
+- Correct ec2 instance counts
+- Fix python 3 compatibility
+- Fix output issues with s3 and ec2
+- Upgrade dependencies  
+
 0.1.24 (5th April 2016)
 
 - Improve permission checks to prevent false negatives
