@@ -65,23 +65,25 @@ def get_interfaces(interfaces):
         for akey, avalue in six.iteritems(interface.get('Attachment')):
             ret.append("  {0}:{1}\n".format(str(akey), str(avalue)))
         ret.append(" Private IP Addresses:\n")
-        for private_ip_address in interface.get('PrivateIpAddresses'):
-            for pkey, pvalue in six.iteritems(private_ip_address):
-                if pkey == "Association":
-                    ret.append("  Association:\n")
-                    for qqkey, qqvalue in six.iteritems(pvalue):
-                        ret.append("   {0}:{1}\n".format(qqkey, qqvalue))
-                else:
-                    ret.append("  {0}:{1}\n".format(str(pkey), str(pvalue)))
+        if interface.get('PrivateIpAddresses'):
+            for private_ip_address in interface.get('PrivateIpAddresses'):
+                for pkey, pvalue in six.iteritems(private_ip_address):
+                    if pkey == "Association":
+                        ret.append("  Association:\n")
+                        for qqkey, qqvalue in six.iteritems(pvalue):
+                            ret.append("   {0}:{1}\n".format(qqkey, qqvalue))
+                    else:
+                        ret.append("  {0}:{1}\n".format(str(pkey), str(pvalue)))
         ret.append(" Security Groups:\n")
-        for group in interface.get('Groups'):
-            for gkey, gvalue in six.iteritems(group):
-                ret.append("  {0}:{1}\n".format(str(gkey), str(gvalue)))
-        for key, value in six.iteritems(interface):
-            if str(key) not in ("Attachment", "NetworkInterfaceId",
-                                "PrivateIpAddresses", "Groups", "Association",
-                                "PrivateIpAddress"):
-                ret.append(" {0}:{1}\n".format(str(key), str(value)))
+        if interface.get('Groups'):
+            for group in interface.get('Groups'):
+                for gkey, gvalue in six.iteritems(group):
+                    ret.append("  {0}:{1}\n".format(str(gkey), str(gvalue)))
+            for key, value in six.iteritems(interface):
+                if str(key) not in ("Attachment", "NetworkInterfaceId",
+                                    "PrivateIpAddresses", "Groups", "Association",
+                                    "PrivateIpAddress"):
+                    ret.append(" {0}:{1}\n".format(str(key), str(value)))
     return ("".join(ret)).rstrip()
 
 
