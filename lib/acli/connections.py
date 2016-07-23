@@ -40,3 +40,5 @@ def get_client(client_type=None, config=None):
         return session.client('s3')
     elif client_type == 'es':
         return session.client('es')
+    elif client_type == 'efs':
+        return session.client('efs')

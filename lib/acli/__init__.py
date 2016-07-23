@@ -28,6 +28,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli s3 (del | rm) <item>
        acli es (ls | list)
        acli es info <domain>
+       acli efs (ls | list) [options]
        acli clean (delete_orphaned_snapshots | delete_unnammed_volumes)
 
 
@@ -49,6 +50,7 @@ The most common commands are:
    secgroup     Manage Security Groups
    s3           Manage S3 storage
    es           Manage Elasticsearch
+   efs          Manage Elastic file systems
    clean        Tools for reporting on and removing unused service items
 See 'acli <command> -h'
 """
@@ -63,7 +65,7 @@ from acli.commands.asg import asg_command
 from acli.commands.ec2 import ec2_command
 from acli.config import Config
 from acli.services import (ec2, elb, account, vpc, eip, asg,
-                           route53, secgroup, s3, es, clean)
+                           route53, secgroup, s3, es, clean, efs)
 from acli.utils import install_completion
 
 
@@ -155,6 +157,15 @@ def es_command(argv=None, aws_config=None):
         es.es_info(aws_config, domain_name=es_res.get('<domain>'))
 
 
+def efs_command(argv=None, aws_config=None):
+    from acli.commands import efs as command_efs
+    efs_res = docopt(command_efs.__doc__, argv=argv)
+    if any((efs_res.get('ls'), efs_res.get('list'))):
+        efs.efs_list(aws_config)
+    elif efs_res.get('info'):
+        efs.efs_info(aws_config, domain_name=efs_res.get('<filesystem_id>'))
+
+
 def clean_command(argv=None, aws_config=None):
     from acli.commands import clean as command_clean
     clean_res = docopt(command_clean.__doc__, argv=argv)
@@ -196,6 +207,8 @@ def real_main():
         s3_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 'es':
         es_command(argv=argv, aws_config=aws_config)
+    elif args['<command>'] == 'efs':
+        efs_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 'clean':
         clean_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] in ['help'] and not args['<args>']:
