@@ -87,14 +87,8 @@ setup(
                    'docopt>=0.6.2',
                    'botocore>=1.4.17',
                    'boto3>=1.1.4',
-<<<<<<< HEAD
                    'terminaltables>=2.1.0',
                    'colorclass==2.0.0',
                    'matplotlib>=1.5.1'],
-=======
-                   'terminaltables>=1.2.1',
-                   'colorclass==2.0.0',
-                   'matplotlib>=1.4.3'],
->>>>>>> 3d8fd96a844b4c2c1672aace871e9ccd6d51b4b1
     cmdclass={'test': PyTest},
 )
