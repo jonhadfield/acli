@@ -1,5 +1,10 @@
 CHANGELOG
 ---------
+0.1.26 (24th July 2016)
+
+- Add basic support for EFS
+- Minor fixes
+
 0.1.25 (23rd July 2016)
 
 - Correct ec2 instance counts

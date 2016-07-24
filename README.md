@@ -10,6 +10,11 @@ Please submit any issues encountered.
 Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog"))
 ------------
 
+0.1.26 (24th July 2016)
+
+- Add basic support for EFS
+- Minor fixes
+
 0.1.25 (23rd July 2016)
 
 - Correct ec2 instance counts
@@ -21,22 +26,6 @@ Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHAN
 
 - Improve permission checks to prevent false negatives
 - Minor fixes
-
-0.1.23 (30th March 2016)
-
-- Make it work with Python 2.6
-- Properly report a lack of (matching) AMIs
-- Let 'ls' option work for ami listing
-- Fail nicely if S3 directory transfer attempted (not able to sync dirs yet)
-- Check instance has tags before trying to filter on them
-
-
-0.1.21 (1st December 2015)
-
-- Show instance counts in output for 'acli ec2 summary'
-- Add filtering/searching on AMI lists
-
-    `example: acli ami ls --filter=webserver`
 
 
 Installation
