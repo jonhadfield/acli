@@ -17,6 +17,17 @@ def get_tag(name=None, tags=None):
                 return tag.get('Value')
 
 
+def colour_state(state=None):
+    if not state:
+        return Color('{autoblack}-{/autoblack}')
+    elif state == 'available':
+        return Color('{autogreen}' + state + '{/autogreen}')
+    elif state in ('deleting', 'deleted'):
+        return Color('{autored}' + state + '{/autored}')
+    elif state == 'creating':
+        return Color('{autoyellow}' + state + '{/autoyellow}')
+
+
 def output_filesystems(filesystems=None):
     """
     @type filesystems: dict
@@ -27,7 +38,7 @@ def output_filesystems(filesystems=None):
                     Color('{autoblue}name{/autoblue}'),
                     Color('{autoblue}state{/autoblue}'),
                     Color('{autoblue}size / time (UTC){/autoblue}'),
-                    Color('{autoblue}performance mode{/autoblue}'),
+                    Color('{autoblue}mode{/autoblue}'),
                     Color('{autoblue}mount targets{/autoblue}'),
                     Color('{autoblue}created (UTC){/autoblue}')
                     ]
@@ -46,8 +57,8 @@ def output_filesystems(filesystems=None):
         td.append([fs.get('FileSystemId'),
                    fs.get('OwnerId'),
                    fs.get('Name'),
-                   fs.get('LifeCycleState'),
-                   '{0} / {1}'.format(dash_if_none(size_in_bytes_value),
+                   colour_state(fs.get('LifeCycleState')),
+                   '{0} / {1}'.format(size_in_bytes_value,
                                       dash_if_none(size_in_bytes_timestamp)),
                    fs.get('PerformanceMode'),
                    fs.get('NumberOfMountTargets'),
