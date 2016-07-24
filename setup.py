@@ -81,15 +81,9 @@ setup(
     keywords=(
         'aws, Python, cli, amazon, ec2'
     ),
-    tests_require=['requests>=2.7.0',
-                   'pytest-cov>=2.2.0',
+    tests_require=['pytest-cov>=2.2.0',
                    'pytest>=2.8.2',
                    'moto>=0.4.24',
-                   'docopt>=0.6.2',
-                   'botocore>=1.4.17',
-                   'boto3>=1.1.4',
-                   'terminaltables>=2.1.0',
-                   'colorclass==2.2.0',
                    'matplotlib>=1.5.1'],
     cmdclass={'test': PyTest},
 )
