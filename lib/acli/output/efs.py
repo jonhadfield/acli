@@ -26,22 +26,32 @@ def output_filesystems(filesystems=None):
                     Color('{autoblue}owner id{/autoblue}'),
                     Color('{autoblue}name{/autoblue}'),
                     Color('{autoblue}state{/autoblue}'),
-                    Color('{autoblue}size (time){/autoblue}'),
+                    Color('{autoblue}size / time (UTC){/autoblue}'),
                     Color('{autoblue}performance mode{/autoblue}'),
                     Color('{autoblue}mount targets{/autoblue}'),
-                    Color('{autoblue}created{/autoblue}')
+                    Color('{autoblue}created (UTC){/autoblue}')
                     ]
     for fs in filesystems:
         size_in_bytes = fs.get('SizeInBytes')
+        size_in_bytes_value = size_in_bytes.get('Value')
+        if size_in_bytes_value:
+            size_in_bytes_value = humanize.naturalsize(size_in_bytes_value)
+        size_in_bytes_timestamp = size_in_bytes.get('Timestamp')
+        if size_in_bytes_timestamp:
+            size_in_bytes_timestamp = size_in_bytes_timestamp.replace(tzinfo=None, second=0)
+        created_time = fs.get('CreationTime')
+        if created_time:
+            created_time = created_time.replace(tzinfo=None, second=0)
+
         td.append([fs.get('FileSystemId'),
                    fs.get('OwnerId'),
                    fs.get('Name'),
                    fs.get('LifeCycleState'),
-                   '{0} ({1})'.format(dash_if_none(humanize.naturalsize(size_in_bytes.get('Value'))),
-                                      dash_if_none(size_in_bytes.get('Timestamp'))),
+                   '{0} / {1}'.format(dash_if_none(size_in_bytes_value),
+                                      dash_if_none(size_in_bytes_timestamp)),
                    fs.get('PerformanceMode'),
                    fs.get('NumberOfMountTargets'),
-                   fs.get('CreationTime')
+                   dash_if_none(created_time)
                    ])
     output_ascii_table_list(table_title=Color('{autowhite}EFS{/autowhite}'),
                             table_data=td,
