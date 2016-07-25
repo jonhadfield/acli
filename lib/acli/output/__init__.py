@@ -11,16 +11,19 @@ Windows.enable(auto_colors=True, reset_atexit=True)
 def output_ascii_table(table_title=None,
                        table_data=None,
                        inner_heading_row_border=False,
+                       inner_footing_row_border=False,
                        inner_row_border=False):
     """
     @type table_title: unicode
     @type table_data: list
     @type inner_heading_row_border: bool
+    @type inner_footing_row_border: bool
     @type inner_row_border: bool
     """
     table = AsciiTable(table_data)
     table.inner_heading_row_border = inner_heading_row_border
     table.inner_row_border = inner_row_border
+    table.inner_footing_row_border = inner_footing_row_border
     table.title = table_title
     print(table.table)
 

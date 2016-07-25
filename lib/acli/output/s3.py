@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
+
 import re
+
 from colorclass import Color, Windows
+
+from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_none)
+
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def output_s3_list(buckets=None, bucket_name=None,
+def output_s3_list(buckets=None, bucket_name=None, owner=None,
                    objects=None, folders=None, item=None):
     """
     @type buckets: dict
     @type bucket_name: unicode
+    @type owner: dict
     @type objects: dict
     @type bucket_name: unicode
     @type objects: dict
@@ -19,7 +24,7 @@ def output_s3_list(buckets=None, bucket_name=None,
     """
     to_remove_len = 0
     if bucket_name:
-        to_remove_len = len(re.sub(bucket_name, '', item))-1
+        to_remove_len = len(re.sub(bucket_name, '', item)) - 1
     if buckets:
         sorted_buckets = sorted(buckets, key=lambda k: ['Name'])
         td = list()
@@ -30,6 +35,13 @@ def output_s3_list(buckets=None, bucket_name=None,
         output_ascii_table(table_title=Color('{autowhite}s3 buckets{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
+        td = list()
+        td.append([Color('{autoblue}Owner{/autoblue}'), Color('{autoblue}Owner ID{/autoblue}')])
+        td.append([owner.get('DisplayName'), owner.get('ID')])
+        output_ascii_table(table_title=Color('{autowhite}s3 buckets owner{/autowhite}'),
+                           table_data=td,
+                           inner_heading_row_border=True)
+
     if any((objects, folders)):
         td = list()
         table_header = [Color('{autoblue}item{/autoblue}'), Color('{autoblue}size (bytes){/autoblue}'),
@@ -37,7 +49,7 @@ def output_s3_list(buckets=None, bucket_name=None,
                         Color('{autoblue}class{/autoblue}'), Color('{autoblue}etag{/autoblue}')]
         if folders:
             for folder in folders:
-                td.append([Color('{autogreen}'+folder.get('Prefix')[to_remove_len:]+'{/autogreen}'),
+                td.append([Color('{autogreen}' + folder.get('Prefix')[to_remove_len:] + '{/autogreen}'),
                            Color('{autoblack}-{/autoblack}'),
                            Color('{autoblack}-{/autoblack}'),
                            Color('{autoblack}-{/autoblack}'),
@@ -55,7 +67,7 @@ def output_s3_list(buckets=None, bucket_name=None,
                                str(an_object.get('ETag')[1:-1])])
             if not folders and not td:
                 td.append(['', ' ', ' ', ' ', ' '])
-        output_ascii_table_list(table_title=Color('{autowhite}'+item+'{/autowhite}'),
+        output_ascii_table_list(table_title=Color('{autowhite}' + item + '{/autowhite}'),
                                 table_data=td,
                                 table_header=table_header,
                                 inner_heading_row_border=True)
@@ -87,6 +99,6 @@ def output_s3_info(s3_object=None, key=None, bucket=None):
     td.append([Color('{autoblue}version id{/autoblue}'),
                str(dash_if_none(s3_object.get('VersionId')))])
     table_title = '{0}/{1}/'.format(bucket, '/'.join(key.split('/')[:-1]))
-    output_ascii_table(table_title=Color('{autowhite}'+table_title+'{/autowhite}'),
+    output_ascii_table(table_title=Color('{autowhite}' + table_title + '{/autowhite}'),
                        table_data=td)
     exit(0)

@@ -48,7 +48,7 @@ def s3_list(aws_config=None, item=None):
     buckets = s3_client.list_buckets()
     if not item:
         if buckets.get('Buckets'):
-            output_s3_list(buckets=buckets.get('Buckets'))
+            output_s3_list(buckets=buckets.get('Buckets'), owner=buckets.get('Owner'))
         else:
             exit("No buckets found.")
     else:
@@ -95,8 +95,11 @@ def s3_info(aws_config=None, item=None):
         bucket_name = item
     check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
     try:
-        s3_object = s3_client.get_object(Bucket=bucket_name, Key=prefix)
-        output_s3_info(s3_object=s3_object, key=prefix, bucket=bucket_name)
+        if not prefix:
+            print('bucket specified')
+        else:
+            s3_object = s3_client.get_object(Bucket=bucket_name, Key=prefix)
+            output_s3_info(s3_object=s3_object, key=prefix, bucket=bucket_name)
     except ClientError as ce:
         if 'NoSuchBucket' in ce.response['Error']['Code']:
             exit('Bucket not found.')
