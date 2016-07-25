@@ -10,6 +10,10 @@ Please submit any issues encountered.
 Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog"))
 ------------
 
+0.1.27 (25th July 2016)
+
+- Add s3 owner information
+
 0.1.26 (24th July 2016)
 
 - Add basic support for EFS
