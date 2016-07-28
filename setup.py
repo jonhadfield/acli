@@ -9,13 +9,13 @@ sys.path.insert(0, os.path.abspath('lib'))
 version = "0.1.28"
 
 if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
-    os.system('python setup.py bdist_wheel upload')
+    os.system('python setup.py sdist upload -r pypi')
+    # os.system('python setup.py bdist_wheel upload')
     sys.exit()
 
 if sys.argv[-1] == 'tag':
     os.system("git tag -a {0} -m 'version {1}'".format(version, version))
-    os.system("git push --tags")
+    os.system("git push --follow-tags")
     sys.exit()
 
 readme = open('README.md').read()

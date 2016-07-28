@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
+
 import math
 import os
-from terminaltables import AsciiTable
+
 from colorclass import Color, Windows
+from terminaltables import AsciiTable
+
 from acli.utils import get_console_dimensions
+
+try:
+    input = raw_input
+except NameError:
+    pass
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
@@ -42,7 +50,7 @@ def output_ascii_table_list(table_title=None,
     """
     console_rows, _ = get_console_dimensions()
     console_rows = int(console_rows)
-    full_display_length = len(table_data)+7
+    full_display_length = len(table_data) + 7
     items_per_page = console_rows - 7
     num_pages = 0
     if full_display_length > console_rows:
@@ -52,7 +60,7 @@ def output_ascii_table_list(table_title=None,
             exit('Console too small to display.')
     if num_pages:
         running_count = 0
-        for page in range(1, num_pages+1):
+        for page in range(1, num_pages + 1):
             page_table_output = list()
             page_table_output.insert(0, table_header)
             upper = (console_rows + running_count) - 7
@@ -69,7 +77,7 @@ def output_ascii_table_list(table_title=None,
                 print('')
             print(table.table)
             if page < num_pages:
-                raw_input("Press Enter to continue...")
+                input("Press Enter to continue...")
                 os.system('clear')
     else:
         table_data.insert(0, table_header)
