@@ -9,6 +9,8 @@ def output_route53_list(zones=None):
     """
     @type zones: list | dict
     """
+    td = list()
+    table_header = list()
     if isinstance(zones, dict):
         zones = [zones]
     for hosted_zone_dict in zones:

@@ -45,7 +45,7 @@ def output_vpc_list(vpcs=None):
 def output_vpc_info(vpc=None, subnets=None):
     """
     @type vpc: ec2.Vpc
-    @type subnets: list
+    @type subnets: dict
     """
     if vpc:
         td = list()
@@ -57,7 +57,7 @@ def output_vpc_info(vpc=None, subnets=None):
         td.append([Color('{autoblue}tags{/autoblue}'), " "])
         if vpc.get('Tags'):
             for vpc_tag in vpc.get('Tags'):
-                td.append([Color('{autoblue}'+ "{0}".format(vpc_tag.get('Key'))+'{/autoblue}'),
+                td.append([Color('{autoblue}' + "{0}".format(vpc_tag.get('Key'))+'{/autoblue}'),
                            " {0}".format(vpc_tag.get('Value'))])
         if subnets:
             td.append(["{0}".format('-' * 30), "{0}".format('-' * 30)])

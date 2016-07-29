@@ -2,8 +2,8 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 
 from acli.connections import get_client
-from acli.output.snapshots import (output_snapshot_list)
 from acli.errors import handle_boto_errors
+from acli.output.snapshots import (output_snapshot_list)
 
 
 @handle_boto_errors

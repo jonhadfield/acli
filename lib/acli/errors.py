@@ -54,5 +54,3 @@ def handle_boto_errors(function):
         except Exception:
             raise
     return handle_errors
-
-
