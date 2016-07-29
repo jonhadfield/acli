@@ -32,9 +32,9 @@ def get_s3_file_md5(s3_client=None, bucket_name=None, path=None):
 
 def get_local_file_md5(path=None):
     try:
-        with open(path, "r") as local_file:
+        with open(path, "r", encoding='utf-8') as local_file:
             content = local_file.read()
-        return hashlib.md5(content).hexdigest()
+        return hashlib.md5(content.encode('utf-8')).hexdigest()
     except IOError:
         pass
 
