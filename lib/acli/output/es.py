@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import (absolute_import, print_function, unicode_literals)
-from acli.output import (output_ascii_table, output_ascii_table_list)
+
 from colorclass import Color, Windows
+
+from acli.output import (output_ascii_table, output_ascii_table_list)
+
 Windows.enable(auto_colors=True, reset_atexit=True)
 from external.six import iteritems
+
 
 def get_tag(name=None, tags=None):
     if tags:
@@ -67,33 +71,33 @@ def output_domain_info(domain=None):
         cluster_conf = domain_details.get('ElasticsearchClusterConfig')
         td = list()
         td.append([Color('{autoblue}domain name{/autoblue}'),
-                  domain_details.get('DomainName')])
+                   domain_details.get('DomainName')])
         td.append([Color('{autoblue}endpoint{/autoblue}'),
-                  domain_details.get('Endpoint')])
+                   domain_details.get('Endpoint')])
         td.append([Color('{autoblue}created{/autoblue}'),
-                  colour_created(domain_details.get('Created'))])
+                   colour_created(domain_details.get('Created'))])
         td.append([Color('{autoblue}deleted{/autoblue}'),
-                  colour_deleted(domain_details.get('Deleted'))])
+                   colour_deleted(domain_details.get('Deleted'))])
         td.append([Color('{autoblue}processing{/autoblue}'),
-                  colour_processing(domain_details.get('Processing'))])
+                   colour_processing(domain_details.get('Processing'))])
         td.append([Color('{autoblue}cluster config{/autoblue}'),
-                  ' '])
+                   ' '])
         td.append([Color('{autoblue} dedicated master enabled{/autoblue}'),
-                  str(cluster_conf.get('DedicatedMasterEnabled'))])
+                   str(cluster_conf.get('DedicatedMasterEnabled'))])
         td.append([Color('{autoblue} instance type{/autoblue}'),
-                  str(cluster_conf.get('InstanceType'))])
+                   str(cluster_conf.get('InstanceType'))])
         td.append([Color('{autoblue} instance count{/autoblue}'),
-                  str(cluster_conf.get('InstanceCount'))])
+                   str(cluster_conf.get('InstanceCount'))])
         td.append([Color('{autoblue} zone awareness{/autoblue}'),
-                  str(cluster_conf.get('ZoneAwarenessEnabled'))])
+                   str(cluster_conf.get('ZoneAwarenessEnabled'))])
         td.append([Color('{autoblue}domain id{/autoblue}'),
-                  domain_details.get('DomainId')])
+                   domain_details.get('DomainId')])
         td.append([Color('{autoblue}snapshot options{/autoblue}'),
-                  output_dict(domain_details.get('SnapshotOptions'))])
+                   output_dict(domain_details.get('SnapshotOptions'))])
         td.append([Color('{autoblue}advanced options{/autoblue}'),
-                  output_dict(domain_details.get('AdvancedOptions'))])
+                   output_dict(domain_details.get('AdvancedOptions'))])
         td.append([Color('{autoblue}ARN{/autoblue}'),
-                  domain_details.get('ARN')])
+                   domain_details.get('ARN')])
         output_ascii_table(table_title=Color('{autowhite}ES domain info{/autowhite}'),
                            table_data=td)
     else:
