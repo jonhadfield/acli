@@ -20,6 +20,7 @@ def check_bucket_accessible(s3_client=None, bucket_name=None):
     except Exception as unhandled:
         exit('Unhandled exception: {0}'.format(unhandled))
 
+
 @handle_boto_errors
 def get_s3_file_md5(s3_client=None, bucket_name=None, path=None):
     try:
@@ -42,6 +43,7 @@ def get_local_file_md5(path=None):
 def s3_list(aws_config=None, item=None):
     """
     @type aws_config: Config
+    @type item: unicode
     """
     s3_client = get_client(client_type='s3', config=aws_config)
     buckets = s3_client.list_buckets()
@@ -208,6 +210,7 @@ def s3_rm(aws_config=None, item=None):
     """
     s3_client = get_client(client_type='s3', config=aws_config)
     prefix = ''
+    bucket_name = ''
     if item and '/' in item:
         path_elements = item.split('/')
         bucket_name = path_elements[0]
