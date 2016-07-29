@@ -3,7 +3,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import (output_ascii_table, output_ascii_table_list)
 from colorclass import Color, Windows
 Windows.enable(auto_colors=True, reset_atexit=True)
-from six import iteritems
+from external.six import iteritems
 
 def get_tag(name=None, tags=None):
     if tags:

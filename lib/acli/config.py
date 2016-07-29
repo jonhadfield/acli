@@ -3,7 +3,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 try:
     import configparser
 except ImportError:
-    from six.moves import configparser
+    from external.six.moves import configparser
 import os
 
 

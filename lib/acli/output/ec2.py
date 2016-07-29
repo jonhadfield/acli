@@ -3,7 +3,7 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 
-import six
+from external.six import iteritems
 from colorclass import (Color,
                         Windows)
 
@@ -66,24 +66,24 @@ def get_interfaces(interfaces):
     for interface in interfaces:
         ret.append("{0}\n".format(interface.get('NetworkInterfaceId')))
         ret.append(" Attachment:\n")
-        for akey, avalue in six.iteritems(interface.get('Attachment')):
+        for akey, avalue in iteritems(interface.get('Attachment')):
             ret.append("  {0}:{1}\n".format(str(akey), str(avalue)))
         ret.append(" Private IP Addresses:\n")
         if interface.get('PrivateIpAddresses'):
             for private_ip_address in interface.get('PrivateIpAddresses'):
-                for pkey, pvalue in six.iteritems(private_ip_address):
+                for pkey, pvalue in iteritems(private_ip_address):
                     if pkey == "Association":
                         ret.append("  Association:\n")
-                        for qqkey, qqvalue in six.iteritems(pvalue):
+                        for qqkey, qqvalue in iteritems(pvalue):
                             ret.append("   {0}:{1}\n".format(qqkey, qqvalue))
                     else:
                         ret.append("  {0}:{1}\n".format(str(pkey), str(pvalue)))
         ret.append(" Security Groups:\n")
         if interface.get('Groups'):
             for group in interface.get('Groups'):
-                for gkey, gvalue in six.iteritems(group):
+                for gkey, gvalue in iteritems(group):
                     ret.append("  {0}:{1}\n".format(str(gkey), str(gvalue)))
-            for key, value in six.iteritems(interface):
+            for key, value in iteritems(interface):
                 if str(key) not in ("Attachment", "NetworkInterfaceId",
                                     "PrivateIpAddresses", "Groups", "Association",
                                     "PrivateIpAddress"):
@@ -96,7 +96,7 @@ def get_placement_details(placement):
     @type placement: dict
     """
     ret = []
-    for key, value in six.iteritems(placement):
+    for key, value in iteritems(placement):
         ret.append("{0}:{1}".format(key, value))
     if ret:
         return "\n".join(ret)

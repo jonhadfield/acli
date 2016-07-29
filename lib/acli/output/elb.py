@@ -2,7 +2,7 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.output import output_ascii_table, output_ascii_table_list, dash_if_none
 from colorclass import Color, Windows
-from six import iteritems
+from external.six import iteritems
 
 Windows.enable(auto_colors=True, reset_atexit=True)
 
