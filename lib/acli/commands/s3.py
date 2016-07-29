@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Usage:
     acli s3 (ls | list) [<item>]
-    acli s3 info <item>
+    acli s3 info [<item>]
     acli s3 cp <source> <dest>
     acli s3 (del | rm) <item>
 

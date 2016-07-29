@@ -23,7 +23,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli secgroup (ls | list)
        acli secgroup info <secgroup_id>
        acli s3 (ls | list) [<item>]
-       acli s3 info <item>
+       acli s3 info [<item>]
        acli s3 cp <source> <dest>
        acli s3 (del | rm) <item>
        acli es (ls | list)

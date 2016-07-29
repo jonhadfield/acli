@@ -10,12 +10,11 @@ from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_no
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def output_s3_list(buckets=None, bucket_name=None, owner=None,
+def output_s3_list(buckets=None, bucket_name=None,
                    objects=None, folders=None, item=None):
     """
     @type buckets: dict
     @type bucket_name: unicode
-    @type owner: dict
     @type objects: dict
     @type bucket_name: unicode
     @type objects: dict
@@ -33,12 +32,6 @@ def output_s3_list(buckets=None, bucket_name=None, owner=None,
             td.append([bucket.get('Name'),
                        str(bucket.get('CreationDate').replace(tzinfo=None, microsecond=0))])
         output_ascii_table(table_title=Color('{autowhite}s3 buckets{/autowhite}'),
-                           table_data=td,
-                           inner_heading_row_border=True)
-        td = list()
-        td.append([Color('{autoblue}Owner{/autoblue}'), Color('{autoblue}Owner ID{/autoblue}')])
-        td.append([owner.get('DisplayName'), owner.get('ID')])
-        output_ascii_table(table_title=Color('{autowhite}s3 buckets owner{/autowhite}'),
                            table_data=td,
                            inner_heading_row_border=True)
 
@@ -74,31 +67,40 @@ def output_s3_list(buckets=None, bucket_name=None, owner=None,
     exit(0)
 
 
-def output_s3_info(s3_object=None, key=None, bucket=None):
+def output_s3_info(s3_object=None, key=None, bucket=None, owner=None):
     """
     @type s3_object: dict
     @type key: unicode
     @type bucket: unicode
+    @type owner: dict
     """
-    td = list()
-    last_modified = str(s3_object['LastModified'].replace(tzinfo=None, second=0))
-    etag = str(s3_object['ETag'])[1:-1]
-    multipart = 'yes' if '-' in etag else 'no'
-    td.append([Color('{autoblue}name{/autoblue}'),
-               str(key.split('/')[-1])])
-    td.append([Color('{autoblue}last modified (UTC){/autoblue}'),
-               last_modified])
-    td.append([Color('{autoblue}ETag{/autoblue}'),
-               etag])
-    td.append([Color('{autoblue}size (bytes){/autoblue}'),
-               str(s3_object['ContentLength'])])
-    td.append([Color('{autoblue}content type{/autoblue}'),
-               str(s3_object['ContentType'])])
-    td.append([Color('{autoblue}multipart{/autoblue}'),
-               multipart])
-    td.append([Color('{autoblue}version id{/autoblue}'),
-               str(dash_if_none(s3_object.get('VersionId')))])
-    table_title = '{0}/{1}/'.format(bucket, '/'.join(key.split('/')[:-1]))
-    output_ascii_table(table_title=Color('{autowhite}' + table_title + '{/autowhite}'),
-                       table_data=td)
+    if key:
+        td = list()
+        last_modified = str(s3_object['LastModified'].replace(tzinfo=None, second=0))
+        etag = str(s3_object['ETag'])[1:-1]
+        multipart = 'yes' if '-' in etag else 'no'
+        td.append([Color('{autoblue}name{/autoblue}'),
+                   str(key.split('/')[-1])])
+        td.append([Color('{autoblue}last modified (UTC){/autoblue}'),
+                   last_modified])
+        td.append([Color('{autoblue}ETag{/autoblue}'),
+                   etag])
+        td.append([Color('{autoblue}size (bytes){/autoblue}'),
+                   str(s3_object['ContentLength'])])
+        td.append([Color('{autoblue}content type{/autoblue}'),
+                   str(s3_object['ContentType'])])
+        td.append([Color('{autoblue}multipart{/autoblue}'),
+                   multipart])
+        td.append([Color('{autoblue}version id{/autoblue}'),
+                   str(dash_if_none(s3_object.get('VersionId')))])
+        table_title = '{0}/{1}/'.format(bucket, '/'.join(key.split('/')[:-1]))
+        output_ascii_table(table_title=Color('{autowhite}' + table_title + '{/autowhite}'),
+                           table_data=td)
+    else:
+        td = list()
+        td.append([Color('{autoblue}Owner{/autoblue}'), Color('{autoblue}Owner ID{/autoblue}')])
+        td.append([owner.get('DisplayName'), owner.get('ID')])
+        output_ascii_table(table_title=Color('{autowhite}s3 buckets owner{/autowhite}'),
+                           table_data=td,
+                           inner_heading_row_border=True)
     exit(0)

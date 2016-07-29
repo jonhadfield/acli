@@ -20,7 +20,6 @@ def check_bucket_accessible(s3_client=None, bucket_name=None):
     except Exception as unhandled:
         exit('Unhandled exception: {0}'.format(unhandled))
 
-
 @handle_boto_errors
 def get_s3_file_md5(s3_client=None, bucket_name=None, path=None):
     try:
@@ -48,7 +47,7 @@ def s3_list(aws_config=None, item=None):
     buckets = s3_client.list_buckets()
     if not item:
         if buckets.get('Buckets'):
-            output_s3_list(buckets=buckets.get('Buckets'), owner=buckets.get('Owner'))
+            output_s3_list(buckets=buckets.get('Buckets'))
         else:
             exit("No buckets found.")
     else:
@@ -93,13 +92,16 @@ def s3_info(aws_config=None, item=None):
             prefix = prefix[:-1]
     else:
         bucket_name = item
-    check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
+    buckets = s3_client.list_buckets()
+    owner = buckets.get('Owner')
+
     try:
-        if not prefix:
-            print('bucket specified')
-        else:
+        if bucket_name:
+            check_bucket_accessible(s3_client=s3_client, bucket_name=bucket_name)
             s3_object = s3_client.get_object(Bucket=bucket_name, Key=prefix)
             output_s3_info(s3_object=s3_object, key=prefix, bucket=bucket_name)
+        else:
+            output_s3_info(owner=owner)
     except ClientError as ce:
         if 'NoSuchBucket' in ce.response['Error']['Code']:
             exit('Bucket not found.')
