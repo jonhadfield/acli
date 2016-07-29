@@ -1,6 +1,20 @@
 CHANGELOG
 ---------
 
+0.1.29 (29th July 2016)
+
+- Move s3 owner information to s3 info
+- Python 3 compatibility
+- Minor fixes
+
+0.1.28 (25th July 2016)
+
+- Add s3 owner information
+
+0.1.27 (25th July 2016)
+
+- Broken
+
 0.1.27 (25th July 2016)
 
 - Add s3 owner information

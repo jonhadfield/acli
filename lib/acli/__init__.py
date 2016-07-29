@@ -177,7 +177,7 @@ def clean_command(argv=None, aws_config=None):
 
 def real_main():
     args = docopt(__doc__,
-                  version='0.1.28',
+                  version='0.1.29',
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
