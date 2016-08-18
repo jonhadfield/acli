@@ -1,6 +1,11 @@
 CHANGELOG
 ---------
 
+0.1.30 (18th August 2016)
+
+- Embed Six (remove external dependency)
+- Python 3 compatibility for S3
+
 0.1.29 (29th July 2016)
 
 - Move s3 owner information to s3 info
