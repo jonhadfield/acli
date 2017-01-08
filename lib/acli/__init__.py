@@ -128,7 +128,7 @@ def vpc_command(argv=None, aws_config=None):
 def secgroup_command(argv=None, aws_config=None):
     from acli.commands import secgroup as command_secgroup
     secgroup_res = docopt(command_secgroup.__doc__, argv=argv)
-    if secgroup_res.get('list'):
+    if any((secgroup_res.get('ls'), secgroup_res.get('list'))):
         secgroup.secgroup_list(aws_config)
     elif secgroup_res.get('info'):
         secgroup.secgroup_info(aws_config, secgroup_id=secgroup_res.get('<secgroup_id>'))
