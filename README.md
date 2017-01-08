@@ -10,6 +10,12 @@ Please submit any issues encountered.
 Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog"))
 ------------
 
+0.1.31 (8th Jan 2017)
+
+- Add IAM user listing and user info
+- Fix secgroup list option
+- S3 - treat file as binary when getting md5
+
 0.1.30 (18th August 2016)
 
 - Embed Six (remove external dependency)
