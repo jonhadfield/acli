@@ -147,8 +147,12 @@ def output_iam_user_info(user=None, user_mfa_devices=None, user_access_keys=None
                dash_if_none(user.get('PasswordLastUsed'))])
     td.append([Color('{autoblue}created{/autoblue}'),
                dash_if_none(user.get('CreateDate'))])
-    td.append([Color('{autoblue}groups{/autoblue}'),
-               dash_if_none(",".join(user_groups))])
+    if user_groups:
+        print(user_groups)
+        td.append([Color('{autoblue}groups{/autoblue}'), ",".join(user_groups)])
+    else:
+        td.append([Color('{autoblue}groups{/autoblue}'),
+                   dash_if_none()])
     td.append([Color('{autoblue}policies{/autoblue}'),
                dash_if_none(",".join(user_policies))])
     if not user_access_keys:

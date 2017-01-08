@@ -4,6 +4,7 @@ from __future__ import (absolute_import, print_function, unicode_literals)
 from acli.connections import get_client
 from acli.errors import handle_boto_errors
 from acli.output.iam import (output_iam_user_list, output_iam_summary, output_iam_user_info)
+from botocore.exceptions import ClientError
 
 
 # from acli.output.iam import (output_iam_user_list, output_iam_user_info)
@@ -30,26 +31,29 @@ def iam_user_info(aws_config=None, username=None):
     @type username: str
     """
     iam_client = get_client(client_type='iam', config=aws_config)
-    user_response = iam_client.get_user(UserName=username)
-    user = user_response['User']
+    try:
+        user_response = iam_client.get_user(UserName=username)
+        user = user_response['User']
 
-    user_access_keys_response = iam_client.list_access_keys(UserName=username)
-    user_access_keys = user_access_keys_response.get('AccessKeyMetadata')
+        user_access_keys_response = iam_client.list_access_keys(UserName=username)
+        user_access_keys = user_access_keys_response.get('AccessKeyMetadata')
 
-    user_policies_response = iam_client.list_user_policies(UserName=username)
-    user_policies = user_policies_response.get('PolicyNames')
+        user_policies_response = iam_client.list_user_policies(UserName=username)
+        user_policies = user_policies_response.get('PolicyNames')
 
-    user_groups_response = iam_client.list_groups_for_user(UserName=username)
-    user_groups = user_groups_response.get('Groups')
+        user_groups_response = iam_client.list_groups_for_user(UserName=username)
+        user_groups = user_groups_response.get('Groups')
 
-    mfa_devices_response = iam_client.list_virtual_mfa_devices(AssignmentStatus='Assigned')
-    mfa_devices = mfa_devices_response.get('VirtualMFADevices')
-    user_mfa_devices = list()
-    for mfa_device in mfa_devices:
-        if mfa_device['User']['UserName'] == username:
-            user_mfa_devices.append(mfa_device)
-    output_iam_user_info(user=user, user_mfa_devices=user_mfa_devices, user_access_keys=user_access_keys,
-                         user_policies=user_policies, user_groups=user_groups)
+        mfa_devices_response = iam_client.list_virtual_mfa_devices(AssignmentStatus='Assigned')
+        mfa_devices = mfa_devices_response.get('VirtualMFADevices')
+        user_mfa_devices = list()
+        for mfa_device in mfa_devices:
+            if mfa_device['User']['UserName'] == username:
+                user_mfa_devices.append(mfa_device)
+        output_iam_user_info(user=user, user_mfa_devices=user_mfa_devices, user_access_keys=user_access_keys,
+                             user_policies=user_policies, user_groups=user_groups)
+    except (ClientError, IndexError):
+        exit("Cannot find user: {0}".format(username))
 
 
 def summary(aws_config=None):
