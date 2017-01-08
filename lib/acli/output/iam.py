@@ -8,15 +8,13 @@ from acli.output import (output_ascii_table, output_ascii_table_list, dash_if_no
 Windows.enable(auto_colors=True, reset_atexit=True)
 
 
-def colour_state(state=None):
-    if not state:
+def colour_staus(status=None):
+    if not status:
         return Color('{autoblack}-{/autoblack}')
-    elif state == 'running':
-        return Color('{autogreen}' + state + '{/autogreen}')
-    elif state in ('stopped', 'stopping', 'shutting-down', 'terminated'):
-        return Color('{autored}' + state + '{/autored}')
-    elif state in ('rebooting', 'pending'):
-        return Color('{autoyellow}' + state + '{/autoyellow}')
+    elif status == 'Active':
+        return Color('{autogreen}' + status + '{/autogreen}')
+    elif status == 'Inactive':
+        return Color('{autored}' + status + '{/autored}')
 
 
 def user_has_mfa_assigned(username=None, password_last_used=None, mfa_devices=None):
@@ -128,27 +126,49 @@ def output_iam_summary(summary_map=None):
     exit(0)
 
 
-def output_eip_info(address=None):
+def output_iam_user_info(user=None, user_mfa_devices=None, user_access_keys=None, user_policies=None, user_groups=None):
     """
-    @type address: dict
+    @type user: dict
+    @type user_mfa_devices: list
+    @type user_access_keys: list
+    @type user_policies: list
+    @type user_groups: list
     """
     td = list()
-    td.append([Color('{autoblue}public ip{/autoblue}'),
-               dash_if_none(address.get('PublicIp'))])
-    td.append([Color('{autoblue}allocation id{/autoblue}'),
-               dash_if_none(address.get('AllocationId'))])
-    td.append([Color('{autoblue}instance id{/autoblue}'),
-               dash_if_none(address.get('InstanceId'))])
-    td.append([Color('{autoblue}association id{/autoblue}'),
-               dash_if_none(address.get('AssociationId'))])
-    td.append([Color('{autoblue}domain{/autoblue}'),
-               dash_if_none(address.get('Domain'))])
-    td.append([Color('{autoblue}network interface id{/autoblue}'),
-               dash_if_none(address.get('NetworkInterfaceId'))])
-    td.append([Color('{autoblue}network interface owner id{/autoblue}'),
-               dash_if_none(address.get('NetworkInterfaceOwnerId'))])
-    td.append([Color('{autoblue}private ip{/autoblue}'),
-               dash_if_none(address.get('PrivateIpAddress'))])
-    output_ascii_table(table_title=Color('{autowhite}eip info{/autowhite}'),
+    td.append([Color('{autoblue}name{/autoblue}'),
+               dash_if_none(user.get('UserName'))])
+    td.append([Color('{autoblue}id{/autoblue}'),
+               dash_if_none(user.get('UserId'))])
+    td.append([Color('{autoblue}arn{/autoblue}'),
+               dash_if_none(user.get('Arn'))])
+    td.append([Color('{autoblue}path{/autoblue}'),
+               dash_if_none(user.get('Path'))])
+    td.append([Color('{autoblue}password last used{/autoblue}'),
+               dash_if_none(user.get('PasswordLastUsed'))])
+    td.append([Color('{autoblue}created{/autoblue}'),
+               dash_if_none(user.get('CreateDate'))])
+    td.append([Color('{autoblue}groups{/autoblue}'),
+               dash_if_none(",".join(user_groups))])
+    td.append([Color('{autoblue}policies{/autoblue}'),
+               dash_if_none(",".join(user_policies))])
+    if not user_access_keys:
+        td.append([Color('{autoblue}access keys{/autoblue}'),
+                   dash_if_none()])
+    else:
+        td.append([Color('{autowhite}access keys{/autowhite}'), ""])
+        for key in user_access_keys:
+            td.append([Color('{autoblue}  id / status / enabled{/autoblue}'),
+                       "{0} / {1} / {2}".format(key.get('AccessKeyId'), colour_staus(key.get('Status')),
+                                                key.get('CreateDate'))])
+    if not user_mfa_devices:
+        td.append([Color('{autoblue}mfa devices{/autoblue}'),
+                   dash_if_none()])
+    else:
+        td.append([Color('{autowhite}mfa devices{/autowhite}'), ""])
+        for md in user_mfa_devices:
+            td.append([Color('{autoblue}  serial / enabled{/autoblue}'),
+                       "{0} / {1}".format(md.get('SerialNumber'), md.get('EnableDate'))])
+
+    output_ascii_table(table_title=Color('{autowhite}user info{/autowhite}'),
                        table_data=td)
     exit(0)

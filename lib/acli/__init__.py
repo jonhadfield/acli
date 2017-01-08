@@ -106,6 +106,8 @@ def iam_command(argv=None, aws_config=None):
     if iam_res.get('user'):
         if any((iam_res.get('ls'), iam_res.get('list'))):
             iam.iam_user_list(aws_config)
+        if iam_res.get('info'):
+            iam.iam_user_info(aws_config, username=iam_res.get('<username>'))
     if iam_res.get('summary'):
         iam.summary(aws_config)
 
