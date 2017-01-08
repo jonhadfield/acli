@@ -52,6 +52,82 @@ def output_iam_user_list(users=None, mfa_devices=None):
     exit(0)
 
 
+def output_iam_summary(summary_map=None):
+    """
+    @type summary_map: dict
+    """
+    td = list()
+    td.append([Color('{autoblue}users{/autoblue}'),
+               dash_if_none(summary_map.get('Users'))])
+    td.append([Color('{autoblue}groups{/autoblue}'),
+               dash_if_none(summary_map.get('Groups'))])
+    td.append([Color('{autoblue}roles{/autoblue}'),
+               dash_if_none(summary_map.get('Roles'))])
+    td.append([Color('{autoblue}policies{/autoblue}'),
+               summary_map.get('Policies')])
+    td.append([Color('{autoblue}account access keys present{/autoblue}'),
+               summary_map.get('AccountAccessKeysPresent')])
+    td.append([Color('{autoblue}policy versions in use{/autoblue}'),
+               summary_map.get('PolicyVersionsInUse')])
+    td.append([Color('{autoblue}server certificates{/autoblue}'),
+               summary_map.get('ServerCertificates')])
+    td.append([Color('{autoblue}mfa devices{/autoblue}'),
+               dash_if_none(summary_map.get('MFADevices'))])
+    td.append([Color('{autoblue}mfa devices in use{/autoblue}'),
+               summary_map.get('MFADevicesInUse')])
+    td.append([Color('{autoblue}account MFA enabled{/autoblue}'),
+               dash_if_none(summary_map.get('AccountMFAEnabled'))])
+    td.append([Color('{autoblue}providers{/autoblue}'),
+               summary_map.get('Providers')])
+    td.append([Color('{autoblue}instance profiles{/autoblue}'),
+               dash_if_none(summary_map.get('InstanceProfiles'))])
+    td.append(["", ""])
+    td.append([Color('{autowhite}quotas{/autowhite}'), ""])
+
+    td.append([Color('{autoblue}user policy size quota{/autoblue}'),
+               dash_if_none(summary_map.get('UserPolicySizeQuota'))])
+    td.append([Color('{autoblue}assume role policy size quota{/autoblue}'),
+               dash_if_none(summary_map.get('AssumeRolePolicySizeQuota'))])
+    td.append([Color('{autoblue}server certificates quota{/autoblue}'),
+               dash_if_none(summary_map.get('ServerCertificatesQuota'))])
+    td.append([Color('{autoblue}users quota{/autoblue}'),
+               dash_if_none(summary_map.get('UsersQuota'))])
+
+    td.append([Color('{autoblue}policy size quota{/autoblue}'),
+               dash_if_none(summary_map.get('PolicySizeQuota'))])
+
+    td.append([Color('{autoblue}attached policies per group quota{/autoblue}'),
+               dash_if_none(summary_map.get('AttachedPoliciesPerGroupQuota'))])
+
+    td.append([Color('{autoblue}groups per user quota{/autoblue}'),
+               dash_if_none(summary_map.get('GroupsPerUserQuota'))])
+    td.append([Color('{autoblue}groups quota{/autoblue}'),
+               dash_if_none(summary_map.get('GroupsQuota'))])
+    td.append([Color('{autoblue}instance profiles quota{/autoblue}'),
+               dash_if_none(summary_map.get('InstanceProfilesQuota'))])
+    td.append([Color('{autoblue}attached policies per role quota{/autoblue}'),
+               dash_if_none(summary_map.get('AttachedPoliciesPerRoleQuota'))])
+    td.append([Color('{autoblue}access keys per user quota{/autoblue}'),
+               dash_if_none(summary_map.get('AccessKeysPerUserQuota'))])
+    td.append([Color('{autoblue}group policy size quota{/autoblue}'),
+               dash_if_none(summary_map.get('GroupPolicySizeQuota'))])
+    td.append([Color('{autoblue}versions per policy quota{/autoblue}'),
+               dash_if_none(summary_map.get('VersionsPerPolicyQuota'))])
+
+    td.append([Color('{autoblue}roles quota{/autoblue}'),
+               dash_if_none(summary_map.get('RolesQuota'))])
+
+    td.append([Color('{autoblue}policy version in use quota{/autoblue}'),
+               dash_if_none(summary_map.get('PolicyVersionsInUseQuota'))])
+    td.append([Color('{autoblue}policies quota{/autoblue}'),
+               dash_if_none(summary_map.get('PoliciesQuota'))])
+    td.append([Color('{autoblue}role policy size quota{/autoblue}'),
+               dash_if_none(summary_map.get('RolePolicySizeQuota'))])
+    output_ascii_table(table_title=Color('{autowhite}iam account summary{/autowhite}'),
+                       table_data=td)
+    exit(0)
+
+
 def output_eip_info(address=None):
     """
     @type address: dict

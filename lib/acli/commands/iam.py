@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Usage:
+    acli iam summary
     acli iam user (ls | list) [options]
     acli iam user info <username>
     -o, --output=<output_type>      table, json, yaml or graph [default: table].

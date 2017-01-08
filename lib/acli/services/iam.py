@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 
 from acli.connections import get_client
 from acli.errors import handle_boto_errors
-from acli.output.iam import (output_iam_user_list)
+from acli.output.iam import (output_iam_user_list, output_iam_summary)
 # from acli.output.iam import (output_iam_user_list, output_iam_user_info)
 
 
@@ -23,6 +23,15 @@ def iam_user_list(aws_config=None):
         output_iam_user_list(users=users, mfa_devices=mfa_devices)
     exit('No users found.')
 
+
+def summary(aws_config=None):
+    """
+    @type aws_config: Config
+    """
+    iam_client = get_client(client_type='iam', config=aws_config)
+    summary_response = iam_client.get_account_summary()
+    summary_map = summary_response['SummaryMap']
+    output_iam_summary(summary_map=summary_map)
 #
 # @handle_boto_errors
 # def eip_info(aws_config=None, eip=None):

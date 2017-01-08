@@ -29,6 +29,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli es (ls | list)
        acli es info <domain>
        acli efs (ls | list) [options]
+       acli iam summary [options]
        acli iam user (ls | list) [options]
        acli iam user info <username>
        acli clean (delete_orphaned_snapshots | delete_unnammed_volumes)
@@ -105,6 +106,8 @@ def iam_command(argv=None, aws_config=None):
     if iam_res.get('user'):
         if any((iam_res.get('ls'), iam_res.get('list'))):
             iam.iam_user_list(aws_config)
+    if iam_res.get('summary'):
+        iam.summary(aws_config)
 
 
 def route53_command(argv=None, aws_config=None):
