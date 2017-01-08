@@ -43,6 +43,9 @@ def iam_user_info(aws_config=None, username=None):
 
         user_groups_response = iam_client.list_groups_for_user(UserName=username)
         user_groups = user_groups_response.get('Groups')
+        group_names = list()
+        for ug in user_groups:
+            group_names.append(ug['GroupName'])
 
         mfa_devices_response = iam_client.list_virtual_mfa_devices(AssignmentStatus='Assigned')
         mfa_devices = mfa_devices_response.get('VirtualMFADevices')
@@ -51,7 +54,7 @@ def iam_user_info(aws_config=None, username=None):
             if mfa_device['User']['UserName'] == username:
                 user_mfa_devices.append(mfa_device)
         output_iam_user_info(user=user, user_mfa_devices=user_mfa_devices, user_access_keys=user_access_keys,
-                             user_policies=user_policies, user_groups=user_groups)
+                             user_policies=user_policies, user_groups=group_names)
     except (ClientError, IndexError):
         exit("Cannot find user: {0}".format(username))
 

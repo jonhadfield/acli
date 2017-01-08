@@ -148,7 +148,6 @@ def output_iam_user_info(user=None, user_mfa_devices=None, user_access_keys=None
     td.append([Color('{autoblue}created{/autoblue}'),
                dash_if_none(user.get('CreateDate'))])
     if user_groups:
-        print(user_groups)
         td.append([Color('{autoblue}groups{/autoblue}'), ",".join(user_groups)])
     else:
         td.append([Color('{autoblue}groups{/autoblue}'),
