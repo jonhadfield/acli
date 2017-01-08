@@ -29,6 +29,8 @@ usage: acli [--version] [--help] [--install-completion]
        acli es (ls | list)
        acli es info <domain>
        acli efs (ls | list) [options]
+       acli iam user (ls | list) [options]
+       acli iam user info <username>
        acli clean (delete_orphaned_snapshots | delete_unnammed_volumes)
 
 
@@ -43,6 +45,7 @@ The most common commands are:
    ami          Manage amis
    asg          Manage auto-scaling groups
    lc           Manage launch configurations
+   iam          Manage iam
    eip          Manage elastic ips
    secgroup     Manage security groups
    route53      Manage route 53 configuration
@@ -65,7 +68,7 @@ from acli.commands.asg import asg_command
 from acli.commands.ec2 import ec2_command
 from acli.config import Config
 from acli.services import (ec2, elb, account, vpc, eip, asg,
-                           route53, secgroup, s3, es, clean, efs)
+                           route53, secgroup, s3, es, clean, efs, iam)
 from acli.utils import install_completion
 
 
@@ -94,6 +97,14 @@ def lc_command(argv=None, aws_config=None):
         asg.lc_list(aws_config)
     elif lc_res.get('info'):
         asg.lc_info(aws_config, lc_name=lc_res.get('<lc_name>'))
+
+
+def iam_command(argv=None, aws_config=None):
+    from acli.commands import iam as command_iam
+    iam_res = docopt(command_iam.__doc__, argv=argv)
+    if iam_res.get('user'):
+        if any((iam_res.get('ls'), iam_res.get('list'))):
+            iam.iam_user_list(aws_config)
 
 
 def route53_command(argv=None, aws_config=None):
@@ -191,6 +202,8 @@ def real_main():
         elb_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 'lc':
         lc_command(argv=argv, aws_config=aws_config)
+    elif args['<command>'] == 'iam':
+        iam_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 'asg':
         asg_command(argv=argv, aws_config=aws_config)
     elif args['<command>'] == 'ami':
