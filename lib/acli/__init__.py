@@ -71,6 +71,7 @@ from acli.config import Config
 from acli.services import (ec2, elb, account, vpc, eip, asg,
                            route53, secgroup, s3, es, clean, efs, iam)
 from acli.utils import install_completion
+from botocore.exceptions import ClientError
 
 
 def elb_command(argv=None, aws_config=None):
@@ -197,41 +198,46 @@ def real_main():
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
-    if args['--install-completion']:
-        install_completion()
-    elif args['<command>'] == 'account':
-        account.account_info(aws_config)
-    elif args['<command>'] == 'ec2':
-        ec2_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'elb':
-        elb_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'lc':
-        lc_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'iam':
-        iam_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'asg':
-        asg_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'ami':
-        ami_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'route53':
-        route53_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'vpc':
-        vpc_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'secgroup':
-        secgroup_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'eip':
-        eip_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 's3':
-        s3_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'es':
-        es_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'efs':
-        efs_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] == 'clean':
-        clean_command(argv=argv, aws_config=aws_config)
-    elif args['<command>'] in ['help'] and not args['<args>']:
-        print("usage: acli <command> -h")
-    elif args['<command>']:
-        exit("{0} is not an acli command. See 'acli -h'.".format(args['<command>']))
-    else:
-        print(__doc__)
+    try:
+        if args['--install-completion']:
+            install_completion()
+        elif args['<command>'] == 'account':
+            account.account_info(aws_config)
+        elif args['<command>'] == 'ec2':
+            ec2_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'elb':
+            elb_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'lc':
+            lc_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'iam':
+            iam_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'asg':
+            asg_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'ami':
+            ami_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'route53':
+            route53_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'vpc':
+            vpc_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'secgroup':
+            secgroup_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'eip':
+            eip_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 's3':
+            s3_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'es':
+            es_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'efs':
+            efs_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] == 'clean':
+            clean_command(argv=argv, aws_config=aws_config)
+        elif args['<command>'] in ['help'] and not args['<args>']:
+            print("usage: acli <command> -h")
+        elif args['<command>']:
+            exit("{0} is not an acli command. See 'acli -h'.".format(args['<command>']))
+        else:
+            print(__doc__)
+    except ClientError as ce:
+        error_code = ce.response['Error']['Code']
+        if error_code == 'InvalidClientTokenId':
+            exit('The access key ID is invalid.')
