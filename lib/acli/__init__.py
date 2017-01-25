@@ -240,4 +240,6 @@ def real_main():
     except ClientError as ce:
         error_code = ce.response['Error']['Code']
         if error_code == 'InvalidClientTokenId':
-            exit('The access key ID is invalid.')
+            exit('The access key ID is invalid (AWS Code: InvalidClientTokenId).')
+        if error_code == 'AccessDenied':
+            exit('You are not authorized to perform this action (AWS Code: AccessDenied).')
