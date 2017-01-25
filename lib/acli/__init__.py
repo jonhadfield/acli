@@ -243,3 +243,5 @@ def real_main():
             exit('The access key ID is invalid (AWS Code: InvalidClientTokenId).')
         if error_code == 'AccessDenied':
             exit('You are not authorized to perform this action (AWS Code: AccessDenied).')
+        if error_code == 'AuthFailure':
+            exit('AWS was unable to validate the provided credentials (AWS Code: AuthFailure).')
