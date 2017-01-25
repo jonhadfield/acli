@@ -245,3 +245,5 @@ def real_main():
             exit('You are not authorized to perform this action (AWS Code: AccessDenied).')
         if error_code == 'AuthFailure':
             exit('AWS was unable to validate the provided credentials (AWS Code: AuthFailure).')
+        if error_code == 'InvalidToken':
+            exit('Provided token is invalid (AWS Code: InvalidToken).')
