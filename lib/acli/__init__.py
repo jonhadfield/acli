@@ -64,6 +64,7 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 
+from botocore.exceptions import ClientError
 from docopt import docopt
 
 from acli.commands.asg import asg_command
@@ -72,7 +73,6 @@ from acli.config import Config
 from acli.services import (ec2, elb, account, vpc, eip, asg,
                            route53, secgroup, s3, es, clean, efs, iam)
 from acli.utils import install_completion
-from botocore.exceptions import ClientError
 
 
 def elb_command(argv=None, aws_config=None):
@@ -195,7 +195,7 @@ def clean_command(argv=None, aws_config=None):
 
 def real_main():
     args = docopt(__doc__,
-                  version='0.1.32',
+                  version='0.1.33',
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
@@ -241,6 +241,14 @@ def real_main():
     except ClientError as ce:
         error_code = ce.response['Error']['Code']
         if error_code == 'InvalidClientTokenId':
-            exit('The access key ID is invalid.')
+            exit('The access key ID is invalid (AWS Code: InvalidClientTokenId).')
+        if error_code == 'AccessDenied':
+            exit('You are not authorized to perform this action (AWS Code: AccessDenied).')
+
+        if error_code == 'AuthFailure':
+            exit('AWS was unable to validate the provided credentials (AWS Code: AuthFailure).')
+
+        if error_code == 'InvalidToken':
+            exit('Provided token is invalid (AWS Code: InvalidToken).')
         else:
             raise
