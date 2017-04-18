@@ -49,8 +49,10 @@ def handle_boto_errors(function):
 
                 else:
                     raise
+            elif error_code == "RequestExpired":
+                exit("Temporary credentials have expired.")
             else:
-                raise
+                exit(ce)
         except Exception:
             raise
     return handle_errors
