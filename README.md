@@ -10,6 +10,11 @@ Please submit any issues encountered.
 Latest changes ([changelog](https://github.com/jonhadfield/acli/blob/master/CHANGELOG.md "Changelog"))
 ------------
 
+0.1.32 (18th April 2017)
+
+- Provide info on EFS file systems and targets 
+- Fix issue where authentication issues were hidden
+
 0.1.31 (8th Jan 2017)
 
 - Add IAM user listing and user info
