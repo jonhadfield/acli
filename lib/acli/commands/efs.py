@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Usage:
     acli efs (ls | list)
+    acli efs info <filesystem_id>
+
 
     -o, --output=<output_type>      table, json, yaml or graph [default: table].
     -h, --help

@@ -6,10 +6,10 @@ usage: acli [--version] [--help] [--install-completion]
             <command> [<args>...]
        acli account [options]
        acli ec2 (ls | list | summary) [options]
-       acli ec2 (start | stop | reboot | terminate | info | cpu | vols | net) <instance_id> [options]
+       acli ec2 (start | stop | reboot | terminate | info) <instance_id> [options]
        acli lc (ls | list) [options]
        acli asg (ls | list) [options]
-       acli asg (info | cpu | mem | net | delete) <asg_name> [options]
+       acli asg (info) <asg_name> [options]
        acli ami (ls | list) info <ami_id>
        acli ami info <ami_id>
        acli eip ([ls | list]| info <eip>)
@@ -29,6 +29,7 @@ usage: acli [--version] [--help] [--install-completion]
        acli es (ls | list)
        acli es info <domain>
        acli efs (ls | list) [options]
+       acli efs (info) <filesystem_id> [options]
        acli iam summary [options]
        acli iam user (ls | list) [options]
        acli iam user info <username>
@@ -180,7 +181,7 @@ def efs_command(argv=None, aws_config=None):
     if any((efs_res.get('ls'), efs_res.get('list'))):
         efs.efs_list(aws_config)
     elif efs_res.get('info'):
-        efs.efs_info(aws_config, domain_name=efs_res.get('<filesystem_id>'))
+        efs.efs_info(aws_config, filesystem_id=efs_res.get('<filesystem_id>'))
 
 
 def clean_command(argv=None, aws_config=None):
@@ -194,7 +195,7 @@ def clean_command(argv=None, aws_config=None):
 
 def real_main():
     args = docopt(__doc__,
-                  version='0.1.30',
+                  version='0.1.32',
                   options_first=True)
     aws_config = Config(args)
     argv = [args['<command>']] + args['<args>']
@@ -240,10 +241,6 @@ def real_main():
     except ClientError as ce:
         error_code = ce.response['Error']['Code']
         if error_code == 'InvalidClientTokenId':
-            exit('The access key ID is invalid (AWS Code: InvalidClientTokenId).')
-        if error_code == 'AccessDenied':
-            exit('You are not authorized to perform this action (AWS Code: AccessDenied).')
-        if error_code == 'AuthFailure':
-            exit('AWS was unable to validate the provided credentials (AWS Code: AuthFailure).')
-        if error_code == 'InvalidToken':
-            exit('Provided token is invalid (AWS Code: InvalidToken).')
+            exit('The access key ID is invalid.')
+        else:
+            raise

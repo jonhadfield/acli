@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 
 from acli.connections import get_client
 from acli.errors import handle_boto_errors
-from acli.output.efs import output_filesystems
+from acli.output.efs import output_filesystems, output_filesystem_info
 
 
 @handle_boto_errors
@@ -16,21 +16,30 @@ def efs_list(aws_config=None):
     efs_client = get_client(client_type='efs', config=aws_config)
     res = efs_client.describe_file_systems()
     filesystems = res.get('FileSystems')
+    mount_targets = list()
+    for fs in filesystems:
+        res = efs_client.describe_mount_targets(FileSystemId=fs.get('FileSystemId'))
+        for mt in res.get('MountTargets'):
+            mount_targets.append(mt)
     if filesystems:
-        output_filesystems(filesystems=filesystems)
+        output_filesystems(filesystems=filesystems, mount_targets=mount_targets)
     else:
         exit("No file systems found.")
 
-#
-# @handle_boto_errors
-# def efs_info(aws_config=None, domain_name=None):
-#     """
-#     @type aws_config: Config
-#     @type domain_name: unicode
-#     """
-#     es_client = get_client(client_type='es', config=aws_config)
-#     try:
-#         domain = es_client.describe_elasticsearch_domains(DomainNames=[domain_name])
-#         output_domain_info(domain=domain)
-#     except (ClientError, IndexError):
-#         exit("Cannot find domain: {0}".format(domain_name))
+
+@handle_boto_errors
+def efs_info(aws_config=None, filesystem_id=None):
+    """
+    @type aws_config: Config
+    @type filesystem_id: unicode
+    """
+    efs_client = get_client(client_type='efs', config=aws_config)
+    try:
+        filesystem = efs_client.describe_file_systems(FileSystemId=filesystem_id)
+        mount_targets = list()
+        res = efs_client.describe_mount_targets(FileSystemId=filesystem['FileSystems'][0]['FileSystemId'])
+        for mt in res.get('MountTargets'):
+            mount_targets.append(mt)
+        output_filesystem_info(filesystem=filesystem, mount_targets=mount_targets)
+    except (ClientError, IndexError):
+        exit("Cannot find filesystem: {0}".format(filesystem_id))
