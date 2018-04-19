@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 sys.path.insert(0, os.path.abspath('lib'))
 
-version = "0.1.33"
+version = "0.1.34"
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload -r pypi')
@@ -56,7 +56,7 @@ setup(
                       'colorclass>=2.2.0',
                       'botocore>=1.4.39',
                       'boto3>=1.3.1',
-                      'requests<=2.6.1',
+                      'requests',
                       'terminaltables>=3.0.0',
                       'humanize>=0.5.1'],
     description='A CLI to manage AWS resources',
