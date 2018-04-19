@@ -56,7 +56,7 @@ setup(
                       'colorclass>=2.2.0',
                       'botocore>=1.4.39',
                       'boto3>=1.3.1',
-                      'requests>=2.10.0',
+                      'requests<=2.6.1',
                       'terminaltables>=3.0.0',
                       'humanize>=0.5.1'],
     description='A CLI to manage AWS resources',
